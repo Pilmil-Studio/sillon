@@ -2,7 +2,7 @@
 
 [Français](README.md) · **English**
 
-[![Build](https://github.com/Relthdrarxash/sillon/actions/workflows/android.yml/badge.svg)](https://github.com/Relthdrarxash/sillon/actions/workflows/android.yml)
+[![Build](https://github.com/Pilmil-Studio/sillon/actions/workflows/android.yml/badge.svg)](https://github.com/Pilmil-Studio/sillon/actions/workflows/android.yml)
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](LICENSE)
 [![Offline](https://img.shields.io/badge/Network-100%25%20Offline-orange.svg)](app/src/main/AndroidManifest.xml)
 [![Android](https://img.shields.io/badge/Android-8.0%2B%20(API%2026%2B)-brightgreen.svg)](app/build.gradle.kts)
@@ -140,10 +140,10 @@ To read the in-depth literature review of allelopathic interactions (alpha-terth
 
 Sillon is part of the digital commons initiative by **Pilmil Studio**:
 
-- **[Sauve](https://github.com/Relthdrarxash/sauve):** 100% offline anti-panic first aid with voice and haptic metronome guidance.
-- **[Sommelle](https://github.com/Relthdrarxash/sommelle):** Evidence-based CBT-I sleep companion without accounts or ads.
-- **[Lunaison](https://github.com/Relthdrarxash/lunaison):** Private, offline menstrual cycle tracking with medical guides.
-- **[Respire](https://github.com/Relthdrarxash/respire):** Mindful breathing pauses before reflex app usage.
+- **[Sauve](https://github.com/Pilmil-Studio/sauve):** 100% offline anti-panic first aid with voice and haptic metronome guidance.
+- **[Sommelle](https://github.com/Pilmil-Studio/sommelle):** Evidence-based CBT-I sleep companion without accounts or ads.
+- **[Lunaison](https://github.com/Pilmil-Studio/lunaison):** Private, offline menstrual cycle tracking with medical guides.
+- **[Respire](https://github.com/Pilmil-Studio/respire):** Mindful breathing pauses before reflex app usage.
 
 ---
 

@@ -2,7 +2,7 @@
 
 **Français** · [English](README.en.md)
 
-[![Build](https://github.com/Relthdrarxash/sillon/actions/workflows/android.yml/badge.svg)](https://github.com/Relthdrarxash/sillon/actions/workflows/android.yml)
+[![Build](https://github.com/Pilmil-Studio/sillon/actions/workflows/android.yml/badge.svg)](https://github.com/Pilmil-Studio/sillon/actions/workflows/android.yml)
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](LICENSE)
 [![Offline](https://img.shields.io/badge/Network-100%25%20Offline-orange.svg)](app/src/main/AndroidManifest.xml)
 [![Android](https://img.shields.io/badge/Android-8.0%2B%20(API%2026%2B)-brightgreen.svg)](app/build.gradle.kts)
@@ -140,10 +140,10 @@ Pour consulter la revue bibliographique complète des mécanismes allélopathiqu
 
 Sillon s'inscrit dans la démarche des applications d'intérêt général de **Pilmil Studio** :
 
-- **[Sauve](https://github.com/Relthdrarxash/sauve) :** Premiers secours d'urgence « Anti-Panique » 100 % hors-ligne guidés par la voix.
-- **[Sommelle](https://github.com/Relthdrarxash/sommelle) :** Accompagnement de l'insomnie par la TCC-I sans compte ni publicité.
-- **[Lunaison](https://github.com/Relthdrarxash/lunaison) :** Suivi intime du cycle menstruel respectueux de la vie privée.
-- **[Respire](https://github.com/Relthdrarxash/respire) :** Déconnexion numérique et micro-pauses respiratoires sereines.
+- **[Sauve](https://github.com/Pilmil-Studio/sauve) :** Premiers secours d'urgence « Anti-Panique » 100 % hors-ligne guidés par la voix.
+- **[Sommelle](https://github.com/Pilmil-Studio/sommelle) :** Accompagnement de l'insomnie par la TCC-I sans compte ni publicité.
+- **[Lunaison](https://github.com/Pilmil-Studio/lunaison) :** Suivi intime du cycle menstruel respectueux de la vie privée.
+- **[Respire](https://github.com/Pilmil-Studio/respire) :** Déconnexion numérique et micro-pauses respiratoires sereines.
 
 ---
 

@@ -71,13 +71,13 @@ def page(title, desc, body):
   <a class="brand" href="./">Sillon</a>
   <nav class="nav" aria-label="Navigation">
     <a href="confidentialite.html">Confidentialité</a>
-    <a href="https://github.com/Relthdrarxash/sillon">Code source</a>
+    <a href="https://github.com/Pilmil-Studio/sillon">Code source</a>
   </nav>
 </header>
 {body}
 <footer class="wrap foot">
-  <p>Sillon fait partie des applis de <a href="https://relthdrarxash.github.io/">Pilmil Studio</a>.</p>
-  <p>Contact : pilmil.studio@proton.me · <a href="https://github.com/Relthdrarxash/sillon/blob/main/LICENSE">Licence MPL-2.0</a></p>
+  <p>Sillon fait partie des applis de <a href="https://pilmil-studio.github.io/">Pilmil Studio</a>.</p>
+  <p>Contact : pilmil.studio@proton.me · <a href="https://github.com/Pilmil-Studio/sillon/blob/main/LICENSE">Licence MPL-2.0</a></p>
 </footer>
 </body>
 </html>
@@ -98,8 +98,8 @@ body = f"""<main>
     <h1>Le bon geste au bon moment, au jardin.</h1>
     <p class="lead">Sillon dit ce qu'il y a à faire cette quinzaine, aide à organiser les parcelles et repère les maladies. Tout reste sur votre téléphone, sans réseau.</p>
     <div class="cta">
-      <a class="btn primary" href="https://github.com/Relthdrarxash/sillon/releases">Télécharger l'APK</a>
-      <a class="btn" href="https://github.com/Relthdrarxash/sillon">Voir le code</a>
+      <a class="btn primary" href="https://github.com/Pilmil-Studio/sillon/releases">Télécharger l'APK</a>
+      <a class="btn" href="https://github.com/Pilmil-Studio/sillon">Voir le code</a>
     </div>
   </div>
   <div class="shot"><img src="captures/s1.webp" alt="{SHOTS[0]}" width="540" height="960"></div>
