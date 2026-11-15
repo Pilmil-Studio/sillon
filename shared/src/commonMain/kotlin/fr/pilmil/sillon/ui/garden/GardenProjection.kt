@@ -1,6 +1,7 @@
 package fr.pilmil.sillon.ui.garden
 
 import androidx.compose.ui.geometry.Offset
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -52,7 +53,7 @@ class GardenProjection private constructor(
 
     /** Champ de vision vertical résultant, pour information. */
     fun verticalFovDegrees(heightPx: Float): Float =
-        Math.toDegrees(2.0 * kotlin.math.atan(heightPx / 2f / focal.toDouble())).toFloat()
+        (2.0 * kotlin.math.atan(heightPx / 2f / focal.toDouble()) * 180.0 / PI).toFloat()
 
     companion object {
         /**
@@ -70,7 +71,7 @@ class GardenProjection private constructor(
             farOverNear: Float = 0.79f,
             pitchDegrees: Float = 50f,
         ): GardenProjection {
-            val pitch = Math.toRadians(pitchDegrees.toDouble()).toFloat()
+            val pitch = (pitchDegrees.toDouble() * PI / 180.0).toFloat()
             val sinP = sin(pitch)
             val cosP = cos(pitch)
             // Profondeur du bord proche telle que depth(z = outerWidth) / depth(0) = 1 / farOverNear.

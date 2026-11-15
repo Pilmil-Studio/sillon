@@ -254,7 +254,7 @@ private fun DrawScope.flowerHead(
         for (i in 0 until petals) {
             val a = TAU * (i + layer * 0.5f) / petals
             val pc = Offset(c.x + cos(a) * rr * 0.6f, c.y + sin(a) * rr * 0.48f)
-            val rot = Math.toDegrees(atan2(sin(a) * 0.5, cos(a).toDouble())).toFloat()
+            val rot = (atan2(sin(a) * 0.5, cos(a).toDouble()) * 180.0 / PI).toFloat()
             rotate(rot, pc) {
                 drawOval(col.darker(0.22f), Offset(pc.x - rr * petalLen + rr * 0.05f, pc.y - rr * petalWid + rr * 0.06f), Size(rr * petalLen * 2, rr * petalWid * 2))
                 drawOval(col, Offset(pc.x - rr * petalLen, pc.y - rr * petalWid), Size(rr * petalLen * 2, rr * petalWid * 2))

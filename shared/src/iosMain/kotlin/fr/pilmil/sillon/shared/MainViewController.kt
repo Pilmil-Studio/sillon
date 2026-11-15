@@ -10,12 +10,8 @@ import platform.UIKit.UIViewController
 fun MainViewController(): UIViewController = ComposeUIViewController {
     SillonTheme(darkTheme = isSystemInDarkTheme()) {
         SillonApp(
-            onApplyReminders = { enabled, garden ->
-                if (enabled) {
-                    IosSowingReminders.scheduleWeekly(garden)
-                } else {
-                    IosSowingReminders.cancelAll()
-                }
+            onApplyReminders = { enabled, _ ->
+                IosSowingReminders.setEnabled(enabled) {}
             },
         )
     }

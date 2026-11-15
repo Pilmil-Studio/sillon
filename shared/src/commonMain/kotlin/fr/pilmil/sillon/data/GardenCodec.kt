@@ -1,6 +1,7 @@
 package fr.pilmil.sillon.data
 
 import fr.pilmil.sillon.model.Garden
+import kotlinx.datetime.Clock
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -29,7 +30,7 @@ object GardenCodec {
     fun decode(content: String): Garden = json.decodeFromString<Garden>(content)
 
     /** Lecture d'un fichier importé : refuse tout ce qui sortirait du cadre de l'appli. */
-    fun decodeAndValidate(content: String, now: Long = System.currentTimeMillis()): Garden {
+    fun decodeAndValidate(content: String, now: Long = Clock.System.now().toEpochMilliseconds()): Garden {
         if (content.length > MAX_FILE_CHARS) throw GardenValidationException("Ce fichier est trop volumineux pour être une sauvegarde Sillon.")
         val garden = try {
             decode(content)
@@ -40,7 +41,7 @@ object GardenCodec {
         return garden
     }
 
-    fun validate(garden: Garden, now: Long = System.currentTimeMillis()) {
+    fun validate(garden: Garden, now: Long = Clock.System.now().toEpochMilliseconds()) {
         fun refuse(reason: String): Nothing = throw GardenValidationException("Sauvegarde refusée : $reason")
         if (garden.parcels.size > MAX_PARCELS) refuse("plus de $MAX_PARCELS parcelles.")
         if (garden.parcels.map { it.id }.toSet().size != garden.parcels.size) refuse("deux parcelles portent le même identifiant.")

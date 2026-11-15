@@ -10,9 +10,7 @@ actual fun PlatformBackHandler(enabled: Boolean, onBack: () -> Unit) {
 
 @Composable
 actual fun rememberReminderPermissionRequester(onResult: (Boolean) -> Unit): () -> Unit = {
-    IosSowingReminders.requestAuthorization { granted ->
-        onResult(granted)
-    }
+    IosSowingReminders.setEnabled(true, onResult)
 }
 
 @Composable
