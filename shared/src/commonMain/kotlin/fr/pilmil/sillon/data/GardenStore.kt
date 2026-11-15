@@ -17,18 +17,52 @@ import fr.pilmil.sillon.model.epochMillisToLocalDate
 import fr.pilmil.sillon.model.nowEpochMillis
 import fr.pilmil.sillon.model.todayLocalDate
 
-data class GardenUpdate(val garden: Garden, val saved: Boolean)
+/**
+ * Résultat d'une modification. [refused] : le potager n'a pas pu être lu, rien n'a été écrit et
+ * [garden] n'est alors qu'un potager vide, à ne pas afficher.
+ */
+data class GardenUpdate(val garden: Garden, val saved: Boolean, val refused: Boolean = false)
 
 interface PlatformGardenStorage {
     fun exists(): Boolean
+    /** Le texte du fichier, ou null si la lecture a échoué (le fichier existe mais n'est pas lisible). */
     fun readText(): String?
     fun writeTextAtomic(content: String): Boolean
     fun quarantineCorrupt()
 }
 
+/** Ce que contient le fichier du potager, sans rien modifier sur le disque. */
+sealed interface GardenFile {
+    data class Found(val garden: Garden) : GardenFile
+    /** Première ouverture : aucun fichier. */
+    data object Missing : GardenFile
+    /** Le fichier se lit mais son contenu n'est pas un potager. */
+    data object Corrupt : GardenFile
+    /** Erreur d'entrée-sortie : le fichier existe peut-être intact, on n'y touche pas. */
+    data object Unreadable : GardenFile
+    /** Fichier écrit par une version plus récente de l'appli. */
+    data class NewerVersion(val foundVersion: Int, val supportedVersion: Int) : GardenFile
+}
+
+/** Résultat de [GardenStore.load]. */
+sealed interface GardenLoad {
+    /** [recovered] : un fichier illisible a été mis de côté et un potager neuf créé. */
+    data class Ready(val garden: Garden, val recovered: Boolean = false) : GardenLoad
+    /** Lecture impossible pour l'instant : aucune modification possible tant qu'un nouvel essai n'a pas réussi. */
+    data object ReadFailed : GardenLoad
+    /** Le fichier vient d'une version plus récente de Sillon : il est laissé intact. */
+    data class NewerVersion(val foundVersion: Int, val supportedVersion: Int) : GardenLoad
+}
+
+/**
+ * Le potager en mémoire est la source de vérité une fois [load] réussi : les modifications
+ * partent de lui et sont écrites de façon atomique. Tant que [load] n'a pas réussi,
+ * toute modification est refusée, de sorte qu'un potager par défaut ne remplace jamais un fichier existant.
+ */
 class GardenStore(private val storage: PlatformGardenStorage) {
 
     private var recoveryNotice = false
+    private var held: Garden? = null
 
     fun consumeRecoveryNotice(): Boolean {
         val pending = recoveryNotice
@@ -36,23 +70,64 @@ class GardenStore(private val storage: PlatformGardenStorage) {
         return pending
     }
 
-    fun loadGarden(): Garden {
-        if (!storage.exists()) return createDefaultGarden().also { saveGarden(it) }
-        val content = storage.readText() ?: return createDefaultGarden()
+    /** Lit le fichier sans rien écrire ni déplacer. Sert aussi aux exports et aux rappels. */
+    fun read(): GardenFile {
+        if (!storage.exists()) return GardenFile.Missing
+        val content = storage.readText() ?: return GardenFile.Unreadable
         return try {
-            GardenCodec.decode(content)
+            GardenFile.Found(GardenCodec.decode(content))
+        } catch (e: GardenVersionException) {
+            GardenFile.NewerVersion(e.foundVersion, e.supportedVersion)
         } catch (_: Exception) {
-            storage.quarantineCorrupt()
-            recoveryNotice = true
-            createDefaultGarden().also { saveGarden(it) }
+            GardenFile.Corrupt
         }
+    }
+
+    /**
+     * Charge le potager. Fichier absent : potager par défaut, enregistré. Fichier corrompu :
+     * mis en quarantaine, potager neuf et [consumeRecoveryNotice]. Erreur de lecture ou version
+     * trop récente : rien n'est écrit, rien n'est gardé en mémoire et les modifications sont refusées.
+     */
+    fun load(): GardenLoad {
+        val loaded = when (val file = read()) {
+            is GardenFile.Found -> GardenLoad.Ready(file.garden)
+            GardenFile.Missing -> {
+                val garden = createDefaultGarden()
+                if (!saveGarden(garden)) return GardenLoad.ReadFailed
+                GardenLoad.Ready(garden)
+            }
+            GardenFile.Corrupt -> {
+                storage.quarantineCorrupt()
+                recoveryNotice = true
+                val garden = createDefaultGarden()
+                saveGarden(garden)
+                GardenLoad.Ready(garden, recovered = true)
+            }
+            GardenFile.Unreadable -> GardenLoad.ReadFailed
+            is GardenFile.NewerVersion -> GardenLoad.NewerVersion(file.foundVersion, file.supportedVersion)
+        }
+        if (loaded is GardenLoad.Ready) held = loaded.garden
+        return loaded
+    }
+
+    /** Remplace le potager en mémoire par un potager déjà écrit sur disque (import). */
+    fun adopt(garden: Garden) {
+        held = garden
     }
 
     fun saveGarden(garden: Garden): Boolean =
         storage.writeTextAtomic(GardenCodec.encode(garden))
 
-    fun updateSlot(parcelId: String, row: Int, col: Int, vegetableId: String?): GardenUpdate {
-        val current = loadGarden()
+    /** Applique [change] au potager en mémoire puis l'écrit ; refuse si aucune lecture n'a réussi. */
+    private fun mutate(change: (Garden) -> Garden): GardenUpdate {
+        val base = held ?: (load() as? GardenLoad.Ready)?.garden
+            ?: return GardenUpdate(createDefaultGarden(), saved = false, refused = true)
+        val updated = change(base)
+        held = updated
+        return GardenUpdate(updated, saveGarden(updated))
+    }
+
+    fun updateSlot(parcelId: String, row: Int, col: Int, vegetableId: String?): GardenUpdate = mutate { current ->
         val nextHistory = current.history.toMutableList()
         val updatedParcels = current.parcels.map { parcel ->
             if (parcel.id != parcelId) {
@@ -88,9 +163,7 @@ class GardenStore(private val storage: PlatformGardenStorage) {
                 parcel.copy(slots = nextSlots)
             }
         }
-        val updated = current.copy(parcels = updatedParcels, history = nextHistory)
-        val saved = saveGarden(updated)
-        return GardenUpdate(updated, saved)
+        current.copy(parcels = updatedParcels, history = nextHistory)
     }
 
     fun addParcel(
@@ -99,8 +172,7 @@ class GardenStore(private val storage: PlatformGardenStorage) {
         rows: Int,
         cols: Int,
         containerVolumeLiters: Int? = null,
-    ): GardenUpdate {
-        val current = loadGarden()
+    ): GardenUpdate = mutate { current ->
         val newParcel = Parcel(
             id = "parcel_${nowEpochMillis()}",
             name = name.trim().ifEmpty { "Nouvelle parcelle" },
@@ -110,9 +182,7 @@ class GardenStore(private val storage: PlatformGardenStorage) {
             slots = emptyList(),
             containerVolumeLiters = containerVolumeLiters?.coerceIn(1, 2000),
         )
-        val updated = current.copy(parcels = current.parcels + newParcel)
-        val saved = saveGarden(updated)
-        return GardenUpdate(updated, saved)
+        current.copy(parcels = current.parcels + newParcel)
     }
 
     fun updateEnvironment(
@@ -122,9 +192,8 @@ class GardenStore(private val storage: PlatformGardenStorage) {
         covered: Boolean = false,
         lightSource: LightSource? = null,
         growLightHoursPerDay: Int? = null,
-    ): GardenUpdate {
-        val current = loadGarden()
-        val updated = current.copy(
+    ): GardenUpdate = mutate { current ->
+        current.copy(
             environment = environment,
             orientation = orientation,
             windExposure = windExposure,
@@ -132,48 +201,35 @@ class GardenStore(private val storage: PlatformGardenStorage) {
             lightSource = lightSource,
             growLightHoursPerDay = growLightHoursPerDay?.coerceIn(1, 24),
         )
-        val saved = saveGarden(updated)
-        return GardenUpdate(updated, saved)
     }
 
-    fun deleteParcel(parcelId: String): GardenUpdate {
-        val current = loadGarden()
+    fun deleteParcel(parcelId: String): GardenUpdate = mutate { current ->
         val remaining = current.parcels.filterNot { it.id == parcelId }
-        val updated = current.copy(parcels = remaining.ifEmpty { current.parcels })
-        val saved = saveGarden(updated)
-        return GardenUpdate(updated, saved)
+        current.copy(parcels = remaining.ifEmpty { current.parcels })
     }
 
-    fun updateFrostDate(month: Int, day: Int): GardenUpdate {
-        val current = loadGarden()
-        val updated = current.copy(
+    fun updateFrostDate(month: Int, day: Int): GardenUpdate = mutate { current ->
+        current.copy(
             frostDate = FrostDate(month.coerceIn(1, 12), day.coerceIn(1, 31)),
         )
-        val saved = saveGarden(updated)
-        return GardenUpdate(updated, saved)
     }
 
-    fun updateAltitude(meters: Int): GardenUpdate {
-        val current = loadGarden()
-        val updated = current.copy(
+    fun updateAltitude(meters: Int): GardenUpdate = mutate { current ->
+        current.copy(
             altitudeMeters = meters.coerceIn(0, 3000),
         )
-        val saved = saveGarden(updated)
-        return GardenUpdate(updated, saved)
     }
 
-    fun updateWateringConditions(mulched: Boolean, localWeather: LocalWeather): GardenUpdate {
-        val current = loadGarden()
-        val updated = current.copy(
+    fun updateWateringConditions(mulched: Boolean, localWeather: LocalWeather): GardenUpdate = mutate { current ->
+        current.copy(
             mulched = mulched,
             localWeather = localWeather,
         )
-        val saved = saveGarden(updated)
-        return GardenUpdate(updated, saved)
     }
 
-    fun exportCsvString(): String {
-        val garden = loadGarden()
+    /** Le tableur du potager en mémoire, ou null tant qu'aucune lecture n'a réussi. */
+    fun exportCsvString(): String? {
+        val garden = held ?: (load() as? GardenLoad.Ready)?.garden ?: return null
         val sb = StringBuilder()
         sb.append("\uFEFF")
         sb.append("Parcelle;Type;Ligne;Colonne;Plante ID;Date Plantation\n")

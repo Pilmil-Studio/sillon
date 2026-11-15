@@ -1,9 +1,12 @@
 package fr.pilmil.sillon
 
+import fr.pilmil.sillon.data.GardenCodec
+import fr.pilmil.sillon.data.GardenLoad
 import fr.pilmil.sillon.data.GardenStore
 import fr.pilmil.sillon.data.PlatformGardenStorage
 import fr.pilmil.sillon.model.BotanicalFamily
 import fr.pilmil.sillon.model.FrostDate
+import fr.pilmil.sillon.model.Garden
 import fr.pilmil.sillon.model.GrowingEnvironment
 import fr.pilmil.sillon.model.LightSource
 import fr.pilmil.sillon.model.LocalWeather
@@ -17,8 +20,11 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
+private fun GardenStore.ready() = (load() as GardenLoad.Ready).garden
+
 private class FakeGardenStorage(
-    private var content: String? = null,
+    var content: String? = null,
+    var failReads: Boolean = false,
 ) : PlatformGardenStorage {
     var quarantineCalls = 0
         private set
@@ -27,7 +33,7 @@ private class FakeGardenStorage(
 
     override fun exists(): Boolean = content != null
 
-    override fun readText(): String? = content
+    override fun readText(): String? = if (failReads) null else content
 
     override fun writeTextAtomic(content: String): Boolean {
         writeCalls++
@@ -48,7 +54,7 @@ class GardenStoreTest {
         val storage = FakeGardenStorage(null)
         val store = GardenStore(storage)
 
-        val garden = store.loadGarden()
+        val garden = store.ready()
 
         assertEquals("Mon Potager", garden.name)
         assertEquals(1, garden.parcels.size)
@@ -61,7 +67,7 @@ class GardenStoreTest {
         val storage = FakeGardenStorage("{ invalid json")
         val store = GardenStore(storage)
 
-        val garden = store.loadGarden()
+        val garden = store.ready()
 
         assertEquals("Mon Potager", garden.name)
         assertEquals(1, storage.quarantineCalls)
@@ -73,7 +79,7 @@ class GardenStoreTest {
     @Test
     fun updateSlotRecordsHistoryOnlyWhenReplacingOrClearingDifferentVegetable() {
         val store = GardenStore(FakeGardenStorage())
-        store.loadGarden()
+        store.ready()
 
         // Plantation initiale sur une case vide (0,0 est "radis" dans le jardin par défaut,
         // on ajoute une parcelle vierge pour tester à partir de zéro).
@@ -110,7 +116,7 @@ class GardenStoreTest {
     @Test
     fun addParcelAndDeleteParcelEnforceBoundsAndKeepAtLeastOneParcel() {
         val store = GardenStore(FakeGardenStorage())
-        val initial = store.loadGarden()
+        val initial = store.ready()
         val initialId = initial.parcels.single().id
 
         // Impossible de supprimer la dernière parcelle
@@ -141,7 +147,7 @@ class GardenStoreTest {
     @Test
     fun settingsUpdatesCoerceValues() {
         val store = GardenStore(FakeGardenStorage())
-        store.loadGarden()
+        store.ready()
 
         val env = store.updateEnvironment(
             environment = GrowingEnvironment.INDOOR,
@@ -174,12 +180,12 @@ class GardenStoreTest {
     @Test
     fun exportCsvStringFormatsBomHeaderAndSlots() {
         val store = GardenStore(FakeGardenStorage())
-        store.loadGarden()
+        store.ready()
         val added = store.addParcel("Pot Basilic", ParcelType.CONTAINER, 1, 2)
         val parcelId = added.garden.parcels.last().id
         store.updateSlot(parcelId, 0, 0, "basilic")
 
-        val csv = store.exportCsvString()
+        val csv = store.exportCsvString()!!
         assertTrue(csv.startsWith("\uFEFF"))
         val lines = csv.removePrefix("\uFEFF").trimEnd().lines()
         assertEquals("Parcelle;Type;Ligne;Colonne;Plante ID;Date Plantation", lines.first())
@@ -188,36 +194,138 @@ class GardenStoreTest {
     }
 
     @Test
-    fun unreadableStorageReturnsDefaultWithoutQuarantineAndWriteFailurePropagates() {
-        val unreadable = object : PlatformGardenStorage {
-            var quarantineCalled = false
-            var writeCalled = false
-            override fun exists(): Boolean = true
-            override fun readText(): String? = null
-            override fun writeTextAtomic(content: String): Boolean {
-                writeCalled = true
-                return false
-            }
-            override fun quarantineCorrupt() {
-                quarantineCalled = true
-            }
-        }
-        val store = GardenStore(unreadable)
-        val garden = store.loadGarden()
-        assertEquals("Mon Potager", garden.name)
-        assertFalse(unreadable.quarantineCalled)
-        assertFalse(unreadable.writeCalled)
+    fun readErrorNeverWritesAndRefusesEveryModification() {
+        val original = GardenCodec.encode(Garden(id = "g", name = "Vrai potager", frostDate = FrostDate(4, 20)))
+        val storage = FakeGardenStorage(original, failReads = true)
+        val store = GardenStore(storage)
+
+        assertEquals(GardenLoad.ReadFailed, store.load())
         assertFalse(store.consumeRecoveryNotice())
 
-        val failedUpdate = store.updateAltitude(500)
-        assertFalse(failedUpdate.saved)
-        assertEquals(500, failedUpdate.garden.altitudeMeters)
+        val results = listOf(
+            store.updateSlot("parcel_demo_1", 0, 0, "tomate"),
+            store.addParcel("Planche", ParcelType.ROW_BED, 2, 2),
+            store.deleteParcel("parcel_demo_1"),
+            store.updateAltitude(500),
+            store.updateFrostDate(3, 3),
+            store.updateWateringConditions(true, LocalWeather.DRY_HOT),
+            store.updateEnvironment(GrowingEnvironment.BALCONY),
+        )
+        results.forEach { assertTrue(it.refused); assertFalse(it.saved) }
+        assertEquals(0, storage.writeCalls)
+        assertEquals(0, storage.quarantineCalls)
+        assertEquals(original, storage.content)
+        assertNull(store.exportCsvString())
+    }
+
+    @Test
+    fun retryAfterTransientReadErrorLoadsTheRealGarden() {
+        val original = GardenCodec.encode(Garden(id = "g", name = "Vrai potager", frostDate = FrostDate(4, 20)))
+        val storage = FakeGardenStorage(original, failReads = true)
+        val store = GardenStore(storage)
+        assertEquals(GardenLoad.ReadFailed, store.load())
+
+        storage.failReads = false
+        val update = store.updateAltitude(700)
+        assertFalse(update.refused)
+        assertTrue(update.saved)
+        assertEquals("Vrai potager", update.garden.name)
+        assertEquals(700, update.garden.altitudeMeters)
+    }
+
+    @Test
+    fun modificationBeforeAnyLoadReadsFirstAndNeverOverwritesExistingFile() {
+        val storage = FakeGardenStorage(GardenCodec.encode(Garden(id = "g", name = "Vrai potager", frostDate = FrostDate(4, 20))), failReads = true)
+        val store = GardenStore(storage)
+        assertTrue(store.updateAltitude(10).refused)
+        assertEquals(0, storage.writeCalls)
+    }
+
+    @Test
+    fun writeFailureKeepsInMemoryGardenAndReportsIt() {
+        val failing = object : PlatformGardenStorage {
+            override fun exists(): Boolean = false
+            override fun readText(): String? = null
+            override fun writeTextAtomic(content: String): Boolean = false
+            override fun quarantineCorrupt() {}
+        }
+        // Fichier absent mais impossible à créer : pas de potager « prêt » à modifier.
+        assertEquals(GardenLoad.ReadFailed, GardenStore(failing).load())
+
+        val storage = FakeGardenStorage()
+        val store = GardenStore(storage)
+        store.ready()
+        val ok = store.updateAltitude(500)
+        assertTrue(ok.saved)
+    }
+
+    @Test
+    fun modificationsUseTheInMemoryGardenWithoutRereadingTheDisk() {
+        val storage = FakeGardenStorage()
+        val store = GardenStore(storage)
+        store.ready()
+        storage.failReads = true
+        val update = store.updateAltitude(900)
+        assertFalse(update.refused)
+        assertTrue(update.saved)
+        assertEquals(900, update.garden.altitudeMeters)
+    }
+
+    @Test
+    fun legacyFileWithoutSchemaVersionIsReadAsVersionOne() {
+        val modern = GardenCodec.encode(Garden(id = "g", name = "Ancien", frostDate = FrostDate(5, 15)))
+        val legacy = modern.lines().filterNot { it.contains("schemaVersion") }.joinToString("\n")
+        assertFalse(legacy.contains("schemaVersion"))
+        val storage = FakeGardenStorage(legacy)
+        val loaded = GardenStore(storage).load() as GardenLoad.Ready
+        assertEquals("Ancien", loaded.garden.name)
+        assertFalse(loaded.recovered)
+        assertEquals(0, storage.writeCalls)
+    }
+
+    @Test
+    fun savedFileCarriesTheSchemaVersion() {
+        val storage = FakeGardenStorage()
+        GardenStore(storage).ready()
+        assertTrue(storage.content!!.contains("\"schemaVersion\": ${GardenCodec.SCHEMA_VERSION}"))
+    }
+
+    @Test
+    fun newerSchemaVersionIsRefusedWithoutOverwriting() {
+        val future = """{ "schemaVersion": ${GardenCodec.SCHEMA_VERSION + 1}, "id": "g", "name": "Futur", "frostDate": { "month": 5, "day": 1 }, "nouveauChamp": { "x": 1 } }"""
+        val storage = FakeGardenStorage(future)
+        val store = GardenStore(storage)
+
+        val load = store.load()
+        assertTrue(load is GardenLoad.NewerVersion)
+        assertEquals(GardenCodec.SCHEMA_VERSION + 1, (load as GardenLoad.NewerVersion).foundVersion)
+        assertTrue(store.updateAltitude(1).refused)
+        assertEquals(0, storage.writeCalls)
+        assertEquals(0, storage.quarantineCalls)
+        assertEquals(future, storage.content)
+    }
+
+    @Test
+    fun exportThenImportRoundTripIsUnchanged() {
+        val garden = Garden(
+            id = "g", name = "Aller-retour", frostDate = FrostDate(4, 2),
+            parcels = listOf(
+                fr.pilmil.sillon.model.Parcel(
+                    "p1", "Carré", ParcelType.RAISED_BED_SQUARES, 2, 2,
+                    listOf(fr.pilmil.sillon.model.ParcelSlot(0, 1, "tomate", 1_700_000_000_000L)),
+                ),
+            ),
+        )
+        val exported = GardenCodec.encode(garden)
+        val imported = GardenCodec.decodeAndValidate(exported, now = 1_750_000_000_000L)
+        assertEquals(garden, imported)
+        assertEquals(exported, GardenCodec.encode(imported))
     }
 
     @Test
     fun updateSlotWithUnknownParcelLeavesGardenUnchanged() {
         val store = GardenStore(FakeGardenStorage())
-        val initial = store.loadGarden()
+        val initial = store.ready()
         val updated = store.updateSlot("inexistant", 0, 0, "tomate")
         assertTrue(updated.saved)
         assertEquals(initial.parcels, updated.garden.parcels)

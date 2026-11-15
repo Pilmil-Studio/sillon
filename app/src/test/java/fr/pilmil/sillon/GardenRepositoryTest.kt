@@ -1,6 +1,7 @@
 package fr.pilmil.sillon
 
 import fr.pilmil.sillon.data.GardenCodec
+import fr.pilmil.sillon.data.GardenFile
 import fr.pilmil.sillon.data.GardenRepository
 import fr.pilmil.sillon.data.GardenValidationException
 import fr.pilmil.sillon.model.FrostDate
@@ -46,7 +47,7 @@ class GardenRepositoryTest {
         val target = GardenRepository(tmp.newFolder("b"))
         val result = import(target, out.toString("UTF-8"))
         assertEquals(sample(), result.getOrThrow())
-        assertEquals(sample(), target.loadGarden())
+        assertEquals(GardenFile.Found(sample()), target.readGarden())
     }
 
     @Test
@@ -65,7 +66,7 @@ class GardenRepositoryTest {
             val failure = import(repo, content).exceptionOrNull()
             assertTrue("Devrait être refusé : ${content.take(40)}", failure is GardenValidationException)
         }
-        assertEquals(sample(), repo.loadGarden())
+        assertEquals(GardenFile.Found(sample()), repo.readGarden())
     }
 
     @Test
@@ -75,46 +76,29 @@ class GardenRepositoryTest {
         repo.saveGarden(sample())
         val neuf = sample(rows = 4, cols = 4)
         assertTrue(import(repo, GardenCodec.encode(neuf)).isSuccess)
-        assertEquals(neuf, repo.loadGarden())
+        assertEquals(GardenFile.Found(neuf), repo.readGarden())
         assertEquals(sample(), GardenCodec.decode(java.io.File(dir, "sillon_garden.json.bak").readText()))
     }
 
     @Test
-    fun fichierCorrompuEstMisDeCoteAvantDeRepartirDuDefaut() {
+    fun lectureSeuleNeToucheNiAuFichierAbsentNiAuFichierCorrompu() {
+        val dir = tmp.newFolder()
+        val repo = GardenRepository(dir)
+        assertEquals(GardenFile.Missing, repo.readGarden())
+        assertEquals(0, dir.listFiles()!!.size)
+
+        java.io.File(dir, "sillon_garden.json").writeText("{ corrompu")
+        assertEquals(GardenFile.Corrupt, repo.readGarden())
+        assertEquals(listOf("sillon_garden.json"), dir.listFiles()!!.map { it.name })
+    }
+
+    @Test
+    fun exportRefuseSiLePotagerEstIllisible() {
         val dir = tmp.newFolder()
         java.io.File(dir, "sillon_garden.json").writeText("{ corrompu")
         val repo = GardenRepository(dir)
-
-        val garden = repo.loadGarden()
-        assertEquals("Mon Potager", garden.name)
-        assertTrue(repo.consumeRecoveryNotice())
-        assertFalse("L'indicateur ne se consomme qu'une fois", repo.consumeRecoveryNotice())
-        val copies = dir.listFiles { f -> f.name.startsWith("sillon_garden.json.corrupt-") }!!
-        assertEquals(1, copies.size)
-        assertEquals("{ corrompu", copies[0].readText())
-        // Le potager par défaut a été réécrit : le rechargement ne signale plus rien.
-        repo.loadGarden()
-        assertFalse(repo.consumeRecoveryNotice())
-    }
-
-    @Test
-    fun auPlusTroisCopiesCorrompuesSontGardees() {
-        val dir = tmp.newFolder()
-        val repo = GardenRepository(dir)
-        repeat(5) {
-            java.io.File(dir, "sillon_garden.json").writeText("cassé $it")
-            repo.loadGarden()
-            Thread.sleep(3) // horodatages distincts
-        }
-        val copies = dir.listFiles { f -> f.name.startsWith("sillon_garden.json.corrupt-") }!!
-        assertEquals(3, copies.size)
-    }
-
-    @Test
-    fun saveGardenRenvoieFauxSiLEcritureEchoue() {
-        val dir = tmp.newFolder()
-        val repo = GardenRepository(java.io.File(dir, "inexistant"))
-        assertFalse(repo.saveGarden(sample()))
+        assertTrue(runCatching { repo.exportToJson(java.io.ByteArrayOutputStream()) }.isFailure)
+        assertTrue(runCatching { repo.exportToCsv(java.io.ByteArrayOutputStream()) }.isFailure)
     }
 
     @Test
@@ -217,31 +201,12 @@ class GardenRepositoryTest {
     }
 
     @Test
-    fun mutationsRepositoryEtExportCsv() {
+    fun exportCsv() {
         val repo = GardenRepository(tmp.newFolder())
-        val initial = repo.loadGarden()
-        assertEquals(1, initial.parcels.size)
-
-        val added = repo.addParcel("Planche Est", ParcelType.ROW_BED, 2, 2)
-        assertTrue(added.saved)
-        assertEquals(2, added.garden.parcels.size)
-        val newParcelId = added.garden.parcels.last().id
-
-        val slotted = repo.updateSlot(newParcelId, 1, 1, "carotte")
-        assertTrue(slotted.saved)
-        assertEquals("carotte", slotted.garden.parcels.last().getSlot(1, 1)?.vegetableId)
-
-        val frosted = repo.updateFrostDate(4, 25)
-        assertTrue(frosted.saved)
-        assertEquals(FrostDate(4, 25), frosted.garden.frostDate)
-
+        repo.saveGarden(sample(rows = 2, cols = 2))
         val csvOut = java.io.ByteArrayOutputStream()
         repo.exportToCsv(csvOut)
         val csv = csvOut.toString("UTF-8")
-        assertTrue(csv.contains("Planche Est;Planche en lignes;2;2;carotte;"))
-
-        val deleted = repo.deleteParcel(newParcelId)
-        assertTrue(deleted.saved)
-        assertEquals(1, deleted.garden.parcels.size)
+        assertTrue(csv.contains("Carré;Carré potager surélevé;1;1;tomate;"))
     }
 }

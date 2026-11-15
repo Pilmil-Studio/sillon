@@ -19,6 +19,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import fr.pilmil.sillon.MainActivity
 import fr.pilmil.sillon.R
+import fr.pilmil.sillon.data.GardenFile
 import fr.pilmil.sillon.data.GardenRepository
 import fr.pilmil.sillon.data.SillonPrefs
 import fr.pilmil.sillon.engine.DashboardPlanner
@@ -76,8 +77,11 @@ class SowingReminderWorker(context: Context, params: WorkerParameters) : Corouti
         val context = applicationContext
         val prefs = SillonPrefs(context)
         if (!prefs.sowingReminders || !SowingReminders.canNotify(context)) return Result.success()
+        // Lecture seule : sans potager lisible (absent, erreur, version plus récente), pas de rappel.
+        val garden = (GardenRepository(context).readGarden() as? GardenFile.Found)?.garden
+            ?: return Result.success()
         val plan = DashboardPlanner.plan(
-            GardenRepository(context).loadGarden(),
+            garden,
             todayLocalDate(),
             FrostEngine(climate = prefs.climate),
         )

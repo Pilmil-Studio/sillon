@@ -1,6 +1,8 @@
 package fr.pilmil.sillon.ui
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -9,6 +11,7 @@ import androidx.compose.material.icons.filled.Eco
 import androidx.compose.material.icons.filled.Healing
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Yard
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,9 +33,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import fr.pilmil.sillon.data.DiseaseCatalog
 import fr.pilmil.sillon.data.FrenchFrostCatalog
+import fr.pilmil.sillon.data.GardenLoad
 import fr.pilmil.sillon.data.GardenStore
 import fr.pilmil.sillon.data.GardenUpdate
 import fr.pilmil.sillon.data.VegetableCatalog
@@ -95,26 +100,41 @@ fun SillonApp(
     var remindersOn by remember { mutableStateOf(prefs.sowingReminders) }
     var smartViewfinderOn by remember { mutableStateOf(prefs.smartViewfinderEnabled) }
     var pickingDepartment by remember { mutableStateOf(false) }
+    var loadProblem by remember { mutableStateOf<GardenLoad?>(null) }
 
     val showIntroHints = remember { prefs.dashboardVisits < 3 }
 
-    LaunchedEffect(Unit) {
-        prefs.dashboardVisits = prefs.dashboardVisits + 1
-        val (garden, recovered) = withContext(Dispatchers.IO) {
-            storeMutex.withLock {
-                store.loadGarden() to store.consumeRecoveryNotice()
+    fun loadFromDisk() {
+        scope.launch {
+            val (result, recovered) = withContext(Dispatchers.IO) {
+                storeMutex.withLock {
+                    store.load() to store.consumeRecoveryNotice()
+                }
+            }
+            if (result is GardenLoad.Ready) {
+                loadProblem = null
+                loadedGarden = result.garden
+            } else {
+                loadProblem = result
+            }
+            if (recovered) {
+                snackbarHostState.showSnackbar(
+                    "Le fichier du potager était illisible : un potager neuf a été créé."
+                )
             }
         }
-        loadedGarden = garden
-        if (recovered) {
-            snackbarHostState.showSnackbar(
-                "Le fichier du potager était illisible : un potager neuf a été créé."
-            )
-        }
+    }
+
+    LaunchedEffect(Unit) {
+        prefs.dashboardVisits = prefs.dashboardVisits + 1
+        loadFromDisk()
     }
 
     LaunchedEffect(externalGarden) {
         if (externalGarden != null) {
+            // Le fichier vient d'être remplacé par l'import : la mémoire du magasin doit suivre.
+            storeMutex.withLock { store.adopt(externalGarden) }
+            loadProblem = null
             loadedGarden = externalGarden
         }
     }
@@ -123,6 +143,12 @@ fun SillonApp(
         scope.launch {
             val result = withContext(Dispatchers.IO) {
                 storeMutex.withLock { change() }
+            }
+            if (result.refused) {
+                snackbarHostState.showSnackbar(
+                    "Le potager n'a pas pu être lu : modification annulée, rien n'a été écrasé."
+                )
+                return@launch
             }
             loadedGarden = result.garden
             onGardenReplaced(result.garden)
@@ -160,8 +186,13 @@ fun SillonApp(
     }
 
     val garden: Garden = loadedGarden ?: run {
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
+        val problem = loadProblem
+        if (problem == null) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        } else {
+            GardenLoadProblemScreen(problem, onRetry = { loadFromDisk() })
         }
         return
     }
@@ -409,5 +440,24 @@ private fun SillonBottomNavigation(
                 colors = navColors,
             )
         }
+    }
+}
+
+/** Le potager n'a pas pu être chargé : on n'affiche rien d'inventé et on ne modifie rien. */
+@Composable
+private fun GardenLoadProblemScreen(problem: GardenLoad, onRetry: () -> Unit) {
+    val message = when (problem) {
+        is GardenLoad.NewerVersion ->
+            "Ce potager a été enregistré par une version plus récente de Sillon. Mettez l'appli à jour pour l'ouvrir. Le fichier n'a pas été modifié."
+        else ->
+            "Le potager n'a pas pu être lu pour l'instant. Votre fichier n'a pas été touché : réessayez dans un instant."
+    }
+    Column(
+        modifier = Modifier.fillMaxSize().padding(32.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(message, textAlign = TextAlign.Center, style = MaterialTheme.typography.bodyLarge)
+        Button(onClick = onRetry) { Text("Réessayer") }
     }
 }
