@@ -143,6 +143,7 @@ Sillon s'inscrit dans la démarche des applications d'intérêt général de **P
 - **[Sommelle](https://github.com/Pilmil-Studio/sommelle) :** Accompagnement de l'insomnie par la TCC-I sans compte ni publicité.
 - **[Lunaison](https://github.com/Pilmil-Studio/lunaison) :** Suivi intime du cycle menstruel respectueux de la vie privée.
 - **[Respire](https://github.com/Pilmil-Studio/respire) :** Déconnexion numérique et micro-pauses respiratoires sereines.
+- **[Fredonne](https://github.com/Pilmil-Studio/fredonne) :** Saisie mélodique à une voix, lecture acoustique et transposition hors-ligne.
 
 ---
 
