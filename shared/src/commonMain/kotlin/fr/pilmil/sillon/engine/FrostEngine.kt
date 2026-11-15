@@ -1,6 +1,7 @@
 package fr.pilmil.sillon.engine
 
 import fr.pilmil.sillon.data.VegetableCatalog
+import fr.pilmil.sillon.model.Climate
 import fr.pilmil.sillon.model.FrostDate
 import fr.pilmil.sillon.model.Garden
 import fr.pilmil.sillon.model.Vegetable
@@ -43,9 +44,58 @@ data class HarvestTask(
     val description: String,
 )
 
+/**
+ * Calendrier ancré sur [FrostDate] : la dernière gelée en [Climate.TEMPERATE], le début de la saison de
+ * plantation du territoire en [Climate.TROPICAL]. Seules les plantes qui ont un calendrier dans ce climat
+ * produisent des tâches.
+ */
 class FrostEngine(
     private val defaultCatalog: List<Vegetable> = VegetableCatalog.ALL_VEGETABLES,
+    val climate: Climate = Climate.TEMPERATE,
 ) {
+
+    private val anchorName = if (climate == Climate.TROPICAL) "le début de saison" else "la dernière gelée"
+
+    private fun List<Vegetable>.forClimate(): List<Vegetable> = filter { climate in it.climates }
+
+    /**
+     * Dates de l'ancre à essayer. Sous les tropiques la saison peut commencer en fin d'année (1er novembre) :
+     * un semis de janvier se rattache à l'ancre de l'année précédente, une récolte longue à celle d'il y a deux ans.
+     */
+    private fun anchors(frostDate: FrostDate, currentDate: LocalDate): List<LocalDate> =
+        if (climate == Climate.TROPICAL) (-2..1).map { getLastFrostDate(frostDate, currentDate.year + it) }
+        else listOf(getLastFrostDate(frostDate, currentDate.year))
+
+    /** Position relative à l'ancre, en toutes lettres (« 3 sem. après la dernière gelée »). */
+    private fun relative(weeks: Int): String =
+        if (climate == Climate.TROPICAL) "${abs(weeks)} sem. ${if (weeks >= 0) "après" else "avant"} le début de saison"
+        else if (weeks >= 0) "$weeks sem. après gelée" else "${abs(weeks)} sem. avant dernière gelée"
+
+    /**
+     * Tâches de semis en intérieur (rebord de fenêtre ou lampe horticole), possibles toute l'année
+     * pour les variétés marquées [Vegetable.indoorSuitable].
+     */
+    fun getIndoorYearRoundTasks(
+        currentDate: LocalDate,
+        toleranceDays: Int = 7,
+        catalog: List<Vegetable> = defaultCatalog,
+    ): List<CalendarTask> {
+        val windowStart = currentDate.minusDays(toleranceDays.toLong())
+        val windowEnd = currentDate.plusDays(toleranceDays.toLong())
+        return catalog
+            .filter { it.indoorSuitable }
+            .map { veg ->
+                CalendarTask(
+                    vegetable = veg,
+                    action = GardeningAction.SOW_INDOORS,
+                    targetDate = currentDate,
+                    windowStart = windowStart,
+                    windowEnd = windowEnd,
+                    daysUntilTarget = 0L,
+                    description = "Semis en intérieur toute l'année pour '${veg.name}' (rebord lumineux ou lampe). Température min : ${veg.tempGerminationMin}°C.",
+                )
+            }
+    }
 
     /**
      * Calcule la date de dernière gelée pour l'année courante de référence.
@@ -72,27 +122,25 @@ class FrostEngine(
         toleranceDays: Int = 7,
         catalog: List<Vegetable> = defaultCatalog,
     ): List<CalendarTask> {
-        val frostDateThisYear = getLastFrostDate(frostDate, currentDate.year)
+        val anchors = anchors(frostDate, currentDate)
 
-        return catalog.mapNotNull { veg ->
+        return catalog.forClimate().mapNotNull { veg ->
             val weeksBefore = veg.sowIndoorsWeeksBeforeFrost ?: return@mapNotNull null
-            val targetDate = frostDateThisYear.minusWeeks(weeksBefore.toLong())
+            val targetDate = anchors.map { it.minusWeeks(weeksBefore.toLong()) }
+                .firstOrNull { currentDate in it.minusDays(toleranceDays.toLong())..it.plusDays(toleranceDays.toLong()) }
+                ?: return@mapNotNull null
             val windowStart = targetDate.minusDays(toleranceDays.toLong())
             val windowEnd = targetDate.plusDays(toleranceDays.toLong())
 
-            if (currentDate in windowStart..windowEnd) {
-                CalendarTask(
-                    vegetable = veg,
-                    action = GardeningAction.SOW_INDOORS,
-                    targetDate = targetDate,
-                    windowStart = windowStart,
-                    windowEnd = windowEnd,
-                    daysUntilTarget = daysBetween(currentDate, targetDate),
-                    description = "Semer '${veg.name}' en terrine ou godets au chaud ($weeksBefore sem. avant la dernière gelée). Température min: ${veg.tempGerminationMin}°C.",
-                )
-            } else {
-                null
-            }
+            CalendarTask(
+                vegetable = veg,
+                action = GardeningAction.SOW_INDOORS,
+                targetDate = targetDate,
+                windowStart = windowStart,
+                windowEnd = windowEnd,
+                daysUntilTarget = daysBetween(currentDate, targetDate),
+                description = "Semer '${veg.name}' en terrine ou godets au chaud ($weeksBefore sem. avant $anchorName). Température min: ${veg.tempGerminationMin}°C.",
+            )
         }.sortedBy { abs(it.daysUntilTarget) }
     }
 
@@ -106,28 +154,26 @@ class FrostEngine(
         toleranceDays: Int = 7,
         catalog: List<Vegetable> = defaultCatalog,
     ): List<CalendarTask> {
-        val frostDateThisYear = getLastFrostDate(frostDate, currentDate.year)
+        val anchors = anchors(frostDate, currentDate)
 
-        return catalog.mapNotNull { veg ->
+        return catalog.forClimate().mapNotNull { veg ->
             val weeksAfter = veg.sowOutdoorsWeeksAfterFrost ?: return@mapNotNull null
-            val targetDate = frostDateThisYear.plusWeeks(weeksAfter.toLong())
+            val targetDate = anchors.map { it.plusWeeks(weeksAfter.toLong()) }
+                .firstOrNull { currentDate in it.minusDays(toleranceDays.toLong())..it.plusDays(toleranceDays.toLong()) }
+                ?: return@mapNotNull null
             val windowStart = targetDate.minusDays(toleranceDays.toLong())
             val windowEnd = targetDate.plusDays(toleranceDays.toLong())
 
-            if (currentDate in windowStart..windowEnd) {
-                val weekInfo = if (weeksAfter >= 0) "$weeksAfter sem. après gelée" else "${abs(weeksAfter)} sem. avant dernière gelée"
-                CalendarTask(
-                    vegetable = veg,
-                    action = GardeningAction.SOW_OUTDOORS,
-                    targetDate = targetDate,
-                    windowStart = windowStart,
-                    windowEnd = windowEnd,
-                    daysUntilTarget = daysBetween(currentDate, targetDate),
-                    description = "Semer '${veg.name}' directement en place ($weekInfo). Espacement dans le rang: ${veg.spacingInRowCm} cm.",
-                )
-            } else {
-                null
-            }
+            val weekInfo = relative(weeksAfter)
+            CalendarTask(
+                vegetable = veg,
+                action = GardeningAction.SOW_OUTDOORS,
+                targetDate = targetDate,
+                windowStart = windowStart,
+                windowEnd = windowEnd,
+                daysUntilTarget = daysBetween(currentDate, targetDate),
+                description = "Semer '${veg.name}' directement en place ($weekInfo). Espacement dans le rang: ${veg.spacingInRowCm} cm.",
+            )
         }.sortedBy { abs(it.daysUntilTarget) }
     }
 
@@ -141,28 +187,26 @@ class FrostEngine(
         toleranceDays: Int = 7,
         catalog: List<Vegetable> = defaultCatalog,
     ): List<CalendarTask> {
-        val frostDateThisYear = getLastFrostDate(frostDate, currentDate.year)
+        val anchors = anchors(frostDate, currentDate)
 
-        return catalog.mapNotNull { veg ->
+        return catalog.forClimate().mapNotNull { veg ->
             val weeksAfter = veg.transplantWeeksAfterFrost ?: return@mapNotNull null
-            val targetDate = frostDateThisYear.plusWeeks(weeksAfter.toLong())
+            val targetDate = anchors.map { it.plusWeeks(weeksAfter.toLong()) }
+                .firstOrNull { currentDate in it.minusDays(toleranceDays.toLong())..it.plusDays(toleranceDays.toLong()) }
+                ?: return@mapNotNull null
             val windowStart = targetDate.minusDays(toleranceDays.toLong())
             val windowEnd = targetDate.plusDays(toleranceDays.toLong())
 
-            if (currentDate in windowStart..windowEnd) {
-                val weekInfo = if (weeksAfter >= 0) "$weeksAfter sem. après gelée" else "${abs(weeksAfter)} sem. avant dernière gelée"
-                CalendarTask(
-                    vegetable = veg,
-                    action = GardeningAction.TRANSPLANT,
-                    targetDate = targetDate,
-                    windowStart = windowStart,
-                    windowEnd = windowEnd,
-                    daysUntilTarget = daysBetween(currentDate, targetDate),
-                    description = "Repiquer '${veg.name}' en pleine terre ($weekInfo). Densité au carré: ${veg.squareFootDensity}/30x30cm.",
-                )
-            } else {
-                null
-            }
+            val weekInfo = relative(weeksAfter)
+            CalendarTask(
+                vegetable = veg,
+                action = GardeningAction.TRANSPLANT,
+                targetDate = targetDate,
+                windowStart = windowStart,
+                windowEnd = windowEnd,
+                daysUntilTarget = daysBetween(currentDate, targetDate),
+                description = "Repiquer '${veg.name}' en pleine terre ($weekInfo). Densité au carré: ${veg.squareFootDensity}/30x30cm.",
+            )
         }.sortedBy { abs(it.daysUntilTarget) }
     }
 
@@ -220,31 +264,30 @@ class FrostEngine(
         currentDate: LocalDate,
         catalog: List<Vegetable> = defaultCatalog,
     ): List<CalendarTask> {
-        val frostDateThisYear = getLastFrostDate(frostDate, currentDate.year)
+        val anchors = anchors(frostDate, currentDate)
 
-        return catalog.mapNotNull { veg ->
-            // Date de plantation théorique
-            val plantDate = when {
-                veg.transplantWeeksAfterFrost != null -> frostDateThisYear.plusWeeks(veg.transplantWeeksAfterFrost.toLong())
-                veg.sowOutdoorsWeeksAfterFrost != null -> frostDateThisYear.plusWeeks(veg.sowOutdoorsWeeksAfterFrost.toLong())
-                else -> null
-            } ?: return@mapNotNull null
+        return catalog.forClimate().mapNotNull { veg ->
+            // Semaines de plantation relatives à l'ancre : repiquage d'abord, sinon semis en place.
+            val plantWeeks = veg.transplantWeeksAfterFrost ?: veg.sowOutdoorsWeeksAfterFrost ?: return@mapNotNull null
 
-            val harvestStart = plantDate.plusDays(veg.daysToHarvest.first.toLong())
-            val harvestEnd = plantDate.plusDays((veg.daysToHarvest.last + (veg.harvestDurationWeeks * 7)).toLong())
+            anchors.firstNotNullOfOrNull { anchor ->
+                val plantDate = anchor.plusWeeks(plantWeeks.toLong())
+                val harvestStart = plantDate.plusDays(veg.daysToHarvest.first.toLong())
+                val harvestEnd = plantDate.plusDays((veg.daysToHarvest.last + (veg.harvestDurationWeeks * 7)).toLong())
 
-            if (currentDate in harvestStart..harvestEnd) {
-                CalendarTask(
-                    vegetable = veg,
-                    action = GardeningAction.HARVEST,
-                    targetDate = harvestStart,
-                    windowStart = harvestStart,
-                    windowEnd = harvestEnd,
-                    daysUntilTarget = daysBetween(currentDate, harvestStart),
-                    description = "Fenêtre de récolte de '${veg.name}' ouverte (durée estimée: ${veg.harvestDurationWeeks} semaines).",
-                )
-            } else {
-                null
+                if (currentDate in harvestStart..harvestEnd) {
+                    CalendarTask(
+                        vegetable = veg,
+                        action = GardeningAction.HARVEST,
+                        targetDate = harvestStart,
+                        windowStart = harvestStart,
+                        windowEnd = harvestEnd,
+                        daysUntilTarget = daysBetween(currentDate, harvestStart),
+                        description = "Fenêtre de récolte de '${veg.name}' ouverte (durée estimée: ${veg.harvestDurationWeeks} semaines).",
+                    )
+                } else {
+                    null
+                }
             }
         }.sortedBy { it.vegetable.name }
     }

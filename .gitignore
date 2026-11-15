@@ -10,3 +10,6 @@ distribution/
 *.keystore
 *.jks
 !app/sillon-debug.keystore
+
+# Environnement virtuel ML local
+tools/ml/.venv/

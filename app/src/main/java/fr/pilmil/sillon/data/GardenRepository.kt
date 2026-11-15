@@ -1,6 +1,7 @@
 package fr.pilmil.sillon.data
 
 import android.content.Context
+import fr.pilmil.core.platform.backup.AndroidBackupVault
 import fr.pilmil.sillon.model.BotanicalFamily
 import fr.pilmil.sillon.model.FrostDate
 import fr.pilmil.sillon.model.Garden
@@ -174,6 +175,31 @@ class GardenRepository(private val dir: File) {
         val content = GardenCodec.encode(garden)
         outputStream.write(content.toByteArray(StandardCharsets.UTF_8))
         outputStream.flush()
+    }
+
+    /** Export chiffré (.pilmil) via AndroidBackupVault de pilmil-core (AES-256-GCM + PBKDF2). */
+    fun exportToPilmil(outputStream: OutputStream, passphrase: CharArray) {
+        val content = GardenCodec.encode(loadGarden())
+        val container = AndroidBackupVault().encrypt(content, passphrase)
+        outputStream.write(container)
+        outputStream.flush()
+    }
+
+    /** Import d'une sauvegarde chiffrée (.pilmil) avec validation complète et sauvegarde `.bak`. */
+    @Synchronized
+    fun importFromPilmil(inputStream: InputStream, passphrase: CharArray): Result<Garden> {
+        return try {
+            val container = inputStream.readBytes()
+            val content = AndroidBackupVault().decrypt(container, passphrase)
+            val importedGarden = GardenCodec.decodeAndValidate(content)
+            if (gardenFile.exists()) {
+                Files.copy(gardenFile.toPath(), File(dir, "$FILE_NAME.bak").toPath(), StandardCopyOption.REPLACE_EXISTING)
+            }
+            if (!saveGarden(importedGarden)) throw IOException("Écriture du potager importé impossible")
+            Result.success(importedGarden)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     /**

@@ -52,8 +52,9 @@ except ImportError:
     print("Erreur : bibliothèques 'requests' et 'Pillow' requises (pip install requests pillow)", file=sys.stderr)
     sys.exit(1)
 
-# Licences compatibles avec la redistribution libre et acceptées par train_sillon.py
-ACCEPTED_LICENSES = {"cc0", "cc-by", "cc-by-sa"}
+# Licences compatibles avec la redistribution libre (cc0, cc-by, cc-by-sa)
+# ou autorisées par accord écrit des auteurs pour l'entraînement des poids sans redistribution des images brutes (author-permission-nc).
+ACCEPTED_LICENSES = {"cc0", "cc-by", "cc-by-sa", "author-permission-nc"}
 GBIF_API_OCCURRENCE = "https://api.gbif.org/v1/occurrence/search"
 INAT_API_OBSERVATIONS = "https://api.inaturalist.org/v1/observations"
 
@@ -238,11 +239,18 @@ def normalize_license(text: str) -> str:
     """Harmonise le nom d'une licence pour vérification."""
     if not text:
         return "unknown"
-    t = re.sub(r"[\s_]+", "-", text.strip().lower())
+    raw = text.strip().lower()
+    if "creativecommons.org/publicdomain/zero" in raw or "cc0" in raw or "public-domain" in raw:
+        return "cc0"
+    if "author-permission" in raw:
+        return "author-permission-nc"
+    if "creativecommons.org/licenses/by-sa" in raw:
+        return "cc-by-sa"
+    if "creativecommons.org/licenses/by/" in raw:
+        return "cc-by"
+    t = re.sub(r"[\s_]+", "-", raw)
     t = re.sub(r"-?(international|unported|generic)", "", t)
     t = re.sub(r"-?v?\d+(\.\d+)?$", "", t)
-    if "cc0" in t or "public-domain" in t:
-        return "cc0"
     if "cc-by-sa" in t:
         return "cc-by-sa"
     if "cc-by" in t and "sa" not in t and "nc" not in t and "nd" not in t:
@@ -331,9 +339,9 @@ def fetch_gbif_records_for_taxon(scientific_name: str, target_count: int, per_us
     offset = 0
     limit = 100
 
-    # Codes de licence acceptés par GBIF correspondant à CC0, CC-BY, CC-BY-SA
-    # Dans GBIF : CC0_1_0, CC_BY_4_0, CC_BY_SA_4_0
-    licenses_gbif = ["CC0_1_0", "CC_BY_4_0", "CC_BY_SA_4_0"]
+    # Codes de licence acceptés par l'API GBIF (/v1/occurrence/search) : CC0_1_0 et CC_BY_4_0
+    # (CC_BY_SA_4_0 provoque une erreur 400 sur ce endpoint GBIF ; la licence média reste vérifiée ensuite).
+    licenses_gbif = ["CC0_1_0", "CC_BY_4_0"]
 
     session = requests.Session()
 
@@ -564,6 +572,15 @@ def download_inat_dataset(out_dir: Path, per_class: int = 150, max_workers: int 
 # Module d'ingestion et remappage de jeux externes / Kaggle (PlantWild, PlantDoc, Roboflow, etc.)
 # =================================================================================================
 
+# Cultures potagères retenues lors de l'ingestion de jeux externes multi-cultures (ex. PlantWild, PlantSeg)
+# pour éviter d'importer du pommier, du blé, du caféier, du maïs ou du soja dans les classes Sillon.
+VEGETABLE_CROPS_FILTER = {
+    "tomato", "potato", "pepper", "bell pepper", "chili", "squash", "zucchini", "cucumber",
+    "pumpkin", "melon", "strawberry", "cabbage", "broccoli", "cauliflower", "kale", "lettuce",
+    "spinach", "bean", "pea", "carrot", "onion", "garlic", "leek", "eggplant", "celery", "radish",
+    "basil", "mint", "parsley",
+}
+
 KEYWORDS_MAP: list[tuple[list[str], str]] = [
     # Mildiou (Late blight, downy mildew)
     (["late blight", "phytophthora", "downy mildew", "pseudoperonospora", "plasmopara"], "mildiou"),
@@ -622,32 +639,56 @@ def ingest_external_dataset(
     attributions = AttributionsManager(out_dir)
     image_exts = {".jpg", ".jpeg", ".png", ".webp", ".bmp"}
     count_per_class: dict[str, int] = {c: 0 for c in SILLON_CLASSES}
+    diag = {"files": 0, "skip_mask": 0, "skip_crop": 0, "skip_noclass": 0, "skip_cap": 0, "skip_dup": 0, "save_fail": 0}
 
     for item in sorted(source_root.rglob("*")):
         if not item.is_file() or item.suffix.lower() not in image_exts:
             continue
+        diag["files"] += 1
+
+        rel_parts = item.relative_to(source_root).parts
+        # Ignorer les dossiers de masques de segmentation (ex. PlantSeg annotations / masks) ou d'images pré-augmentées
+        rel_norm = " ".join(re.sub(r"[^a-z0-9]+", " ", p.lower()).strip() for p in rel_parts)
+        if any(skip_kw in rel_norm.split() for skip_kw in ("mask", "masks", "annotation", "annotations", "label", "labels", "segmented", "grayscale", "augmented")):
+            diag["skip_mask"] += 1
+            continue
+
+        # Si le chemin mentionne une culture, vérifier qu'il s'agit bien d'une plante potagère
+        # (évite d'ingérer Apple rust, Corn blight, Wheat rust, Coffee leaf rust depuis PlantWild/PlantSeg)
+        non_veg_crops = {
+            "apple", "corn", "maize", "wheat", "rice", "coffee", "cotton", "soybean",
+            "grape", "grapevine", "peach", "cherry", "citrus", "orange", "tea", "sugarcane",
+            "tobacco", "banana", "cassava", "blueberry", "maple", "plum", "raspberry", "ginger",
+        }
+        if any(c in rel_norm.split() for c in non_veg_crops) and not any(vc in rel_norm for vc in VEGETABLE_CROPS_FILTER):
+            diag["skip_crop"] += 1
+            continue
 
         # Déterminer la classe par les dossiers parents ou le nom de fichier
         target_class = None
-        for p in reversed(item.relative_to(source_root).parts):
+        for p in reversed(rel_parts):
             target_class = classify_folder_or_name(p)
             if target_class:
                 break
 
         if not target_class or target_class not in SILLON_CLASSES:
+            diag["skip_noclass"] += 1
             continue
 
         if count_per_class[target_class] >= max_images_per_class:
+            diag["skip_cap"] += 1
             continue
 
         try:
             data = item.read_bytes()
         except Exception:
+            diag["save_fail"] += 1
             continue
 
-        # Déduplication par MD5
-        h = compute_image_hash(data)
+        # Déduplication par MD5 (au sein d'une même classe cible uniquement)
+        h = f"{target_class}:{compute_image_hash(data)}"
         if h in attributions.seen_hashes:
+            diag["skip_dup"] += 1
             continue
         attributions.seen_hashes.add(h)
 
@@ -660,8 +701,10 @@ def ingest_external_dataset(
             rel_path = f"{target_class}/{dest_filename}"
             attributions.add(rel_path, source_name, norm_lic, f"Dataset {source_name} contributor", str(item.name))
             count_per_class[target_class] += 1
+        else:
+            diag["save_fail"] += 1
 
-    print("\nBilan de l'ingestion :")
+    print(f"\nBilan de l'ingestion ({diag}) :")
     for c, cnt in count_per_class.items():
         if cnt > 0:
             print(f"  - {c}: {cnt} images")
@@ -735,7 +778,7 @@ def main():
     parser.add_argument("--per-class", type=int, default=150, help="Nombre cible d'images par classe")
     parser.add_argument("--ingest", type=Path, help="Dossier d'un jeu externe (ex. Kaggle) à ingérer")
     parser.add_argument("--source-name", type=str, default="external", help="Nom du jeu externe pour l'attribution")
-    parser.add_argument("--default-license", type=str, default="cc-by", help="Licence du jeu ingéré (cc0, cc-by, cc-by-sa)")
+    parser.add_argument("--default-license", type=str, default="cc-by", help="Licence du jeu ingéré (cc0, cc-by, cc-by-sa, author-permission-nc)")
     parser.add_argument("--verify", type=Path, help="Vérifier la conformité d'un dossier pour train_sillon.py --extra-field")
 
     args = parser.parse_args()

@@ -16,4 +16,4 @@ VOS DONNÉES RESTENT CHEZ VOUS
 • Données de votre potager sauvegardées localement.
 • Gratuite et libre (MPL-2.0) : le code est transparent, auditable et respectueux de ses utilisateurs.
 
-Code source : https://github.com/pilmil/sillon
+Code source : https://github.com/Pilmil-Studio/sillon

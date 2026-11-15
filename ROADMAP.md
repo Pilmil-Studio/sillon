@@ -6,11 +6,12 @@
 - **v1.0 (socle & validation)** :
   - Évaluation du modèle embarqué (14 classes, 1,1 Mo) sur plusieurs centaines de vraies photos de jardin, avec publication honnête du taux de réussite réel.
   - Première release étiquetée sur GitHub et fiche Google Play / F-Droid.
-- **v1.5 (mémoire du jardin)** :
+- **v1.5 (mémoire du jardin & culture urbaine)** :
   - Historique pluriannuel des cultures par emplacement avec alertes de rotation.
   - Conseils d'arrosage tenant compte du paillage et de la météo saisie (100 % hors-ligne).
   - Intégration de variétés anciennes et semences reproductibles dans le catalogue.
   - Modes « Balcon » (pots, orientation, vent) et « Intérieur » (calendrier sans gelée, estimation de la lumière) pour les personnes en appartement — voir [`specs/balcon-interieur.md`](specs/balcon-interieur.md).
+  - Prochain entraînement du modèle photo (renforcement de la classe `sain` sur aromatiques/salades en pot, ajout de `tetranyques`/`cochenilles`, gestion des stress hydriques et de l'étiolement couplée au triage du terreau) — voir [`specs/modele-diagnostic-ia.md`](specs/modele-diagnostic-ia.md) et [`tools/ml/README.md`](tools/ml/README.md#pistes-damélioration-pour-le-prochain-entraînement-v15).
 - **v2.0 (horizon 2028, sous réserve de partenariat/financement)** :
   - Détection d'objets en direct caméra (type YOLO nano quantifié TFLite/ONNX) après constitution d'un jeu d'images annotées.
 

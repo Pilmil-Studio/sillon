@@ -14,3 +14,6 @@ actual fun rememberReminderPermissionRequester(onResult: (Boolean) -> Unit): () 
         onResult(granted)
     }
 }
+
+@Composable
+actual fun rememberAmbientLuxSensor(): Float? = null

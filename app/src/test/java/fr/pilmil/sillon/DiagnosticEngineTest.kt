@@ -2,7 +2,9 @@ package fr.pilmil.sillon
 
 import fr.pilmil.sillon.data.DiseaseCatalog
 import fr.pilmil.sillon.data.VegetableCatalog
+import fr.pilmil.sillon.engine.AmbientLightCategory
 import fr.pilmil.sillon.engine.DiagnosticEngine
+import fr.pilmil.sillon.engine.LightEstimator
 import fr.pilmil.sillon.model.BotanicalFamily
 import fr.pilmil.sillon.model.PlantOrgan
 import org.junit.Assert.assertEquals
@@ -94,5 +96,52 @@ class DiagnosticEngineTest {
         assertFalse(slugResults.isEmpty())
         val slugMatch = slugResults.find { it.disease.id == "limaces" }
         assertNotNull("Les limaces doivent être identifiées sur la salade", slugMatch)
+    }
+
+    @Test
+    fun testIndoorPestsAndPhysiologicalDisordersDiagnosis() {
+        val gnatResults = engine.diagnose(
+            organ = PlantOrgan.SEEDLING,
+            symptoms = listOf("petits moucherons noirs terreau", "larves translucides"),
+        )
+        assertFalse(gnatResults.isEmpty())
+        assertEquals("moucherons_terreau", gnatResults.first().disease.id)
+
+        val spiderMiteResults = engine.diagnose(
+            organ = PlantOrgan.LEAF,
+            symptoms = listOf("fines toiles soyeuses", "acariens", "appartement chauffe"),
+        )
+        assertFalse(spiderMiteResults.isEmpty())
+        assertEquals("tetranyques", spiderMiteResults.first().disease.id)
+
+        val mealybugResults = engine.diagnose(
+            organ = PlantOrgan.STEM,
+            symptoms = listOf("amas cotonneux blancs", "cochenilles", "miellat collant"),
+        )
+        assertFalse(mealybugResults.isEmpty())
+        assertEquals("cochenilles", mealybugResults.first().disease.id)
+
+        val etiolationResults = engine.diagnose(
+            organ = PlantOrgan.SEEDLING,
+            symptoms = listOf("tiges longues fines pales filent", "manque de lumiere"),
+        )
+        assertFalse(etiolationResults.isEmpty())
+        assertEquals("etiolement", etiolationResults.first().disease.id)
+
+        val rootRotResults = engine.diagnose(
+            organ = PlantOrgan.ROOT,
+            symptoms = listOf("racines brunes molles malodorantes", "pot detrempe coupelle"),
+        )
+        assertFalse(rootRotResults.isEmpty())
+        assertEquals("exces_eau_racines", rootRotResults.first().disease.id)
+    }
+
+    @Test
+    fun testLightEstimatorCategories() {
+        assertEquals(AmbientLightCategory.LOW, LightEstimator.classifyLux(350f))
+        assertEquals(AmbientLightCategory.MEDIUM, LightEstimator.classifyLux(2_500f))
+        assertEquals(AmbientLightCategory.BRIGHT_INDIRECT, LightEstimator.classifyLux(8_000f))
+        assertEquals(AmbientLightCategory.DIRECT_SUN, LightEstimator.classifyLux(22_000f))
+        assertTrue(LightEstimator.formatSummary(4_200f).contains("4200 lx"))
     }
 }

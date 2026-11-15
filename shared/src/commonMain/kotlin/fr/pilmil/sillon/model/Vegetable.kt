@@ -1,5 +1,6 @@
 package fr.pilmil.sillon.model
 
+import kotlin.math.max
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -83,9 +84,13 @@ data class Vegetable(
     val indoorSuitable: Boolean = false,
     val minContainerLiters: Int? = null,
     val minDirectSunHours: Int? = null,
+    val climates: Set<Climate> = setOf(Climate.TEMPERATE),
+    val indicative: Boolean = false,
+    val heirloomVarieties: List<String> = emptyList(),
 ) {
     val daysToEmergeMin: Int get() = daysToEmerge.first
     val daysToEmergeMax: Int get() = daysToEmerge.last
     val daysToHarvestMin: Int get() = daysToHarvest.first
     val daysToHarvestMax: Int get() = daysToHarvest.last
+    val needsMoreSpace: Boolean get() = max(spacingInRowCm, spacingBetweenRowsCm) >= 100
 }

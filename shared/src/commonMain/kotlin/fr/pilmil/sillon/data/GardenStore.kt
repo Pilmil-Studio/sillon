@@ -2,12 +2,20 @@ package fr.pilmil.sillon.data
 
 import androidx.compose.runtime.Composable
 import fr.pilmil.sillon.model.BotanicalFamily
+import fr.pilmil.sillon.model.CropHistoryEntry
 import fr.pilmil.sillon.model.FrostDate
 import fr.pilmil.sillon.model.Garden
+import fr.pilmil.sillon.model.GrowingEnvironment
+import fr.pilmil.sillon.model.LightSource
+import fr.pilmil.sillon.model.LocalWeather
+import fr.pilmil.sillon.model.Orientation
 import fr.pilmil.sillon.model.Parcel
 import fr.pilmil.sillon.model.ParcelSlot
 import fr.pilmil.sillon.model.ParcelType
+import fr.pilmil.sillon.model.WindExposure
+import fr.pilmil.sillon.model.epochMillisToLocalDate
 import fr.pilmil.sillon.model.nowEpochMillis
+import fr.pilmil.sillon.model.todayLocalDate
 
 data class GardenUpdate(val garden: Garden, val saved: Boolean)
 
@@ -45,11 +53,28 @@ class GardenStore(private val storage: PlatformGardenStorage) {
 
     fun updateSlot(parcelId: String, row: Int, col: Int, vegetableId: String?): GardenUpdate {
         val current = loadGarden()
+        val nextHistory = current.history.toMutableList()
         val updatedParcels = current.parcels.map { parcel ->
             if (parcel.id != parcelId) {
                 parcel
             } else {
                 val existingSlot = parcel.slots.find { it.row == row && it.col == col }
+                val prevVegId = existingSlot?.vegetableId
+                if (prevVegId != null && prevVegId != vegetableId) {
+                    val prevFamily = VegetableCatalog.getById(prevVegId)?.family
+                    if (prevFamily != null) {
+                        val year = existingSlot.plantedDate?.let { epochMillisToLocalDate(it).year } ?: todayLocalDate().year
+                        val entry = CropHistoryEntry(
+                            parcelId = parcelId,
+                            row = row,
+                            col = col,
+                            year = year,
+                            family = prevFamily,
+                            vegetableId = prevVegId,
+                        )
+                        if (entry !in nextHistory) nextHistory.add(entry)
+                    }
+                }
                 val nextSlots = parcel.slots.filterNot { it.row == row && it.col == col }.toMutableList()
                 if (vegetableId != null) {
                     val now = nowEpochMillis()
@@ -63,12 +88,18 @@ class GardenStore(private val storage: PlatformGardenStorage) {
                 parcel.copy(slots = nextSlots)
             }
         }
-        val updated = current.copy(parcels = updatedParcels)
+        val updated = current.copy(parcels = updatedParcels, history = nextHistory)
         val saved = saveGarden(updated)
         return GardenUpdate(updated, saved)
     }
 
-    fun addParcel(name: String, type: ParcelType, rows: Int, cols: Int): GardenUpdate {
+    fun addParcel(
+        name: String,
+        type: ParcelType,
+        rows: Int,
+        cols: Int,
+        containerVolumeLiters: Int? = null,
+    ): GardenUpdate {
         val current = loadGarden()
         val newParcel = Parcel(
             id = "parcel_${nowEpochMillis()}",
@@ -77,8 +108,30 @@ class GardenStore(private val storage: PlatformGardenStorage) {
             rows = rows.coerceIn(1, 8),
             cols = cols.coerceIn(1, 8),
             slots = emptyList(),
+            containerVolumeLiters = containerVolumeLiters?.coerceIn(1, 2000),
         )
         val updated = current.copy(parcels = current.parcels + newParcel)
+        val saved = saveGarden(updated)
+        return GardenUpdate(updated, saved)
+    }
+
+    fun updateEnvironment(
+        environment: GrowingEnvironment,
+        orientation: Orientation? = null,
+        windExposure: WindExposure? = null,
+        covered: Boolean = false,
+        lightSource: LightSource? = null,
+        growLightHoursPerDay: Int? = null,
+    ): GardenUpdate {
+        val current = loadGarden()
+        val updated = current.copy(
+            environment = environment,
+            orientation = orientation,
+            windExposure = windExposure,
+            covered = covered,
+            lightSource = lightSource,
+            growLightHoursPerDay = growLightHoursPerDay?.coerceIn(1, 24),
+        )
         val saved = saveGarden(updated)
         return GardenUpdate(updated, saved)
     }
@@ -95,6 +148,25 @@ class GardenStore(private val storage: PlatformGardenStorage) {
         val current = loadGarden()
         val updated = current.copy(
             frostDate = FrostDate(month.coerceIn(1, 12), day.coerceIn(1, 31)),
+        )
+        val saved = saveGarden(updated)
+        return GardenUpdate(updated, saved)
+    }
+
+    fun updateAltitude(meters: Int): GardenUpdate {
+        val current = loadGarden()
+        val updated = current.copy(
+            altitudeMeters = meters.coerceIn(0, 3000),
+        )
+        val saved = saveGarden(updated)
+        return GardenUpdate(updated, saved)
+    }
+
+    fun updateWateringConditions(mulched: Boolean, localWeather: LocalWeather): GardenUpdate {
+        val current = loadGarden()
+        val updated = current.copy(
+            mulched = mulched,
+            localWeather = localWeather,
         )
         val saved = saveGarden(updated)
         return GardenUpdate(updated, saved)

@@ -40,10 +40,20 @@ class IosGardenStorage : PlatformGardenStorage {
     override fun quarantineCorrupt() {
         val target = "$docsDir/$FILE_NAME.corrupt-${nowEpochMillis()}"
         fileManager.moveItemAtPath(gardenPath, toPath = target, error = null)
+        val entries = fileManager.contentsOfDirectoryAtPath(docsDir, error = null)
+            ?.mapNotNull { it as? String }
+            ?.filter { it.startsWith("$FILE_NAME.corrupt-") }
+            ?.sortedDescending()
+            ?.drop(MAX_CORRUPT_COPIES)
+            .orEmpty()
+        entries.forEach { name ->
+            fileManager.removeItemAtPath("$docsDir/$name", error = null)
+        }
     }
 
     private companion object {
         const val FILE_NAME = "sillon_garden.json"
+        const val MAX_CORRUPT_COPIES = 3
     }
 }
 

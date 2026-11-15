@@ -7,17 +7,24 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -42,7 +49,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import fr.pilmil.sillon.data.DiseaseCatalog
 import fr.pilmil.sillon.data.SillonPrefs
+import fr.pilmil.sillon.engine.AbioticSymptomHint
+import fr.pilmil.sillon.engine.PhotoDiagnosis
 import fr.pilmil.sillon.engine.PhotoVerdict
+import fr.pilmil.sillon.engine.SubstrateMoisture
 import fr.pilmil.sillon.ui.components.SillonButton
 import fr.pilmil.sillon.ui.components.SillonCard
 import fr.pilmil.sillon.ui.components.SillonOutlinedButton
@@ -184,15 +194,23 @@ fun PhotoDiagnosisCard(onOpenDisease: (String) -> Unit) {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun VerdictText(verdict: PhotoVerdict, onOpenDisease: (String) -> Unit) {
     fun percent(p: Float) = "${(p * 100).toInt()} %"
     when (verdict) {
-        is PhotoVerdict.Healthy -> Text(
-            "Feuille d'apparence saine (confiance ${percent(verdict.confidence)}).",
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.SemiBold,
-        )
+        is PhotoVerdict.Healthy -> {
+            Text(
+                "Feuille d'apparence saine (confiance ${percent(verdict.confidence)}).",
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.SemiBold,
+            )
+            Text(
+                "Si la plante semble malgré tout affaiblie (tiges qui filent, feuillage mou), vérifiez l'état du terreau et l'exposition ci-dessous.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
         is PhotoVerdict.Disease -> {
             val name = DiseaseCatalog.getById(verdict.catalogId)?.name ?: verdict.catalogId
             Text(
@@ -203,13 +221,100 @@ private fun VerdictText(verdict: PhotoVerdict, onOpenDisease: (String) -> Unit) 
             TextButton(onClick = { onOpenDisease(verdict.catalogId) }) { Text("Voir la fiche $name") }
         }
         is PhotoVerdict.Unsure -> {
-            Text(
-                "Je ne reconnais pas ce problème avec assez de certitude. Utilisez la clé de diagnostic ci-dessous.",
-                style = MaterialTheme.typography.bodyLarge,
-            )
-            verdict.leads.forEach { (id, p) ->
-                val name = DiseaseCatalog.getById(id)?.name ?: id
-                TextButton(onClick = { onOpenDisease(id) }) { Text("Piste possible : $name (${percent(p)})") }
+            var selectedMoisture by remember { mutableStateOf<SubstrateMoisture?>(null) }
+            var selectedHint by remember { mutableStateOf<AbioticSymptomHint?>(null) }
+            val abioticLeads = remember(selectedMoisture, selectedHint) {
+                PhotoDiagnosis.resolveAbioticTriage(selectedMoisture, selectedHint)
+            }
+
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    "Je ne reconnais pas de maladie foliaire franche avec assez de certitude.",
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+                verdict.leads.forEach { (id, p) ->
+                    val name = DiseaseCatalog.getById(id)?.name ?: id
+                    TextButton(onClick = { onOpenDisease(id) }) { Text("Piste possible : $name (${percent(p)})") }
+                }
+
+                Text(
+                    "Affiner avec le contexte (arrosage, lumière, pot) :",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    "1. État du terreau à 2–3 cm de profondeur :",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    SubstrateMoisture.entries.forEach { m ->
+                        val selected = selectedMoisture == m
+                        Surface(
+                            modifier = Modifier.clickable {
+                                selectedMoisture = if (selected) null else m
+                            },
+                            shape = RoundedCornerShape(8.dp),
+                            color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
+                            border = BorderStroke(
+                                1.dp,
+                                if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                            ),
+                        ) {
+                            Text(
+                                text = m.frenchLabel,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+                                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                            )
+                        }
+                    }
+                }
+
+                Text(
+                    "2. Allure générale ou indice :",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    AbioticSymptomHint.entries.forEach { h ->
+                        val selected = selectedHint == h
+                        Surface(
+                            modifier = Modifier.clickable {
+                                selectedHint = if (selected) null else h
+                            },
+                            shape = RoundedCornerShape(8.dp),
+                            color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
+                            border = BorderStroke(
+                                1.dp,
+                                if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                            ),
+                        ) {
+                            Text(
+                                text = h.frenchLabel,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+                                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                            )
+                        }
+                    }
+                }
+
+                abioticLeads.forEach { id ->
+                    val name = DiseaseCatalog.getById(id)?.name ?: id
+                    TextButton(onClick = { onOpenDisease(id) }) {
+                        Text("Fiche conseillée : $name", fontWeight = FontWeight.SemiBold)
+                    }
+                }
             }
         }
     }

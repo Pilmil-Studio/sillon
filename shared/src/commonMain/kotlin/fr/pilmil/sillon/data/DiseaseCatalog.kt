@@ -466,6 +466,180 @@ object DiseaseCatalog {
         ),
     )
 
+    val MOUCHERONS_TERREAU = Disease(
+        id = "moucherons_terreau",
+        name = "Moucherons du terreau (Sciarides)",
+        latinName = "Bradysia spp.",
+        pathogenType = PathogenType.PEST,
+        affectedOrgans = listOf(PlantOrgan.ROOT, PlantOrgan.SEEDLING),
+        symptoms = listOf(
+            "Petits moucherons noirs (2 à 3 mm) qui s'envolent du terreau lors de l'arrosage",
+            "Larves translucides à tête noire dans les premiers centimètres du substrat humide",
+            "Ralentissement de la croissance et flétrissement des jeunes semis en pot",
+            "Racines fines grignotées favorisant l'entrée de champignons racinaires",
+        ),
+        causes = listOf(
+            "Substrat maintenu constamment détrempé en surface (arrosages trop fréquents en intérieur)",
+            "Terreau riche en matière organique peu décomposée ou tourbe humide",
+        ),
+        organicRemedies = listOf(
+            "Laisser sécher le terreau sur 2 à 3 cm de profondeur entre deux arrosages",
+            "Arroser par capillarité (par la coupelle, en vidant l'excédent après 20 minutes)",
+            "Poser des pièges chromatiques jaunes englués près des pots pour capturer les adultes",
+            "Appliquer des nématodes auxiliaires (Steinernema feltiae) dans l'eau d'arrosage contre les larves",
+        ),
+        targetFamilies = emptyList(),
+        preventiveMeasures = listOf(
+            "Surfaçage du pot avec une couche de 1 cm de sable grossier ou de pouzzolane fine pour empêcher la ponte",
+            "Éviter toute eau stagnante dans les soucoupes",
+        ),
+    )
+
+    val TETRANYQUES = Disease(
+        id = "tetranyques",
+        name = "Tétranyques (Araignées rouges)",
+        latinName = "Tetranychus urticae",
+        pathogenType = PathogenType.PEST,
+        affectedOrgans = listOf(PlantOrgan.LEAF, PlantOrgan.STEM),
+        symptoms = listOf(
+            "Minuscules ponctuations jaunes ou décolorées (aspect piqueté / grisâtre) sur le dessus des feuilles",
+            "Fines toiles soyeuses visibles à l'aisselle des feuilles et sous le limbe",
+            "Acariens minuscules (< 0,5 mm, jaunâtres ou rougeâtres) au revers des feuilles",
+            "Dessèchement et chute prématurée du feuillage",
+        ),
+        causes = listOf(
+            "Atmosphère chaude et très sèche (appartement chauffé en hiver, rebord au-dessus d'un radiateur, balcon brûlant)",
+            "Manque d'humidité ambiante (< 40 % d'hygrométrie)",
+        ),
+        organicRemedies = listOf(
+            "Bassiner / brumiser régulièrement le feuillage (dessus et dessous) à l'eau non calcaire pour augmenter l'hygrométrie",
+            "Doucher le plant à l'eau tiède pour décrocher les toiles et les acariens",
+            "Pulvériser une solution de savon noir dilué (15 ml/L) sous les feuilles en cas de forte attaque",
+            "Lâcher d'acariens prédateurs auxiliaires (Phytoseiulus persimilis ou Amblyseius californicus)",
+        ),
+        targetFamilies = emptyList(),
+        preventiveMeasures = listOf(
+            "Éloigner les pots des radiateurs et sources d'air sec",
+            "Poser les pots sur un lit de billes d'argile humides (sans que le fond du pot ne trempe dans l'eau)",
+        ),
+    )
+
+    val COCHENILLES = Disease(
+        id = "cochenilles",
+        name = "Cochenilles (farineuses et à carapace)",
+        latinName = "Pseudococcidae / Coccidae",
+        pathogenType = PathogenType.PEST,
+        affectedOrgans = listOf(PlantOrgan.STEM, PlantOrgan.LEAF),
+        symptoms = listOf(
+            "Amas cotonneux blancs (cochenilles farineuses) ou petits boucliers bruns immobiles le long des tiges et nervures",
+            "Dépôt collant et brillant (miellat) sur les feuilles, parfois recouvert de fumagine noire",
+            "Jaunissement des feuilles et affaiblissement progressif de la plante en pot",
+        ),
+        causes = listOf(
+            "Introduction via un nouveau plant contaminé en intérieur ou sur balcon abrité",
+            "Air confiné, chaleur constante et excès d'engrais azoté",
+        ),
+        organicRemedies = listOf(
+            "Retirer les cochenilles manuellement avec un coton-tige imbibé d'eau savonneuse ou d'alcool dilué",
+            "Pulvériser un mélange d'eau, de savon noir (1 cuillère à soupe/L) et d'huile végétale (1 cuillère à café/L)",
+            "Isoler immédiatement le pot atteint des autres plantes d'intérieur",
+        ),
+        targetFamilies = emptyList(),
+        preventiveMeasures = listOf(
+            "Inspecter le revers des feuilles et les tiges de tout nouveau plant avant de l'installer",
+            "Aérer régulièrement les pièces de culture en intérieur",
+        ),
+    )
+
+    val ETIOLEMENT = Disease(
+        id = "etiolement",
+        name = "Étiolement (Manque de lumière)",
+        latinName = null,
+        pathogenType = PathogenType.PHYSIOLOGICAL,
+        affectedOrgans = listOf(PlantOrgan.STEM, PlantOrgan.SEEDLING, PlantOrgan.LEAF),
+        symptoms = listOf(
+            "Tiges anormalement longues, fines, pâles et fragiles qui filent et se couchent",
+            "Espacement excessif entre les nœuds (entre-nœuds allongés)",
+            "Feuilles petites, vert pâle ou jaunâtres, orientées vers la fenêtre",
+            "Jeunes semis qui s'effondrent sous leur propre poids",
+        ),
+        causes = listOf(
+            "Éclairement insuffisant en intérieur (éloignement de la fenêtre, exposition nord, jours courts d'hiver)",
+            "Température de la pièce trop élevée (20–22 °C) par rapport à la faible quantité de lumière reçue",
+        ),
+        organicRemedies = listOf(
+            "Rapprocher immédiatement le contenant au plus près d'une fenêtre bien exposée (Sud, Sud-Est, Sud-Ouest)",
+            "Installer une lampe horticole LED (spectre blanc lumière du jour, 12 à 14 h/j) à 15–25 cm au-dessus de la canopée",
+            "Abaisser la température ambiante (pièce plus fraîche la nuit) pour ralentir l'allongement des tiges",
+            "Pour les tomates en godet : rempoter en enterrant la tige jusqu'aux premières feuilles",
+        ),
+        targetFamilies = emptyList(),
+        preventiveMeasures = listOf(
+            "Tourner les pots d'un quart de tour tous les 2 à 3 jours sur un rebord de fenêtre",
+            "Ne pas semer trop tôt en saison sans éclairage d'appoint si la température intérieure dépasse 19 °C",
+        ),
+    )
+
+    val EXCES_EAU_RACINES = Disease(
+        id = "exces_eau_racines",
+        name = "Asphyxie et pourriture racinaire (Excès d'eau)",
+        latinName = null,
+        pathogenType = PathogenType.PHYSIOLOGICAL,
+        affectedOrgans = listOf(PlantOrgan.ROOT, PlantOrgan.LEAF, PlantOrgan.STEM),
+        symptoms = listOf(
+            "Feuilles basses qui jaunissent, deviennent molles et tombent malgré un terreau humide",
+            "Flétrissement paradoxal de la plante alors que le pot est lourd et détrempé",
+            "Racines brunes, molles et malodorantes au dépotage (au lieu de racines fermes et blanches)",
+            "Moisissure blanche ou verdâtre à la surface du substrat",
+        ),
+        causes = listOf(
+            "Arrosages trop rapprochés sans attendre le ressuyage du terreau",
+            "Pot sans trou de drainage ou eau stagnante permanente dans la coupelle",
+            "Substrat trop compacté et asphyxiant",
+        ),
+        organicRemedies = listOf(
+            "Suspendre tout arrosage et vider immédiatement la soucoupe",
+            "Dépoter, retirer le terreau détrempé, couper les racines brunes ou pourries avec un sécateur propre",
+            "Rempoter dans un terreau neuf et drainant (ajout de perlite, pouzzolane ou billes d'argile au fond)",
+        ),
+        targetFamilies = emptyList(),
+        preventiveMeasures = listOf(
+            "Toujours utiliser des pots percés au fond avec une couche de drainage",
+            "Enfoncer un doigt sur 2 à 3 cm dans le substrat avant d'arroser : n'arroser que si c'est sec",
+            "Vider systématiquement les coupelles 15 à 20 minutes après l'arrosage",
+        ),
+    )
+
+    val MANQUE_EAU = Disease(
+        id = "manque_eau",
+        name = "Stress hydrique (Manque d'eau / Coup de chaud)",
+        latinName = null,
+        pathogenType = PathogenType.PHYSIOLOGICAL,
+        affectedOrgans = listOf(PlantOrgan.LEAF, PlantOrgan.STEM, PlantOrgan.SEEDLING),
+        symptoms = listOf(
+            "Feuilles molles, ternes et pendantes en journée, alors que le terreau est sec et léger",
+            "Bords des feuilles qui brunissent, sèchent et deviennent cassants",
+            "Motte rétractée qui se décolle des parois du pot",
+            "Chute prématurée des fleurs ou des jeunes fruits en pot sur balcon exposé",
+        ),
+        causes = listOf(
+            "Arrosages insuffisants ou trop espacés par rapport au volume du pot",
+            "Pot trop petit ou exposé au plein soleil et au vent (dessèchement rapide)",
+            "Motte devenue hydrophobe : l'eau coule directement le long des parois sans mouiller le cœur",
+        ),
+        organicRemedies = listOf(
+            "Réhydrater la motte par bassinage : plonger le pot dans une bassine d'eau à température ambiante pendant 15 à 20 minutes jusqu'à arrêt des bulles, puis laisser égoutter",
+            "Placer temporairement le pot à la mi-ombre le temps que le feuillage retrouve sa turgescence",
+            "Arroser tôt le matin ou le soir, jamais en plein soleil sur un substrat brûlant",
+        ),
+        targetFamilies = emptyList(),
+        preventiveMeasures = listOf(
+            "Pailler la surface des pots (chanvre, lin, broyat fin) pour limiter l'évaporation",
+            "Choisir des pots suffisamment profonds et éviter les petits contenants noirs en plein soleil",
+            "Griffer légèrement la croûte superficielle du terreau avant d'arroser",
+        ),
+    )
+
     val ALL_DISEASES: List<Disease> = listOf(
         MILDIOU,
         ALTERNARIOSE,
@@ -482,6 +656,12 @@ object DiseaseCatalog {
         FONTE_DES_SEMIS,
         DORYPHORE,
         ANTHRACNOSE,
+        MOUCHERONS_TERREAU,
+        TETRANYQUES,
+        COCHENILLES,
+        ETIOLEMENT,
+        EXCES_EAU_RACINES,
+        MANQUE_EAU,
     )
 
     private val diseaseMap: Map<String, Disease> by lazy {

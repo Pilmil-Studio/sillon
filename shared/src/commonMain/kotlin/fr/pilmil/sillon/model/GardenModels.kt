@@ -90,6 +90,13 @@ data class Parcel(
 }
 
 @Serializable
+enum class LocalWeather(val frenchLabel: String) {
+    NORMAL("Temps normal"),
+    DRY_HOT("Sec et chaud"),
+    RAINY("Pluvieux / humide"),
+}
+
+@Serializable
 data class Garden(
     val id: String,
     val name: String,
@@ -101,6 +108,10 @@ data class Garden(
     val covered: Boolean = false,
     val lightSource: LightSource? = null,
     val growLightHoursPerDay: Int? = null,
+    val altitudeMeters: Int = 0,
+    val history: List<CropHistoryEntry> = emptyList(),
+    val mulched: Boolean = false,
+    val localWeather: LocalWeather = LocalWeather.NORMAL,
 )
 
 @Serializable

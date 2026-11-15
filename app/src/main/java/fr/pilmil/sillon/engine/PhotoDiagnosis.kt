@@ -43,6 +43,21 @@ sealed interface PhotoVerdict {
     data class Unsure(val leads: List<Pair<String, Float>>) : PhotoVerdict
 }
 
+/** État du substrat à 2–3 cm de profondeur pour départager les stress hydriques qu'une photo seule ne distingue pas. */
+enum class SubstrateMoisture(val frenchLabel: String) {
+    DRY("Terreau sec"),
+    MOIST("Terreau frais"),
+    WATERLOGGED("Terreau détrempé"),
+}
+
+/** Indices visuels complémentaires (port de la plante, environnement du pot). */
+enum class AbioticSymptomHint(val frenchLabel: String) {
+    WILTED_OR_DROOPING("Feuilles molles / tombantes"),
+    STRETCHED_PALE_STEMS("Tiges longues et pâles vers la fenêtre"),
+    TINY_WEBS_OR_SPECKS("Feuilles piquetées / fines toiles"),
+    GNATS_FROM_SOIL("Moucherons noirs sur le terreau"),
+}
+
 object PhotoDiagnosis {
 
     const val HEALTHY_LABEL = "sain"
@@ -79,5 +94,44 @@ object PhotoDiagnosis {
             .filter { probabilities[it] >= MIN_LEAD }
             .mapNotNull { i -> spec.classes[i].catalogId?.let { it to probabilities[i] } }
         return PhotoVerdict.Unsure(leads)
+    }
+
+    /**
+     * Oriente vers les fiches de troubles abiotiques ou ravageurs d'intérieur lorsque la photo seule
+     * ne permet pas de trancher (ex. flétrissement par manque d'eau vs asphyxie racinaire, étiolement).
+     */
+    fun resolveAbioticTriage(
+        moisture: SubstrateMoisture?,
+        hint: AbioticSymptomHint?,
+    ): List<String> {
+        val suggestions = linkedSetOf<String>()
+        when (hint) {
+            AbioticSymptomHint.STRETCHED_PALE_STEMS -> suggestions.add("etiolement")
+            AbioticSymptomHint.GNATS_FROM_SOIL -> {
+                suggestions.add("moucherons_terreau")
+                suggestions.add("exces_eau_racines")
+            }
+            AbioticSymptomHint.TINY_WEBS_OR_SPECKS -> suggestions.add("tetranyques")
+            AbioticSymptomHint.WILTED_OR_DROOPING -> when (moisture) {
+                SubstrateMoisture.DRY -> suggestions.add("manque_eau")
+                SubstrateMoisture.WATERLOGGED -> suggestions.add("exces_eau_racines")
+                SubstrateMoisture.MOIST, null -> {
+                    suggestions.add("manque_eau")
+                    suggestions.add("exces_eau_racines")
+                }
+            }
+            null -> Unit
+        }
+        when (moisture) {
+            SubstrateMoisture.WATERLOGGED -> {
+                suggestions.add("exces_eau_racines")
+                suggestions.add("moucherons_terreau")
+            }
+            SubstrateMoisture.DRY -> {
+                suggestions.add("manque_eau")
+            }
+            SubstrateMoisture.MOIST, null -> Unit
+        }
+        return suggestions.toList()
     }
 }

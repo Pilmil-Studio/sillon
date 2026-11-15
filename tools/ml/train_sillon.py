@@ -75,8 +75,9 @@ LEAF_SPOT_MEMBERS = ["mildiou", "alternariose"]
 LEAF_SPOT_LABEL = "tache_feuille"
 # Une classe testée sur moins d'images donne un intervalle de confiance trop large pour conclure.
 MIN_TEST_IMAGES = 60
-# Licences acceptées pour --extra-field (CC-BY-NC et CC-BY-ND sont refusées).
-ACCEPTED_LICENSES = {"cc0", "cc-by", "cc-by-sa"}
+# Licences acceptées pour --extra-field : CC0, CC-BY, CC-BY-SA, ainsi que 'author-permission-nc'
+# (accord écrit explicite des auteurs pour entraîner et distribuer les poids sans redistribuer les images brutes).
+ACCEPTED_LICENSES = {"cc0", "cc-by", "cc-by-sa", "author-permission-nc"}
 
 
 def build_classes(merge_leaf_spots: bool) -> tuple[list[dict], np.ndarray]:
@@ -193,8 +194,13 @@ def scan_classed(root: Path, test_ratio: float, val_ratio: float) -> list[Sample
 
 
 def normalize_license(text: str) -> str:
-    """'CC BY-SA 4.0' -> 'cc-by-sa' ; 'cc0-1.0' -> 'cc0'. Le reste est laissé tel quel (donc refusé)."""
-    t = re.sub(r"[\s_]+", "-", text.strip().lower())
+    """'CC BY-SA 4.0' -> 'cc-by-sa' ; 'cc0-1.0' -> 'cc0' ; 'author-permission-nc' conservé."""
+    raw = text.strip().lower()
+    if "cc0" in raw or "public-domain" in raw:
+        return "cc0"
+    if "author-permission" in raw:
+        return "author-permission-nc"
+    t = re.sub(r"[\s_]+", "-", raw)
     t = re.sub(r"-?(international|unported|generic)", "", t)
     t = re.sub(r"-?v?\d+(\.\d+)?$", "", t)
     return t
@@ -203,8 +209,8 @@ def normalize_license(text: str) -> str:
 def check_extra_field(root: Path) -> list[str]:
     """
     Vérifie qu'un dossier --extra-field est publiable : un fichier ATTRIBUTIONS.csv (colonnes path et
-    license, comme collect_data.py) doit lister chaque image avec une licence CC0, CC-BY ou CC-BY-SA.
-    Renvoie la liste des problèmes (vide si tout est en ordre).
+    license, comme collect_data.py) doit lister chaque image avec une licence CC0, CC-BY, CC-BY-SA
+    ou author-permission-nc. Renvoie la liste des problèmes (vide si tout est en ordre).
     """
     import csv
 
@@ -219,7 +225,7 @@ def check_extra_field(root: Path) -> list[str]:
     problems = []
     refused = sorted({v for v in licenses.values() if v not in ACCEPTED_LICENSES})
     if refused:
-        problems.append(f"{attributions} : licence(s) refusée(s) {refused} (acceptées : CC0, CC-BY, CC-BY-SA)")
+        problems.append(f"{attributions} : licence(s) refusée(s) {refused} (acceptées : CC0, CC-BY, CC-BY-SA, author-permission-nc)")
     images = [p for p in root.rglob("*") if p.suffix.lower() in IMAGE_EXTENSIONS]
     if not images:
         problems.append(f"{root} : aucune image")

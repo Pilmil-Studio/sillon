@@ -215,4 +215,33 @@ class GardenRepositoryTest {
             runCatching { GardenCodec.decodeAndValidate(GardenCodec.encode(invalidVolume)) }.exceptionOrNull() is GardenValidationException
         )
     }
+
+    @Test
+    fun mutationsRepositoryEtExportCsv() {
+        val repo = GardenRepository(tmp.newFolder())
+        val initial = repo.loadGarden()
+        assertEquals(1, initial.parcels.size)
+
+        val added = repo.addParcel("Planche Est", ParcelType.ROW_BED, 2, 2)
+        assertTrue(added.saved)
+        assertEquals(2, added.garden.parcels.size)
+        val newParcelId = added.garden.parcels.last().id
+
+        val slotted = repo.updateSlot(newParcelId, 1, 1, "carotte")
+        assertTrue(slotted.saved)
+        assertEquals("carotte", slotted.garden.parcels.last().getSlot(1, 1)?.vegetableId)
+
+        val frosted = repo.updateFrostDate(4, 25)
+        assertTrue(frosted.saved)
+        assertEquals(FrostDate(4, 25), frosted.garden.frostDate)
+
+        val csvOut = java.io.ByteArrayOutputStream()
+        repo.exportToCsv(csvOut)
+        val csv = csvOut.toString("UTF-8")
+        assertTrue(csv.contains("Planche Est;Planche en lignes;2;2;carotte;"))
+
+        val deleted = repo.deleteParcel(newParcelId)
+        assertTrue(deleted.saved)
+        assertEquals(1, deleted.garden.parcels.size)
+    }
 }

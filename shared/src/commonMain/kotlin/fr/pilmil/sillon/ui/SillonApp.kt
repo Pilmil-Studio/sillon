@@ -39,6 +39,7 @@ import fr.pilmil.sillon.data.VegetableCatalog
 import fr.pilmil.sillon.data.rememberGardenStore
 import fr.pilmil.sillon.data.rememberSillonPrefs
 import fr.pilmil.sillon.engine.DashboardPlanner
+import fr.pilmil.sillon.engine.FrostEngine
 import fr.pilmil.sillon.model.Garden
 import fr.pilmil.sillon.model.plusDays
 import fr.pilmil.sillon.model.todayLocalDate
@@ -50,7 +51,12 @@ import fr.pilmil.sillon.ui.garden.GardenScreen
 import fr.pilmil.sillon.ui.onboarding.DepartmentDialog
 import fr.pilmil.sillon.ui.onboarding.OnboardingScreen
 import fr.pilmil.sillon.ui.settings.SettingsScreen
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 
 enum class SillonScreen(val title: String, val icon: ImageVector) {
     DASHBOARD("Aujourd'hui", Icons.Filled.CalendarMonth),
@@ -72,11 +78,14 @@ fun SillonApp(
     onCloudBackupChange: (Boolean) -> Unit = {},
     onExportJson: ((Garden) -> Unit)? = null,
     onImportJson: ((onLoaded: (Garden) -> Unit) -> Unit)? = null,
+    onExportPilmil: ((CharArray) -> Unit)? = null,
+    onImportPilmil: ((CharArray, onLoaded: (Garden) -> Unit) -> Unit)? = null,
     onExportCsv: ((GardenStore) -> Unit)? = null,
 ) {
     val prefs = rememberSillonPrefs()
     val store = rememberGardenStore()
     val scope = rememberCoroutineScope()
+    val storeMutex = remember { Mutex() }
     val snackbarHostState = remember { SnackbarHostState() }
 
     var currentScreen by rememberSaveable { mutableStateOf(SillonScreen.DASHBOARD) }
@@ -87,15 +96,17 @@ fun SillonApp(
     var smartViewfinderOn by remember { mutableStateOf(prefs.smartViewfinderEnabled) }
     var pickingDepartment by remember { mutableStateOf(false) }
 
-    val showIntroHints = remember {
-        val visits = prefs.dashboardVisits
-        prefs.dashboardVisits = visits + 1
-        visits < 3
-    }
+    val showIntroHints = remember { prefs.dashboardVisits < 3 }
 
     LaunchedEffect(Unit) {
-        loadedGarden = store.loadGarden()
-        if (store.consumeRecoveryNotice()) {
+        prefs.dashboardVisits = prefs.dashboardVisits + 1
+        val (garden, recovered) = withContext(Dispatchers.IO) {
+            storeMutex.withLock {
+                store.loadGarden() to store.consumeRecoveryNotice()
+            }
+        }
+        loadedGarden = garden
+        if (recovered) {
             snackbarHostState.showSnackbar(
                 "Le fichier du potager était illisible : un potager neuf a été créé."
             )
@@ -109,11 +120,13 @@ fun SillonApp(
     }
 
     fun update(change: () -> GardenUpdate) {
-        val result = change()
-        loadedGarden = result.garden
-        onGardenReplaced(result.garden)
-        if (!result.saved) {
-            scope.launch {
+        scope.launch {
+            val result = withContext(Dispatchers.IO) {
+                storeMutex.withLock { change() }
+            }
+            loadedGarden = result.garden
+            onGardenReplaced(result.garden)
+            if (!result.saved) {
                 snackbarHostState.showSnackbar(
                     "Le potager n'a pas pu être enregistré : vérifiez l'espace libre."
                 )
@@ -156,6 +169,9 @@ fun SillonApp(
     if (!onboarded) {
         OnboardingScreen(
             onDepartment = { chooseDepartment(it?.code) },
+            onEnvironment = { env ->
+                update { store.updateEnvironment(environment = env) }
+            },
             onFinish = { reminders ->
                 setReminders(reminders, garden)
                 prefs.onboarded = true
@@ -201,12 +217,14 @@ fun SillonApp(
             when (currentScreen) {
                 SillonScreen.DASHBOARD -> {
                     val today = remember { todayLocalDate() }
-                    val horizons = remember(garden, today) {
+                    val climate = remember(departmentCode) { FrenchFrostCatalog.getClimate(departmentCode) }
+                    val frostEngine = remember(climate) { FrostEngine(climate = climate) }
+                    val horizons = remember(garden, today, frostEngine) {
                         listOf(
-                            ForecastHorizon("Aujourd'hui", "Travaux autour du jour J", DashboardPlanner.plan(garden, today)),
-                            ForecastHorizon("Prochains jours", "Horizon à +3 jours", DashboardPlanner.plan(garden, today.plusDays(3))),
-                            ForecastHorizon("Semaine suivante", "Horizon à +7 jours", DashboardPlanner.plan(garden, today.plusDays(7))),
-                            ForecastHorizon("À venir", "Horizon à +15 jours", DashboardPlanner.plan(garden, today.plusDays(15))),
+                            ForecastHorizon("Aujourd'hui", "Travaux autour du jour J", DashboardPlanner.plan(garden, today, frostEngine)),
+                            ForecastHorizon("Prochains jours", "Horizon à +3 jours", DashboardPlanner.plan(garden, today.plusDays(3), frostEngine)),
+                            ForecastHorizon("Semaine suivante", "Horizon à +7 jours", DashboardPlanner.plan(garden, today.plusDays(7), frostEngine)),
+                            ForecastHorizon("À venir", "Horizon à +15 jours", DashboardPlanner.plan(garden, today.plusDays(15), frostEngine)),
                         )
                     }
                     val activeCropIds = remember(garden) {
@@ -251,6 +269,9 @@ fun SillonApp(
                     onAddParcel = { name, type, r, c ->
                         update { store.addParcel(name, type, r, c) }
                     },
+                    onAddParcelWithVolume = { name, type, r, c, vol ->
+                        update { store.addParcel(name, type, r, c, vol) }
+                    },
                     onDeleteParcel = { pId ->
                         update { store.deleteParcel(pId) }
                     },
@@ -268,11 +289,30 @@ fun SillonApp(
                 SillonScreen.SETTINGS -> SettingsScreen(
                     frostMonth = garden.frostDate.month,
                     frostDay = garden.frostDate.day,
+                    climate = FrenchFrostCatalog.getClimate(departmentCode),
+                    altitudeMeters = garden.altitudeMeters,
+                    onAltitudeChange = { meters ->
+                        update { store.updateAltitude(meters) }
+                    },
+                    mulched = garden.mulched,
+                    localWeather = garden.localWeather,
+                    onWateringConditionsChange = { mulched, weather ->
+                        update { store.updateWateringConditions(mulched, weather) }
+                    },
                     onFrostDateChange = { m, d ->
                         val day = d.coerceAtMost(daysInMonth(m))
                         update { store.updateFrostDate(m, day) }
                         prefs.departmentCode = null
                         departmentCode = null
+                    },
+                    environment = garden.environment,
+                    orientation = garden.orientation,
+                    windExposure = garden.windExposure,
+                    covered = garden.covered,
+                    lightSource = garden.lightSource,
+                    growLightHoursPerDay = garden.growLightHoursPerDay,
+                    onEnvironmentChange = { env, ori, wind, cov, src, hours ->
+                        update { store.updateEnvironment(env, ori, wind, cov, src, hours) }
                     },
                     departmentLabel = departmentCode?.let(FrenchFrostCatalog::getByCode)?.let { "${it.name} (${it.code})" },
                     onPickDepartment = { pickingDepartment = true },
@@ -296,9 +336,28 @@ fun SillonApp(
                     onExportJson = { onExportJson?.invoke(garden) },
                     onImportJson = {
                         onImportJson?.invoke { imported ->
-                            store.saveGarden(imported)
-                            loadedGarden = imported
+                            scope.launch {
+                                withContext(Dispatchers.IO) {
+                                    storeMutex.withLock { store.saveGarden(imported) }
+                                }
+                                loadedGarden = imported
+                            }
                         }
+                    },
+                    onExportPilmil = onExportPilmil,
+                    onImportPilmil = if (onImportPilmil != null) {
+                        { passphrase ->
+                            onImportPilmil.invoke(passphrase) { imported ->
+                                scope.launch {
+                                    withContext(Dispatchers.IO) {
+                                        storeMutex.withLock { store.saveGarden(imported) }
+                                    }
+                                    loadedGarden = imported
+                                }
+                            }
+                        }
+                    } else {
+                        null
                     },
                     onExportCsv = { onExportCsv?.invoke(store) },
                 )

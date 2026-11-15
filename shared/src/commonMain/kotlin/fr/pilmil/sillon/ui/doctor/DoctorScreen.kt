@@ -133,6 +133,7 @@ fun DoctorScreen(
                     null to "Tous les organes",
                     PlantOrgan.LEAF to "Feuilles",
                     PlantOrgan.STEM to "Tiges / Collet",
+                    PlantOrgan.SEEDLING to "Semis / Pousses",
                     PlantOrgan.FRUIT to "Fruits / Légumes",
                     PlantOrgan.ROOT to "Racines",
                 )

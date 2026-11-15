@@ -39,24 +39,30 @@ import androidx.compose.ui.unit.dp
 import fr.pilmil.sillon.data.DepartmentFrost
 import fr.pilmil.sillon.data.FrenchFrostCatalog
 import fr.pilmil.sillon.engine.DiagnosticEngine
+import fr.pilmil.sillon.model.GrowingEnvironment
 import fr.pilmil.sillon.model.formatDayMonthFr
 import fr.pilmil.sillon.ui.PlatformBackHandler
 import fr.pilmil.sillon.ui.components.SillonButton
+import fr.pilmil.sillon.ui.components.SillonCard
 import fr.pilmil.sillon.ui.components.SillonOutlinedButton
 import fr.pilmil.sillon.ui.rememberReminderPermissionRequester
 
 /**
- * Premier lancement en deux écrans : où est le jardin (pour la date de gelée),
- * puis les rappels de semis, facultatifs.
+ * Premier lancement : choix de l'environnement de culture (jardin, balcon, intérieur),
+ * département (pour la date de gelée si extérieur/balcon), puis rappels facultatifs.
  */
 @Composable
 fun OnboardingScreen(
     onDepartment: (DepartmentFrost?) -> Unit,
     onFinish: (reminders: Boolean) -> Unit,
+    onEnvironment: (GrowingEnvironment) -> Unit = {},
 ) {
     var step by rememberSaveable { mutableIntStateOf(0) }
+    var chosenEnvironment by rememberSaveable { mutableStateOf(GrowingEnvironment.OUTDOOR) }
     val requestReminders = rememberReminderPermissionRequester(onResult = onFinish)
-    PlatformBackHandler(enabled = step > 0) { step = 0 }
+    PlatformBackHandler(enabled = step > 0) {
+        step = if (step == 2 && chosenEnvironment == GrowingEnvironment.INDOOR) 0 else step - 1
+    }
 
     Column(
         modifier = Modifier
@@ -68,7 +74,57 @@ fun OnboardingScreen(
     ) {
         when (step) {
             0 -> {
-                Title("Où se trouve votre potager ?")
+                Title("Où cultivez-vous ?")
+                Text(
+                    "Sillon adapte le calendrier et les conseils selon que vous cultivez en pleine terre, sur un balcon en pots ou en intérieur.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                val options = listOf(
+                    Triple(
+                        GrowingEnvironment.OUTDOOR,
+                        "Pleine terre / Jardin",
+                        "Carrés potagers ou planches, calendrier calé sur les dernières gelées et rotation des familles.",
+                    ),
+                    Triple(
+                        GrowingEnvironment.BALCONY,
+                        "Balcon / Terrasse",
+                        "Culture en pots et jardinières, calendrier calé sur les gelées avec suivi d'exposition et d'arrosage.",
+                    ),
+                    Triple(
+                        GrowingEnvironment.INDOOR,
+                        "Intérieur (appartement)",
+                        "Rebord de fenêtre ou lampe horticole : semis possibles toute l'année, sans dépendre des gelées.",
+                    ),
+                )
+                options.forEach { (env, title, desc) ->
+                    SillonCard(
+                        backgroundColor = MaterialTheme.colorScheme.surface,
+                        borderColor = MaterialTheme.colorScheme.outline,
+                        onClick = {
+                            chosenEnvironment = env
+                            onEnvironment(env)
+                            step = if (env == GrowingEnvironment.INDOOR) 2 else 1
+                        },
+                    ) {
+                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Text(
+                                text = title,
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontWeight = FontWeight.Bold,
+                            )
+                            Text(
+                                text = desc,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    }
+                }
+            }
+            1 -> {
+                Title("Où se trouve votre ${if (chosenEnvironment == GrowingEnvironment.BALCONY) "balcon" else "potager"} ?")
                 Text(
                     "Sillon cale tous les semis sur la date moyenne des dernières gelées de votre département. Rien ne quitte votre téléphone.",
                     style = MaterialTheme.typography.bodyLarge,
@@ -78,14 +134,14 @@ fun OnboardingScreen(
                     modifier = Modifier.weight(1f),
                     onPick = {
                         onDepartment(it)
-                        step = 1
+                        step = 2
                     },
                 )
                 SillonOutlinedButton(
                     text = "Je réglerai plus tard",
                     onClick = {
                         onDepartment(null)
-                        step = 1
+                        step = 2
                     },
                 )
             }
@@ -195,7 +251,7 @@ fun DepartmentSearch(
 fun DepartmentDialog(selectedCode: String?, onPick: (DepartmentFrost) -> Unit, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Mon département") },
+        title = { Text("Mon territoire ou département") },
         text = { DepartmentSearch(onPick = onPick, selectedCode = selectedCode, modifier = Modifier.heightIn(max = 420.dp)) },
         confirmButton = {},
         dismissButton = { TextButton(onClick = onDismiss) { Text("Annuler") } },

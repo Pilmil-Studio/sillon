@@ -70,15 +70,17 @@ fun CatalogScreen(
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var selectedFamily by remember { mutableStateOf<BotanicalFamily?>(null) }
+    var onlyIndoorSuitable by remember { mutableStateOf(false) }
     var expandedVegetableId by remember { mutableStateOf<String?>(null) }
 
-    val filteredVegetables = remember(vegetables, searchQuery, selectedFamily) {
+    val filteredVegetables = remember(vegetables, searchQuery, selectedFamily, onlyIndoorSuitable) {
         vegetables.filter { plant ->
             val matchesQuery = searchQuery.isBlank() ||
                     plant.name.contains(searchQuery, ignoreCase = true) ||
                     plant.latinName.contains(searchQuery, ignoreCase = true)
             val matchesFamily = selectedFamily == null || plant.family == selectedFamily
-            matchesQuery && matchesFamily
+            val matchesIndoor = !onlyIndoorSuitable || plant.indoorSuitable
+            matchesQuery && matchesFamily && matchesIndoor
         }
     }
 
@@ -170,6 +172,25 @@ fun CatalogScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(horizontal = 2.dp),
             ) {
+                item {
+                    Surface(
+                        modifier = Modifier.clickable { onlyIndoorSuitable = !onlyIndoorSuitable },
+                        shape = RoundedCornerShape(10.dp),
+                        color = if (onlyIndoorSuitable) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.surface,
+                        border = androidx.compose.foundation.BorderStroke(
+                            1.dp,
+                            if (onlyIndoorSuitable) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outline,
+                        ),
+                    ) {
+                        Text(
+                            text = "Intérieur / Balcon",
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = if (onlyIndoorSuitable) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface,
+                            fontWeight = if (onlyIndoorSuitable) FontWeight.Bold else FontWeight.Normal,
+                        )
+                    }
+                }
                 items(families) { (family, label) ->
                     val isSelected = selectedFamily == family
                     Surface(
@@ -282,6 +303,13 @@ private fun VegetableCard(
                     textColor = SillonTheme.colors.synergy,
                     icon = Icons.Filled.WaterDrop,
                 )
+                if (vegetable.indoorSuitable) {
+                    SillonBadge(
+                        text = "Intérieur / Pot",
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        textColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                }
             }
 
             // Détails dépliés
@@ -301,6 +329,22 @@ private fun VegetableCard(
                         color = MaterialTheme.colorScheme.onSurface,
                         lineHeight = 20.sp,
                     )
+
+                    if (vegetable.heirloomVarieties.isNotEmpty()) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Text(
+                            text = "Variétés anciennes / reproductibles :",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = vegetable.heirloomVarieties.joinToString(" · "),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(12.dp))
 

@@ -60,6 +60,66 @@ class MainActivity : ComponentActivity() {
                 }
                 val photoAvailable = remember { PhotoClassifier.isAvailable(this@MainActivity) }
                 var importedGarden by remember { mutableStateOf<Garden?>(null) }
+                var pendingPilmilPassphrase by remember { mutableStateOf<CharArray?>(null) }
+
+                val exportPilmilLauncher = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.CreateDocument("application/octet-stream")
+                ) { uri ->
+                    val pass = pendingPilmilPassphrase
+                    pendingPilmilPassphrase = null
+                    if (uri != null && pass != null) {
+                        scope.launch {
+                            val written = withContext(disk) {
+                                try {
+                                    contentResolver.openOutputStream(uri)?.use { out ->
+                                        repository.exportToPilmil(out, pass)
+                                    } != null
+                                } catch (_: Exception) {
+                                    false
+                                } finally {
+                                    pass.fill('\u0000')
+                                }
+                            }
+                            Toast.makeText(
+                                this@MainActivity,
+                                if (written) "Coffre .pilmil exporté" else "Échec de l'export .pilmil.",
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                        }
+                    } else {
+                        pass?.fill('\u0000')
+                    }
+                }
+
+                val importPilmilLauncher = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.OpenDocument()
+                ) { uri ->
+                    val pass = pendingPilmilPassphrase
+                    pendingPilmilPassphrase = null
+                    if (uri != null && pass != null) {
+                        scope.launch {
+                            val result = withContext(disk) {
+                                try {
+                                    contentResolver.openInputStream(uri)?.use {
+                                        repository.importFromPilmil(it, pass)
+                                    } ?: Result.failure(IOException("Flux illisible"))
+                                } catch (e: Exception) {
+                                    Result.failure(e)
+                                } finally {
+                                    pass.fill('\u0000')
+                                }
+                            }
+                            result.onSuccess { imported ->
+                                importedGarden = imported
+                                Toast.makeText(this@MainActivity, "Coffre .pilmil restauré", Toast.LENGTH_SHORT).show()
+                            }.onFailure {
+                                Toast.makeText(this@MainActivity, "Phrase secrète incorrecte ou fichier invalide.", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    } else {
+                        pass?.fill('\u0000')
+                    }
+                }
 
                 val exportJsonLauncher = rememberLauncherForActivityResult(
                     contract = ActivityResultContracts.CreateDocument("application/json")
@@ -155,6 +215,14 @@ class MainActivity : ComponentActivity() {
                     },
                     onImportJson = {
                         importJsonLauncher.launch(arrayOf("application/json", "*/*"))
+                    },
+                    onExportPilmil = { passphrase ->
+                        pendingPilmilPassphrase = passphrase
+                        exportPilmilLauncher.launch("sillon_coffre_${LocalDate.now()}.pilmil")
+                    },
+                    onImportPilmil = { passphrase, _ ->
+                        pendingPilmilPassphrase = passphrase
+                        importPilmilLauncher.launch(arrayOf("application/octet-stream", "*/*"))
                     },
                     onExportCsv = {
                         exportCsvLauncher.launch("sillon_potager_${LocalDate.now()}.csv")

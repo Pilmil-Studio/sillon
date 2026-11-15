@@ -85,6 +85,8 @@ fun SmartCameraViewfinder(
         mutableStateOf(FrameQuality(FrameQualityStatus.WARNING, 0f, 0f, 0f, "Cadrez la feuille au centre"))
     }
     var imageCapture by remember { mutableStateOf<ImageCapture?>(null) }
+    var cameraProvider by remember { mutableStateOf<ProcessCameraProvider?>(null) }
+    var isDisposed by remember { mutableStateOf(false) }
     var isCapturing by remember { mutableStateOf(false) }
 
     // Suivi du temps en condition optimale pour l'auto-déclenchement
@@ -136,7 +138,11 @@ fun SmartCameraViewfinder(
     }
 
     DisposableEffect(Unit) {
-        onDispose { executor.shutdown() }
+        onDispose {
+            isDisposed = true
+            cameraProvider?.unbindAll()
+            executor.shutdown()
+        }
     }
 
     Box(
@@ -156,7 +162,12 @@ fun SmartCameraViewfinder(
 
                 val cameraProviderFuture = ProcessCameraProvider.getInstance(ctx)
                 cameraProviderFuture.addListener({
-                    val cameraProvider = cameraProviderFuture.get()
+                    val provider = runCatching { cameraProviderFuture.get() }.getOrNull() ?: return@addListener
+                    if (isDisposed) {
+                        provider.unbindAll()
+                        return@addListener
+                    }
+                    cameraProvider = provider
 
                     val preview = Preview.Builder().build().also {
                         it.setSurfaceProvider(previewView.surfaceProvider)
@@ -181,8 +192,8 @@ fun SmartCameraViewfinder(
                     )
 
                     try {
-                        cameraProvider.unbindAll()
-                        cameraProvider.bindToLifecycle(
+                        provider.unbindAll()
+                        provider.bindToLifecycle(
                             lifecycleOwner,
                             CameraSelector.DEFAULT_BACK_CAMERA,
                             preview,

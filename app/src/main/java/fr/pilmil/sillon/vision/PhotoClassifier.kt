@@ -35,6 +35,7 @@ sealed interface PhotoResult {
 class PhotoClassifier private constructor(
     private val interpreter: Interpreter,
     val spec: PhotoModelSpec,
+    private val leafDetector: LeafDetector? = null,
 ) : AutoCloseable {
 
     // Protège l'interpréteur : close() attend la fin d'une inférence en cours, et classify() refuse un interpréteur fermé.
@@ -55,8 +56,18 @@ class PhotoClassifier private constructor(
         }
     }
 
-    /** Verdict du modèle, ou null si le classifieur a été fermé entre-temps. */
+    /** Verdict du modèle (avec pré-cadrage YOLO optionnel si une zone suspecte est repérée), ou null si fermé. */
     fun classify(bitmap: Bitmap): PhotoVerdict? {
+        val full = classifySingle(bitmap) ?: return null
+        val box = leafDetector?.detectBestBox(bitmap) ?: return full
+        // Si la boîte couvre quasiment toute l'image, inutile de re-classifier.
+        if (box.area >= 0.85f) return full
+        val cropped = LeafDetector.cropWithMargin(bitmap, box)
+        val cropVerdict = classifySingle(cropped) ?: return full
+        return selectBestVerdict(full, cropVerdict)
+    }
+
+    private fun classifySingle(bitmap: Bitmap): PhotoVerdict? {
         val w = spec.input.width
         val h = spec.input.height
         val square = centerSquare(bitmap)
@@ -81,11 +92,25 @@ class PhotoClassifier private constructor(
             closed = true
             interpreter.close()
         }
+        leafDetector?.close()
     }
 
     companion object {
         private const val MODEL = "models/sillon_disease.tflite"
         private const val SPEC = "models/sillon_disease.json"
+
+        private fun verdictScore(verdict: PhotoVerdict): Float = when (verdict) {
+            is PhotoVerdict.Disease -> verdict.confidence
+            is PhotoVerdict.Healthy -> verdict.confidence
+            is PhotoVerdict.Unsure -> verdict.leads.firstOrNull()?.second ?: 0f
+        }
+
+        fun selectBestVerdict(full: PhotoVerdict, cropped: PhotoVerdict): PhotoVerdict = when {
+            full is PhotoVerdict.Unsure && cropped !is PhotoVerdict.Unsure -> cropped
+            cropped is PhotoVerdict.Disease && full !is PhotoVerdict.Disease && cropped.confidence >= verdictScore(full) -> cropped
+            verdictScore(cropped) > verdictScore(full) -> cropped
+            else -> full
+        }
 
         fun isAvailable(context: Context): Boolean =
             runCatching { context.assets.list("models")?.contains("sillon_disease.tflite") == true }.getOrDefault(false)
@@ -96,7 +121,11 @@ class PhotoClassifier private constructor(
             val spec = PhotoModelSpec.parse(context.assets.open(SPEC).bufferedReader().use { it.readText() })
             // Un modèle de vérification du pipeline ne doit jamais servir à de vrais diagnostics.
             if (spec.synthetic) return null
-            PhotoClassifier(Interpreter(mapModel(context), Interpreter.Options().setNumThreads(2)), spec)
+            PhotoClassifier(
+                interpreter = Interpreter(mapModel(context), Interpreter.Options().setNumThreads(2)),
+                spec = spec,
+                leafDetector = LeafDetector.load(context),
+            )
         }.getOrNull()
 
         private fun mapModel(context: Context): MappedByteBuffer =

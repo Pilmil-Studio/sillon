@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.Grass
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocalFlorist
 import androidx.compose.material.icons.filled.Spa
+import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -47,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.pilmil.sillon.engine.DashboardPlan
 import fr.pilmil.sillon.engine.FrostStatus
+import fr.pilmil.sillon.model.Climate
 import fr.pilmil.sillon.ui.components.SillonBadge
 import fr.pilmil.sillon.ui.components.SillonCard
 import fr.pilmil.sillon.ui.theme.SillonTheme
@@ -97,6 +99,7 @@ fun DashboardScreen(
     onOpenSettings: () -> Unit = {},
 ) {
     val currentPlan = horizons.first().plan
+    val tropical = currentPlan.climate == Climate.TROPICAL
     val pagerState = rememberPagerState(pageCount = { horizons.size })
     val scope = rememberCoroutineScope()
 
@@ -128,7 +131,7 @@ fun DashboardScreen(
                 Spacer(modifier = Modifier.height(4.dp))
                 val subtitle = when {
                     activeGardenMarker != null -> activeGardenMarker
-                    showIntroHints -> "Calculé pour votre date de dernières gelées."
+                    showIntroHints -> if (tropical) "Calculé pour le début de votre saison de plantation." else "Calculé pour votre date de dernières gelées."
                     else -> null
                 }
                 if (subtitle != null) {
@@ -141,7 +144,68 @@ fun DashboardScreen(
             }
         }
 
-        item { FrostCard(currentPlan.frost, placeLabel, onOpenSettings) }
+        item { FrostCard(currentPlan.frost, placeLabel, tropical, onOpenSettings) }
+
+        if (tropical) {
+            item {
+                Text(
+                    text = "Seules les cultures tropicales ont un calendrier ici : les plantes tempérées restent plantables dans vos parcelles, sans tâches de calendrier.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    lineHeight = 20.sp,
+                )
+            }
+        }
+
+        currentPlan.wateringReminderNote?.let { note ->
+            item {
+                SillonCard(
+                    backgroundColor = MaterialTheme.colorScheme.surface,
+                    borderColor = MaterialTheme.colorScheme.outline,
+                ) {
+                    Row(verticalAlignment = Alignment.Top) {
+                        Icon(
+                            imageVector = Icons.Filled.Info,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(20.dp),
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(
+                            text = note,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            lineHeight = 19.sp,
+                        )
+                    }
+                }
+            }
+        }
+
+        currentPlan.altitudeNote?.let { note ->
+            item {
+                SillonCard(
+                    backgroundColor = MaterialTheme.colorScheme.surface,
+                    borderColor = MaterialTheme.colorScheme.outline,
+                ) {
+                    Row(verticalAlignment = Alignment.Top) {
+                        Icon(
+                            imageVector = Icons.Filled.Info,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(20.dp),
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(
+                            text = note,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            lineHeight = 19.sp,
+                        )
+                    }
+                }
+            }
+        }
 
         item {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -310,6 +374,7 @@ private fun HorizonPageContent(
 private fun FrostCard(
     frost: FrostStatus,
     placeLabel: String?,
+    tropical: Boolean,
     onOpenSettings: () -> Unit,
 ) {
     SillonCard(
@@ -318,22 +383,27 @@ private fun FrostCard(
     ) {
         Column {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                IconBubble(Icons.Filled.AcUnit, MaterialTheme.colorScheme.primary)
+                IconBubble(if (tropical) Icons.Filled.WbSunny else Icons.Filled.AcUnit, MaterialTheme.colorScheme.primary)
                 Spacer(modifier = Modifier.width(14.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Dernières gelées repères",
+                        text = when {
+                            frost is FrostStatus.FrostFree -> "Culture en intérieur (hors gel)"
+                            tropical -> "Début de la saison de plantation"
+                            else -> "Dernières gelées repères"
+                        },
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Bold,
                     )
                     Spacer(modifier = Modifier.height(2.dp))
-                    val date = when (frost) {
-                        is FrostStatus.Upcoming -> frost.date
-                        is FrostStatus.Passed -> frost.date
+                    val subtitleText = when (frost) {
+                        is FrostStatus.Upcoming -> listOfNotNull(formatDayMonthFr(frost.date), placeLabel).joinToString(" · ")
+                        is FrostStatus.Passed -> listOfNotNull(formatDayMonthFr(frost.date), placeLabel).joinToString(" · ")
+                        FrostStatus.FrostFree -> "Calendrier continu toute l'année"
                     }
                     Text(
-                        text = listOfNotNull(formatDayMonthFr(date), placeLabel).joinToString(" · "),
+                        text = subtitleText,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -349,9 +419,14 @@ private fun FrostCard(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         textColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
+                    FrostStatus.FrostFree -> SillonBadge(
+                        text = "Toute l'année",
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        textColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
                 }
             }
-            if (placeLabel == null) {
+            if (placeLabel == null && frost !is FrostStatus.FrostFree) {
                 TextButton(onClick = onOpenSettings) { Text("Ajuster à mon département") }
             }
         }

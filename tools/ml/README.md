@@ -72,22 +72,43 @@ python expand_dataset.py --verify extra_gbif
 python train_sillon.py --plantvillage <PV> --plantdoc <PD> --classed dataset_raw --extra-field extra_gbif --recipe improved
 ```
 
-## Jeux de données candidats (pistes à vérifier)
+## Jeux de données externes : audit des licences (novembre 2026)
 
-Ces jeux ne sont **pas** utilisés aujourd'hui. Pour chacun, la licence, les conditions de redistribution et le contenu
-réel (cultures, classes, photos de terrain ou de labo) restent **à confirmer** avant tout ajout ; une recherche est en cours
-séparément. Aucune licence n'est à considérer comme établie ici.
+Après vérification des licences officielles, voici le statut des jeux de données externes :
 
-- **PlantSeg** : piste à vérifier (licence à confirmer).
-- **PlantWild** : piste à vérifier (licence à confirmer).
-- **Plant Pathology 2020** : piste à vérifier (licence à confirmer ; à ma connaissance centré sur le pommier, donc peu utile pour les cultures de Sillon).
-- **PlantNet-300K** : piste à vérifier (licence à confirmer ; jeu d'identification d'espèces plutôt que de maladies).
+### 1. Sources compatibles (`CC0`, `CC-BY 4.0`, `CC-BY-SA 4.0`)
+- **Flux GBIF ciblés (`expand_dataset.py --gbif`)** :
+  - **Pl@ntNet sur GBIF** (`publishingOrg = da86174a-a605-43a4-a5e8-53d484152cd3`, filtre `mediaType=StillImage` + licence média `CC0`/`CC-BY`/`CC-BY-SA`) : idéal pour étoffer la classe `sain` sur les aromatiques et légumes-feuilles en pot / intérieur.
+  - **Observation.org sur GBIF** : observations européennes de terrain validées pour les champignons phytopathogènes (`mildiou`, `alternariose`, `rouille`, `botrytis`) et ravageurs (`tetranyques`, `cochenilles`).
+- **Jeux Mendeley Data sous licence `CC BY 4.0`** (pour renforcer `mildiou` et `alternariose` sur le terrain) :
+  - *Potato Leaf (Healthy and Late Blight)* — DOI [`10.17632/zfv4jj7855`](https://doi.org/10.17632/zfv4jj7855) (`CC BY 4.0`, photos de terrain en Éthiopie).
+  - *Enhanced Field-Based Detection of Potato Blight in Complex Backgrounds* — DOI [`10.17632/pbnw43s6kt.1`](https://doi.org/10.17632/pbnw43s6kt.1) (`CC BY 4.0`, feuilles en plein champ sur fonds complexes).
+  - *Pota-Toma-To leaf disease images dataset* — DOI [`10.17632/354fsxwccb.1`](https://doi.org/10.17632/354fsxwccb.1) (`CC BY 4.0`, utiliser uniquement les images RGB brutes, ignorer les images pré-filtrées DWT/CLAHE).
+  - *Potato disease classification* — DOI [`10.17632/ttgtfp3vjb.1`](https://doi.org/10.17632/ttgtfp3vjb.1) (`CC BY 4.0`).
+
+### 2. Sources autorisées par accord écrit des auteurs (entraînement des poids & évaluation privée)
+Par courriel du **9 novembre 2026**, **Dr Tianqi Wei** (`tianqi.wei@uq.edu.au`, en copie **Pr Helen Huang** `helen.huang@uq.edu.au`, The University of Queensland) a accordé à **Pilmil Studio** (Quentin Noilou) l'autorisation explicite d'utiliser **PlantWild** et **PlantSeg** pour l'évaluation privée et l'entraînement du modèle de Sillon, incluant la distribution des **poids résultants** (`sillon_disease.tflite`) sous MPL-2.0, sous réserve du strict respect de trois conditions :
+1. **Usage strictement non commercial** de l'ensemble du projet ;
+2. **Aucune redistribution des images brutes** de PlantWild / PlantSeg (ni dans le dépôt Git, ni dans l'APK) ;
+3. **Citation explicite** des deux jeux de données et de leurs articles associés dans l'application et sa documentation :
+   - **PlantWild** (`tqwei05/MVPDR`, `uqtwei2/PlantWild`) : Wei et al., *"MVPDR: Multi-Modal Visual Prompt for Wild Plant Disease Recognition"*, ECCV 2024.
+   - **PlantSeg** (`tqwei05/PlantSeg`, Zenodo `10.5281/zenodo.13924591`, **CC BY-NC 4.0** sur la dernière version Zenodo) : Wei et al., *"PlantSeg: A Large-Scale In-the-Wild Dataset for Plant Disease Segmentation"*, CIKM 2024.
+
+Pour les ingérer localement avant entraînement (sans versionner les images) :
+```bash
+python expand_dataset.py --ingest /chemin/vers/PlantWild --source-name plantwild --default-license author-permission-nc --out extra_authorized
+python expand_dataset.py --ingest /chemin/vers/PlantSeg --source-name plantseg --default-license author-permission-nc --out extra_authorized
+```
+
+### 3. Sources écartées ou restreintes
+- **Pl@ntNet-300K (archive Zenodo brute)** : contient un mélange d'images individuelles sous `cc-by-nc` et `cc-by-nc-sa` dans `plantnet300K_metadata.csv` → **ne pas ingérer sans filtrer strictement la licence de chaque image**.
+- **Plant Pathology 2020** : centré sur le pommier, hors périmètre potager.
 
 Pour en ajouter un : ranger les photos en un dossier par classe Sillon (`<dossier>/<classe>/<observateur>_<nom>.jpg`, mêmes
 noms de classes que `--classed`), puis créer `<dossier>/ATTRIBUTIONS.csv` avec au moins les colonnes `path` (relatif au
-dossier) et `license`, une ligne par image (même schéma que celui de `collect_data.py`). `train_sillon.py --extra-field <dossier>`
-**refuse** le dossier si le fichier manque, si une image n'y figure pas, ou si une licence n'est pas CC0, CC-BY ou CC-BY-SA
-(CC-BY-NC, CC-BY-ND et inconnues refusées). Ces photos ne servent qu'à l'entraînement et à la validation, jamais au test :
+dossier) et `license`, une ligne par image (même schéma que celui de `collect_data.py`). `expand_dataset.py --verify <dossier>`
+**refuse** le dossier si le fichier manque, si une image n'y figure pas, ou si une licence n'est pas `cc0`, `cc-by`, `cc-by-sa`
+ou `author-permission-nc` (accord écrit des auteurs pour l'entraînement des poids sans redistribution des images). Ces photos ne servent qu'à l'entraînement et à la validation, jamais au test :
 le test de terrain reste identique d'une variante à l'autre, donc les chiffres restent comparables. Publiez ensuite les attributions avec le modèle.
 
 ## Ce que le modèle sait reconnaître
@@ -188,3 +209,24 @@ Dans le respect de la charte de transparence et d'éthique de **Pilmil Studio** 
    - *Licences* : Uniquement sous licences libres permises (**CC0**, **CC-BY**, **CC-BY-SA**).
    - *Traçabilité* : Chaque image conserve son observateur d'origine (`u<user_id>_inat<obs_id>.jpg`) et son URL source dans [`ATTRIBUTIONS.csv`](dataset_raw/ATTRIBUTIONS.csv).
    - *Garantie scientifique* : Découpage `GroupKFold` par observateur : aucune plante ou session photo d'un même jardinier ne peut se retrouver à la fois dans l'entraînement et dans le jeu de test.
+
+## Pistes d'amélioration pour le prochain entraînement (v1.5)
+
+Suite à l'ajout des modes « Balcon » et « Intérieur » (novembre 2026) et à l'analyse des métriques du modèle v1.0 (`sillon_disease.json`), voici les chantiers prioritaires pour la prochaine passe d'entraînement :
+
+1. **Remonter le rappel de la classe `sain` (actuellement 32,9 % au seuil 0,65, précision 87,0 %, n = 143)** :
+   - Le modèle actuel n'a vu en classe `sain` que 5 espèces de plein champ (tomate, pomme de terre, poivron, courge, fraisier). Sur une aromatique en pot ou une salade sur rebord de fenêtre, il hésite et renvoie `Unsure`.
+   - **Action** : étendre `collect_data.py` et `expand_dataset.py` pour collecter des feuillages sains (iNaturalist / GBIF, licences CC0/CC-BY/CC-BY-SA) d'aromatiques et légumes-feuilles cultivés en pot et en lumière intérieure (`Ocimum basilicum`, `Mentha spicata`, `Petroselinum crispum`, `Allium schoenoprasum`, `Lactuca sativa`, `Eruca vesicaria`, `Raphanus sativus`).
+
+2. **Ajouter les ravageurs d'intérieur/balcon visuellement reconnaissables** :
+   - Les fiches `tetranyques` (*Tetranychus urticae* — criblure jaune/argentée et fines toiles) et `cochenilles` (*Planococcus citri* / *Pseudococcidae* — amas cotonneux blancs sur tiges et nervures) existent désormais dans `DiseaseCatalog`.
+   - **Action** : ajouter ces deux classes dans `collect_data.py` en filtrant les photos sur les dégâts foliaires/tiges (et non les vues macro d'insectes isolés en boîte de Petri) et vérifier qu'on atteint au moins `n >= 60` photos de test par observateur distinct.
+
+3. **Traiter les stress abiotiques (manque d'eau, excès d'eau, étiolement) sans faux diagnostic** :
+   - **Problème fondamental** : sur un gros plan de feuille (`224×224`), un flétrissement par sécheresse (`manque_eau`) et un flétrissement par asphyxie racinaire (`exces_eau_racines`) sont visuellement quasi identiques, alors que leurs remèdes sont opposés. De même, l'`etiolement` (manque de lumière) concerne la silhouette de la tige (entre-nœuds allongés et pâles) et non une tache sur le limbe.
+   - **Action côté modèle** : ne **jamais** créer deux classes séparées « manque d'eau » et « excès d'eau » dans le CNN. Tester en revanche l'ajout d'une classe groupée `fletrissement_ou_jaunissement_abiotique` (`catalogId = null`, `group_members = ["manque_eau", "exces_eau_racines"]`) et d'une classe `etiolement` sur jeunes plants.
+   - **Action côté application (déjà en place dans `PhotoDiagnosis.resolveAbioticTriage`)** : quand le modèle est incertain ou détecte un trouble abiotique, l'interface demande en 2 clics l'état du terreau à 2–3 cm (`Sec` / `Frais` / `Détrempé`) et l'allure générale (`Feuilles molles`, `Tiges longues et pâles`, `Moucherons`) avant d'orienter vers la fiche.
+
+4. **Renforcer `mildiou` (rappel 18,4 %, n = 49) et `alternariose` (rappel 18,2 %, n = 22)** :
+   - Effectifs de test encore trop faibles (`n < 60`) et forte confusion entre les deux sur photos de terrain.
+   - **Action** : augmenter le corpus terrain via `expand_dataset.py --gbif` et évaluer l'adoption de la variante `--merge-leaf-spots` (`tache_feuille` renvoyant vers les deux fiches `mildiou` et `alternariose`) en branchant la lecture de `group_members` dans `PhotoModelSpec.ModelClass`.

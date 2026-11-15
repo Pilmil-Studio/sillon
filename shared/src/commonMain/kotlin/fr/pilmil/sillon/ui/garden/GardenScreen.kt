@@ -51,9 +51,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -62,7 +64,10 @@ import androidx.compose.ui.unit.sp
 import fr.pilmil.sillon.engine.Growth
 import fr.pilmil.sillon.engine.GrowthEngine
 import fr.pilmil.sillon.engine.GrowthStage
+import fr.pilmil.sillon.engine.RotationEngine
+import fr.pilmil.sillon.engine.RotationSeverity
 import fr.pilmil.sillon.model.Garden
+import fr.pilmil.sillon.model.GrowingEnvironment
 import fr.pilmil.sillon.model.Parcel
 import fr.pilmil.sillon.model.ParcelSlot
 import fr.pilmil.sillon.model.ParcelType
@@ -70,7 +75,9 @@ import fr.pilmil.sillon.model.Vegetable
 import fr.pilmil.sillon.ui.components.SillonBadge
 import fr.pilmil.sillon.ui.components.SillonButton
 import fr.pilmil.sillon.ui.components.SillonCard
+import fr.pilmil.sillon.ui.components.SillonStepper
 import fr.pilmil.sillon.ui.components.VegetableIcon
+import fr.pilmil.sillon.ui.theme.SillonPalette
 import fr.pilmil.sillon.ui.theme.SillonTheme
 import fr.pilmil.sillon.model.daysBetween
 import fr.pilmil.sillon.model.epochMillisToLocalDate
@@ -85,9 +92,18 @@ fun GardenScreen(
     onUpdateSlot: (parcelId: String, row: Int, col: Int, vegetableId: String?) -> Unit,
     onAddParcel: (name: String, type: ParcelType, rows: Int, cols: Int) -> Unit,
     onDeleteParcel: (parcelId: String) -> Unit,
+    onAddParcelWithVolume: (name: String, type: ParcelType, rows: Int, cols: Int, containerVolumeLiters: Int?) -> Unit = { n, t, r, c, _ ->
+        onAddParcel(n, t, r, c)
+    },
+    today: LocalDate = remember { todayLocalDate() },
+    initialSelectedCell: Pair<Int, Int>? = null,
+    initialPerspective: Boolean = true,
 ) {
     var selectedParcelIndex by remember { mutableStateOf(0) }
     var selectedSlotCoord by remember { mutableStateOf<Pair<Int, Int>?>(null) }
+    var highlightedCell by remember { mutableStateOf(initialSelectedCell) }
+    var perspectiveView by remember { mutableStateOf(initialPerspective) }
+    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     var showAddParcelDialog by remember { mutableStateOf(false) }
 
     val activeParcel = garden.parcels.getOrNull(selectedParcelIndex) ?: garden.parcels.firstOrNull()
@@ -100,21 +116,22 @@ fun GardenScreen(
         contentPadding = PaddingValues(top = 20.dp, bottom = 100.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        // En-tête
+        // En-tête compact et choix de la vue
         item {
-            Column {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
                 Text(
-                    text = "Plan vivant du potager",
-                    style = MaterialTheme.typography.displaySmall,
+                    text = "Mon potager",
+                    style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.onBackground,
-                    fontWeight = FontWeight.Bold,
                 )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Carrés potagers & planches maraîchères avec contrôle d'affinités.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    ViewChip("Perspective", perspectiveView) { perspectiveView = true }
+                    ViewChip("À plat", !perspectiveView) { perspectiveView = false }
+                }
             }
         }
 
@@ -133,7 +150,10 @@ fun GardenScreen(
                         val parcel = garden.parcels[index]
                         val isSelected = index == selectedParcelIndex
                         Surface(
-                            modifier = Modifier.clickable { selectedParcelIndex = index },
+                            modifier = Modifier.clickable {
+                                selectedParcelIndex = index
+                                highlightedCell = null
+                            },
                             shape = RoundedCornerShape(12.dp),
                             color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
                             border = BorderStroke(
@@ -171,11 +191,62 @@ fun GardenScreen(
         // Grille interactive de la parcelle active
         if (activeParcel != null) {
             item {
-                ParcelGridView(
-                    parcel = activeParcel,
-                    vegetables = vegetables,
-                    onSlotClick = { r, c -> selectedSlotCoord = Pair(r, c) },
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    SillonBadge(
+                        text = activeParcel.type.frenchLabel,
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        textColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                    activeParcel.containerVolumeLiters?.let { vol ->
+                        SillonBadge(
+                            text = "$vol L",
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            textColor = MaterialTheme.colorScheme.onSurface,
+                        )
+                    }
+                    if (activeParcel.type.isContainerBased) {
+                        Text(
+                            text = "Renouveler le substrat entre deux cycles",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+            }
+
+            item {
+                if (perspectiveView) {
+                    GardenScene(
+                        parcels = garden.parcels,
+                        selectedIndex = garden.parcels.indexOf(activeParcel),
+                        vegetables = vegetables,
+                        today = today,
+                        selectedCell = highlightedCell,
+                        onSelectParcel = {
+                            selectedParcelIndex = it
+                            highlightedCell = null
+                        },
+                        onCellClick = { r, c ->
+                            highlightedCell = Pair(r, c)
+                            selectedSlotCoord = Pair(r, c)
+                        },
+                        isDark = isDark,
+                        modifier = Modifier.clip(RoundedCornerShape(20.dp)),
+                    )
+                } else {
+                    ParcelGridView(
+                        parcel = activeParcel,
+                        vegetables = vegetables,
+                        onSlotClick = { r, c ->
+                            highlightedCell = Pair(r, c)
+                            selectedSlotCoord = Pair(r, c)
+                        },
+                    )
+                }
             }
 
             // Légende des alertes & synergies
@@ -215,6 +286,8 @@ fun GardenScreen(
                     }
                 }
             }
+
+            item { NeighborhoodCard(activeParcel, vegetables) }
         } else {
             item {
                 Text(
@@ -290,6 +363,22 @@ fun GardenScreen(
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
+                val slotHistory = remember(garden.history, activeParcel.id, row, col) {
+                    garden.history.filter { it.parcelId == activeParcel.id && it.row == row && it.col == col }
+                        .sortedByDescending { it.year }
+                }
+                if (slotHistory.isNotEmpty()) {
+                    Text(
+                        text = "Précédemment ici : " + slotHistory.take(3).joinToString(", ") {
+                            val label = vegetables.find { v -> v.id == it.vegetableId }?.name ?: it.vegetableId
+                            "$label (${it.year})"
+                        },
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
+                val rotationEngine = remember { RotationEngine() }
                 Text(
                     text = "Planter une variété :",
                     style = MaterialTheme.typography.titleSmall,
@@ -303,6 +392,9 @@ fun GardenScreen(
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     items(vegetables) { veg ->
+                        val rotationIssues = remember(veg.id, slotHistory, today.year) {
+                            rotationEngine.checkRotation(veg, activeParcel.id, row, col, today.year, slotHistory)
+                        }
                         Surface(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -338,6 +430,34 @@ fun GardenScreen(
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
+                                    if (veg.needsMoreSpace) {
+                                        Text(
+                                            text = "Demande plus d'espace qu'un carré de 30 cm.",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = SillonPalette.AlertAmber,
+                                        )
+                                    }
+                                    if (veg.indicative) {
+                                        Text(
+                                            text = "Données agronomiques indicatives.",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            fontStyle = FontStyle.Italic,
+                                        )
+                                    }
+                                    rotationIssues.firstOrNull()?.let { issue ->
+                                        val issueColor = when (issue.severity) {
+                                            RotationSeverity.CONFLICT_ERROR -> SillonPalette.AlertAmber
+                                            RotationSeverity.EXHAUSTION_WARNING -> MaterialTheme.colorScheme.secondary
+                                            RotationSeverity.BENEFICIAL -> MaterialTheme.colorScheme.primary
+                                        }
+                                        Text(
+                                            text = issue.severity.frenchLabel,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = issueColor,
+                                            fontWeight = FontWeight.SemiBold,
+                                        )
+                                    }
                                 }
                                 if (currentSlot?.vegetableId == veg.id) {
                                     Icon(
@@ -356,14 +476,21 @@ fun GardenScreen(
 
     // Dialogue d'ajout de parcelle
     if (showAddParcelDialog) {
-        var parcelName by remember { mutableStateOf("Nouveau Carré") }
+        val defaultType = when (garden.environment) {
+            GrowingEnvironment.OUTDOOR -> ParcelType.RAISED_BED_SQUARES
+            GrowingEnvironment.BALCONY -> ParcelType.CONTAINER
+            GrowingEnvironment.INDOOR -> ParcelType.WINDOWSILL
+        }
+        var selectedType by remember { mutableStateOf(defaultType) }
         var selectedSize by remember { mutableStateOf(3) }
+        var containerFormat by remember { mutableStateOf(1 to 3) }
+        var containerVolume by remember { mutableStateOf(20) }
 
         AlertDialog(
             onDismissRequest = { showAddParcelDialog = false },
             title = {
                 Text(
-                    text = "Nouvelle parcelle",
+                    text = "Nouvel espace de culture",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                 )
@@ -371,53 +498,124 @@ fun GardenScreen(
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(
-                        text = "Format standard : Carré potager surélevé divisé en carrés de 30×30 cm.",
-                        style = MaterialTheme.typography.bodySmall,
+                        text = "Type d'installation",
+                        style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    ) {
-                        Surface(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clickable { selectedSize = 3 },
-                            shape = RoundedCornerShape(10.dp),
-                            color = if (selectedSize == 3) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.background,
-                            contentColor = if (selectedSize == 3) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onBackground,
-                            border = BorderStroke(
-                                1.5.dp,
-                                if (selectedSize == 3) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
-                            ),
-                        ) {
-                            Column(
-                                modifier = Modifier.padding(12.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        items(ParcelType.entries) { type ->
+                            val selected = selectedType == type
+                            Surface(
+                                modifier = Modifier.clickable { selectedType = type },
+                                shape = RoundedCornerShape(10.dp),
+                                color = if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.background,
+                                border = BorderStroke(
+                                    1.dp,
+                                    if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                                ),
                             ) {
-                                Text(text = "3 × 3", fontWeight = FontWeight.Bold)
-                                Text(text = "9 carrés (90 cm)", style = MaterialTheme.typography.bodySmall)
+                                Text(
+                                    text = type.frenchLabel,
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = if (selected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
+                                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+                                )
                             }
                         }
+                    }
 
-                        Surface(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clickable { selectedSize = 4 },
-                            shape = RoundedCornerShape(10.dp),
-                            color = if (selectedSize == 4) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.background,
-                            contentColor = if (selectedSize == 4) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onBackground,
-                            border = BorderStroke(
-                                1.5.dp,
-                                if (selectedSize == 4) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
-                            ),
+                    if (selectedType.isContainerBased) {
+                        val presets = listOf(
+                            Triple(1 to 1, "1 × 1", "Pot individuel"),
+                            Triple(1 to 3, "1 × 3", "Jardinière"),
+                            Triple(2 to 3, "2 × 3", "Bac / Étagère"),
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
-                            Column(
-                                modifier = Modifier.padding(12.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
+                            presets.forEach { (dims, title, desc) ->
+                                val selected = containerFormat == dims
+                                Surface(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .clickable { containerFormat = dims },
+                                    shape = RoundedCornerShape(10.dp),
+                                    color = if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.background,
+                                    border = BorderStroke(
+                                        1.5.dp,
+                                        if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                                    ),
+                                ) {
+                                    Column(
+                                        modifier = Modifier.padding(10.dp),
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                    ) {
+                                        Text(text = title, fontWeight = FontWeight.Bold)
+                                        Text(text = desc, style = MaterialTheme.typography.bodySmall)
+                                    }
+                                }
+                            }
+                        }
+                        SillonStepper(
+                            value = containerVolume,
+                            onValueChange = { containerVolume = it },
+                            min = 2,
+                            max = 200,
+                            label = "Volume du contenant (litres)",
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    } else {
+                        Text(
+                            text = "Format standard : Carré potager surélevé divisé en carrés de 30×30 cm.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        ) {
+                            Surface(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable { selectedSize = 3 },
+                                shape = RoundedCornerShape(10.dp),
+                                color = if (selectedSize == 3) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.background,
+                                contentColor = if (selectedSize == 3) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onBackground,
+                                border = BorderStroke(
+                                    1.5.dp,
+                                    if (selectedSize == 3) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                                ),
                             ) {
-                                Text(text = "4 × 4", fontWeight = FontWeight.Bold)
-                                Text(text = "16 carrés (1,20 m)", style = MaterialTheme.typography.bodySmall)
+                                Column(
+                                    modifier = Modifier.padding(12.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                ) {
+                                    Text(text = "3 × 3", fontWeight = FontWeight.Bold)
+                                    Text(text = "9 carrés (90 cm)", style = MaterialTheme.typography.bodySmall)
+                                }
+                            }
+
+                            Surface(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable { selectedSize = 4 },
+                                shape = RoundedCornerShape(10.dp),
+                                color = if (selectedSize == 4) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.background,
+                                contentColor = if (selectedSize == 4) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onBackground,
+                                border = BorderStroke(
+                                    1.5.dp,
+                                    if (selectedSize == 4) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                                ),
+                            ) {
+                                Column(
+                                    modifier = Modifier.padding(12.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                ) {
+                                    Text(text = "4 × 4", fontWeight = FontWeight.Bold)
+                                    Text(text = "16 carrés (1,20 m)", style = MaterialTheme.typography.bodySmall)
+                                }
                             }
                         }
                     }
@@ -425,7 +623,30 @@ fun GardenScreen(
             },
             confirmButton = {
                 TextButton(onClick = {
-                    onAddParcel("Carré ${garden.parcels.size + 1}", ParcelType.RAISED_BED_SQUARES, selectedSize, selectedSize)
+                    val idx = garden.parcels.size + 1
+                    if (selectedType.isContainerBased) {
+                        val prefix = when (selectedType) {
+                            ParcelType.CONTAINER -> "Pot / Jardinière"
+                            ParcelType.WINDOWSILL -> "Rebord"
+                            ParcelType.GROW_LIGHT_SHELF -> "Étagère"
+                            else -> "Parcelle"
+                        }
+                        onAddParcelWithVolume(
+                            "$prefix $idx",
+                            selectedType,
+                            containerFormat.first,
+                            containerFormat.second,
+                            containerVolume,
+                        )
+                    } else {
+                        onAddParcelWithVolume(
+                            "Carré $idx",
+                            selectedType,
+                            selectedSize,
+                            selectedSize,
+                            null,
+                        )
+                    }
                     showAddParcelDialog = false
                 }) {
                     Text("Créer la parcelle", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
@@ -649,5 +870,77 @@ private fun GrowthBar(growth: Growth, height: Int, modifier: Modifier = Modifier
                 .clip(RoundedCornerShape(50))
                 .background(if (growth.stage == GrowthStage.READY) MaterialTheme.colorScheme.secondary else SillonTheme.colors.sprout),
         )
+    }
+}
+
+@Composable
+private fun ViewChip(label: String, selected: Boolean, onClick: () -> Unit) {
+    Surface(
+        modifier = Modifier.clickable(onClick = onClick),
+        shape = RoundedCornerShape(50),
+        color = if (selected) SillonPalette.SageContainer else MaterialTheme.colorScheme.surface,
+        border = BorderStroke(1.dp, if (selected) SillonPalette.Sage else MaterialTheme.colorScheme.outline),
+    ) {
+        Text(
+            text = label,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+            style = MaterialTheme.typography.labelSmall,
+            color = if (selected) SillonPalette.SageDark else MaterialTheme.colorScheme.onSurfaceVariant,
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.SemiBold,
+        )
+    }
+}
+
+/** Les affinités et alertes réellement détectées dans la parcelle, en phrases courtes. */
+@Composable
+private fun NeighborhoodCard(parcel: Parcel, vegetables: List<Vegetable>) {
+    val links = remember(parcel, vegetables) { neighborLinks(parcel, vegetables) }
+    SillonCard(
+        backgroundColor = MaterialTheme.colorScheme.surface,
+        borderColor = MaterialTheme.colorScheme.outline,
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(
+                text = "Voisinage",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            if (links.isEmpty()) {
+                Text(
+                    text = "Aucune affinité ni alerte entre les plantes de ce carré pour l'instant.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            for (link in links.take(6)) {
+                val second = link.second.name.replaceFirstChar { it.lowercase() }
+                val sentence = when {
+                    link.positive && link.protects -> "${link.first.name} et $second se protègent mutuellement"
+                    link.positive -> "${link.first.name} et $second s'entraident"
+                    else -> "${link.first.name} et $second se gênent : à éloigner"
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier
+                            .size(10.dp)
+                            .clip(CircleShape)
+                            .background(if (link.positive) SillonPalette.Sage else SillonPalette.AlertAmber),
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = sentence,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                }
+            }
+            if (links.size > 6) {
+                Text(
+                    text = "et ${links.size - 6} autres",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
     }
 }

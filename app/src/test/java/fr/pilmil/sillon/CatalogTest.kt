@@ -84,6 +84,18 @@ class CatalogTest {
     }
 
     @Test
+    fun testIndoorSuitableVegetablesSelection() {
+        val indoorVegs = VegetableCatalog.ALL_VEGETABLES.filter { it.indoorSuitable }.map { it.id }.toSet()
+        assertTrue("Au moins 15 variétés doivent être compatibles intérieur", indoorVegs.size >= 15)
+        for (expected in listOf("basilic", "menthe", "ciboulette", "persil", "radis", "roquette", "laitue")) {
+            assertTrue("'$expected' devrait être compatible intérieur", expected in indoorVegs)
+        }
+        for (excluded in listOf("pomme_de_terre", "mais_doux", "courge_butternut", "asperge")) {
+            assertFalse("'$excluded' ne devrait pas être marqué compatible intérieur", excluded in indoorVegs)
+        }
+    }
+
+    @Test
     fun testFrenchFrostCatalogCoverage() {
         val departments = FrenchFrostCatalog.DEPARTMENTS
         assertTrue("Le catalogue des gelées doit contenir au moins 96 départements (reçu: ${departments.size})", departments.size >= 96)
@@ -132,5 +144,21 @@ class CatalogTest {
             assertTrue("Les causes doivent être documentées pour '$id'", disease.causes.isNotEmpty())
             assertTrue("Les remèdes bio doivent être documentés pour '$id'", disease.organicRemedies.isNotEmpty())
         }
+
+        // Vérifier l'unicité et la complétude de l'ensemble du catalogue maladies & légumes
+        assertEquals(diseases.size, diseases.map { it.id }.toSet().size)
+        for (d in diseases) {
+            assertFalse("Nom vide pour ${d.id}", d.name.isBlank())
+            assertTrue("Organes vides pour ${d.id}", d.affectedOrgans.isNotEmpty())
+            assertTrue("Symptômes vides pour ${d.id}", d.symptoms.isNotEmpty())
+            assertTrue("Causes vides pour ${d.id}", d.causes.isNotEmpty())
+            assertTrue("Remèdes vides pour ${d.id}", d.organicRemedies.isNotEmpty())
+        }
+        assertEquals(null, DiseaseCatalog.getById("affection_inexistante"))
+        assertEquals(
+            VegetableCatalog.ALL_VEGETABLES.size,
+            VegetableCatalog.ALL_VEGETABLES.map { it.id }.toSet().size,
+        )
+        assertEquals(null, VegetableCatalog.getById("plante_inexistante"))
     }
 }

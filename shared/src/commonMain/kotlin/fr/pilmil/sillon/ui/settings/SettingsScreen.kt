@@ -31,22 +31,33 @@ import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.TableChart
+import androidx.compose.material.icons.filled.WbSunny
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.pilmil.sillon.engine.LightEstimator
+import fr.pilmil.sillon.model.Climate
 import fr.pilmil.sillon.model.GrowingEnvironment
 import fr.pilmil.sillon.model.LightSource
+import fr.pilmil.sillon.model.LocalWeather
 import fr.pilmil.sillon.model.Orientation
 import fr.pilmil.sillon.model.WindExposure
 import fr.pilmil.sillon.ui.components.SillonBadge
@@ -61,6 +72,12 @@ import fr.pilmil.sillon.ui.rememberAmbientLuxSensor
 fun SettingsScreen(
     frostMonth: Int = 5,
     frostDay: Int = 15,
+    climate: Climate = Climate.TEMPERATE,
+    altitudeMeters: Int = 0,
+    onAltitudeChange: (Int) -> Unit = {},
+    mulched: Boolean = false,
+    localWeather: LocalWeather = LocalWeather.NORMAL,
+    onWateringConditionsChange: (Boolean, LocalWeather) -> Unit = { _, _ -> },
     onFrostDateChange: (Int, Int) -> Unit = { _, _ -> },
     environment: GrowingEnvironment = GrowingEnvironment.OUTDOOR,
     orientation: Orientation? = null,
@@ -78,6 +95,8 @@ fun SettingsScreen(
     ) -> Unit = { _, _, _, _, _, _ -> },
     onExportJson: () -> Unit = {},
     onImportJson: () -> Unit = {},
+    onExportPilmil: ((CharArray) -> Unit)? = null,
+    onImportPilmil: ((CharArray) -> Unit)? = null,
     onExportCsv: () -> Unit = {},
     departmentLabel: String? = null,
     onPickDepartment: () -> Unit = {},
@@ -94,6 +113,59 @@ fun SettingsScreen(
         "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
         "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
     )
+    var pilmilDialogMode by remember { mutableStateOf<String?>(null) }
+    var passphraseInput by remember { mutableStateOf("") }
+
+    if (pilmilDialogMode != null) {
+        val isExport = pilmilDialogMode == "export"
+        AlertDialog(
+            onDismissRequest = {
+                pilmilDialogMode = null
+                passphraseInput = ""
+            },
+            title = { Text(if (isExport) "Chiffrer la sauvegarde (.pilmil)" else "Déchiffrer la sauvegarde (.pilmil)") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = if (isExport) {
+                            "Choisissez une phrase secrète pour chiffrer votre coffre .pilmil (AES-256-GCM)."
+                        } else {
+                            "Saisissez la phrase secrète utilisée lors de l'export."
+                        },
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                    OutlinedTextField(
+                        value = passphraseInput,
+                        onValueChange = { passphraseInput = it },
+                        label = { Text("Phrase secrète") },
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    enabled = passphraseInput.isNotEmpty(),
+                    onClick = {
+                        val chars = passphraseInput.toCharArray()
+                        pilmilDialogMode = null
+                        passphraseInput = ""
+                        if (isExport) onExportPilmil?.invoke(chars) else onImportPilmil?.invoke(chars)
+                    },
+                ) {
+                    Text(if (isExport) "Exporter" else "Importer")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    pilmilDialogMode = null
+                    passphraseInput = ""
+                }) {
+                    Text("Annuler")
+                }
+            },
+        )
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -373,14 +445,14 @@ fun SettingsScreen(
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            imageVector = Icons.Filled.AcUnit,
+                            imageVector = if (climate == Climate.TROPICAL) Icons.Filled.WbSunny else Icons.Filled.AcUnit,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(24.dp),
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(
-                            text = "Date repère des dernières gelées",
+                            text = if (climate == Climate.TROPICAL) "Début de la saison de plantation" else "Date repère des dernières gelées",
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.Bold,
@@ -388,7 +460,11 @@ fun SettingsScreen(
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "En France métropolitaine, la date médiane se situe entre mi-mars (zone méditerranéenne) et mi-mai (Saints de Glace en plaine / montagne). Tous les travaux et rappels de semis sont calculés par rapport à ce jour J.",
+                        text = if (climate == Climate.TROPICAL) {
+                            "En outre-mer, il n'y a pas de gelée : le calendrier part du début de la saison de plantation de votre territoire. Cette date est une estimation, qui varie de 1 à 2 mois selon les sources et les microclimats : ajustez-la au jour près. Tous les travaux et rappels de semis sont calculés par rapport à ce jour."
+                        } else {
+                            "En France métropolitaine, la date médiane se situe entre mi-mars (zone méditerranéenne) et mi-mai (Saints de Glace en plaine / montagne). Tous les travaux et rappels de semis sont calculés par rapport à ce jour J."
+                        },
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         lineHeight = 20.sp,
@@ -418,10 +494,79 @@ fun SettingsScreen(
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                     SillonOutlinedButton(
-                        text = departmentLabel?.let { "Département : $it" } ?: "Choisir mon département",
+                        text = departmentLabel?.let { "Lieu : $it" } ?: "Choisir mon département ou territoire",
                         icon = Icons.Filled.Place,
                         onClick = onPickDepartment,
                     )
+                    Spacer(modifier = Modifier.height(14.dp))
+                    SillonStepper(
+                        value = (altitudeMeters / 100).coerceIn(0, 25),
+                        onValueChange = { onAltitudeChange(it * 100) },
+                        min = 0,
+                        max = 25,
+                        label = "Altitude (${altitudeMeters} m)",
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = if (climate == Climate.TROPICAL) {
+                            "Au-delà de 500 m (ex. Hauts de La Réunion), l'air plus frais favorise le chouchou, les salades et les choux."
+                        } else {
+                            "Au-dessus de 200 m, la date de dernière gelée est décalée d'environ 3,5 jours par tranche de 100 m."
+                        },
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Spacer(modifier = Modifier.height(14.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        Text(
+                            text = "Sol paillé",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                        Switch(
+                            checked = mulched,
+                            onCheckedChange = { onWateringConditionsChange(it, localWeather) },
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Météo locale récente",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        LocalWeather.entries.forEach { weather ->
+                            val selected = localWeather == weather
+                            Surface(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable { onWateringConditionsChange(mulched, weather) },
+                                shape = RoundedCornerShape(8.dp),
+                                color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
+                                border = BorderStroke(
+                                    1.dp,
+                                    if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                                ),
+                            ) {
+                                Text(
+                                    text = weather.frenchLabel,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+                                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -557,6 +702,21 @@ fun SettingsScreen(
                         icon = Icons.Filled.TableChart,
                         onClick = onExportCsv,
                     )
+
+                    if (onExportPilmil != null && onImportPilmil != null) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        SillonOutlinedButton(
+                            text = "Coffre chiffré (.pilmil)",
+                            icon = Icons.Filled.Lock,
+                            onClick = { pilmilDialogMode = "export" },
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                        SillonOutlinedButton(
+                            text = "Restaurer un coffre (.pilmil)",
+                            icon = Icons.Filled.FileUpload,
+                            onClick = { pilmilDialogMode = "import" },
+                        )
+                    }
                 }
             }
         }
@@ -634,7 +794,8 @@ fun SettingsScreen(
                                "• Zéro traceur, zéro SDK publicitaire, zéro compte.\n" +
                                "• Calendrier, associations et diagnostic 100 % calculés sur votre téléphone.\n" +
                                "• Logiciel libre sous licence Mozilla Public License 2.0 (MPL-2.0).\n" +
-                               "• Contact : pilmil.studio@proton.me · https://relthdrarxash.github.io",
+                               "• Contact : pilmil.studio@proton.me · https://pilmil-studio.github.io\n" +
+                               "• Un besoin d'outil hors-ligne sans pub ni suivi ? Écrivez-nous à pilmil.studio@proton.me.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurface,
                         lineHeight = 20.sp,

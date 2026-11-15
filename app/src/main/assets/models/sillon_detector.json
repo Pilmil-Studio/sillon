@@ -1,0 +1,19 @@
+{
+  "format": 1,
+  "created": "2026-11-15",
+  "model": "yolo11n.pt",
+  "imgsz": 512,
+  "classes": [
+    "sain",
+    "mildiou",
+    "oidium",
+    "alternariose",
+    "rouille",
+    "tetranyques",
+    "autre"
+  ],
+  "val_map50": 0.43190545921172996,
+  "val_map50_95": 0.29297305755417374,
+  "test_map50": 0.3617516368473468,
+  "test_map50_95": 0.21972231907638273
+}
