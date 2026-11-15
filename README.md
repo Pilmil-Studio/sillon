@@ -7,7 +7,7 @@
 [![Offline](https://img.shields.io/badge/Network-100%25%20Offline-orange.svg)](app/src/main/AndroidManifest.xml)
 [![Android](https://img.shields.io/badge/Android-8.0%2B%20(API%2026%2B)-brightgreen.svg)](app/build.gradle.kts)
 
-Application Android de **potager vivant & calendrier agronomique**, 100 % hors-ligne, libre, gratuite, sans publicité, sans inscription et sans la moindre collecte de données. Fait partie de la suite d'applications d'intérêt général **Pilmil Studio** (avec *Sauve*, *Sommelle*, *Lunaison* et *Respire*).
+Application de **potager vivant & calendrier agronomique** (Android & iOS via Kotlin Multiplatform / Compose Multiplatform), 100 % hors-ligne, libre, gratuite, sans publicité, sans inscription et sans la moindre collecte de données. Fait partie de la suite d'applications d'intérêt général **Pilmil Studio** (*Sauve*, *Sommelle*, *Lunaison*, *Respire*, *Fredonne*).
 
 Concevoir un potager nourricier et résilient ne s'improvise pas : les calendriers par mois fixes ignorent les disparités climatiques locales, les associations empiriques colportent des mythes non prouvés et les applications commerciales exigent des comptes en ligne, des abonnements ou l'envoi de photos sur des serveurs distants.
 
@@ -23,16 +23,16 @@ Concevoir un potager nourricier et résilient ne s'improvise pas : les calendrie
 
 ### 1. Calendrier agronomique dynamique indexé sur les gelées ($J_{\text{gel}}$)
 - **Fini les calendriers rigides :** Les dates fixes (« semer les tomates en mars ») sont inadaptées aux écarts thermiques régionaux. Sillon asservit toutes les fenêtres de culture à la **date médiane des dernières gelées printanières** ($J_{\text{gel}}$), garantissant une cohérence thermique réelle.
-- **101 départements français pré-configurés :** Base climatique intégrée (`FrenchFrostCatalog`) issue des normales trentenaires, personnalisable au jour près pour épouser votre microclimat d'ubac, de versant ou d'altitude.
-- **Guidage hebdomadaire bienveillant :** Écran « Aujourd'hui » affichant instantanément les semis sous abri/au chaud, les semis directs en pleine terre, les repiquages et les récoltes actifs pour la quinzaine, avec tolérance phénologique ($\pm 7$ jours).
+- **105 territoires français pré-configurés :** Base climatique intégrée (`FrenchFrostCatalog`) issue des normales trentenaires (101 départements + territoires d'outre-mer en climat **tropical**), personnalisable au jour près pour épouser votre microclimat d'ubac, de versant ou d'altitude.
+- **Guidage hebdomadaire bienveillant :** Écran « Aujourd'hui » avec prévisions balayables, semis sous abri/au chaud, semis directs en pleine terre, repiquages et récoltes actifs pour la quinzaine ($\pm 7$ jours), plus **rappels hebdomadaires de semis** facultatifs.
 
-### 2. Planificateur visuel de parcelles & carrés vivants
-- **Conception modulaire :** Créez vos carrés potagers surélevés (3x3, 4x4) ou planches de culture maraîchères en lignes.
+### 2. Planificateur visuel de parcelles, balcons & intérieur
+- **Conception modulaire :** Créez vos carrés potagers surélevés (3x3, 4x4), planches en lignes, **jardinières de balcon ou pots d'intérieur** (avec estimation de la luminosité via `LightEstimator` et capteur de lux), avec bascule vue à plat / perspective (`GardenProjection`, `GardenScene`) et icônes vectorielles CC0.
 - **Densités adaptées :** Calcul automatique des densités au pied carré (*Square Foot Gardening* : 1, 4, 9 ou 16 plants/case) ou des écartements maraîchers traditionnels en centimètres.
 - **Un potager qui pousse :** chaque case montre le stade de sa culture (installation, jeune plant, en croissance, bientôt prête, à récolter) avec une jauge et le délai avant la récolte, calculés à partir des durées du catalogue. Le stade est toujours écrit et énoncé par les lecteurs d'écran, jamais porté par l'image seule.
 
 ### 3. Moteur d'allélopathie & compagnonnage végétal (`CompanionEngine`)
-- **62 légumes, herbes aromatiques et fleurs compagnes** minutieusement modélisés (`VegetableCatalog`) avec leur famille botanique, besoins hydriques, exposition solaire et seuils thermiques de germination.
+- **74 légumes, herbes aromatiques et fleurs compagnes** minutieusement modélisés (`VegetableCatalog`) avec leur famille botanique, besoins hydriques, exposition solaire et seuils thermiques de germination.
 - **Graphe relationnel spatial en 2D :** Analyse automatique des cases adjacentes (contiguïté orthogonale et diagonale par distance de Tchebychev).
 - **Synergies documentées :** Détection de la confusion olfactive Alliacées/Apiacées (*Psila rosae* et *Acrolepiopsis assectella*), des effets nématicides racinaires de l'alpha-terthiényle des *Tagetes*, et de l'optimisation racinaire stratifiée.
 - **Alertes biologiques d'antagonisme :** Signalement immédiat des incompatibilités majeures (vecteurs épidémiques croisés comme le mildiou entre tomate et pomme de terre, allélopathie inhibitrice du fenouil ou du noyer).
@@ -46,21 +46,21 @@ Concevoir un potager nourricier et résilient ne s'improvise pas : les calendrie
 - **Prévention sanitaire tellurique :** Détection des récurrences d'une même famille sur un délai inférieur à la pause requise (3 à 5 ans) pour briser le cycle des sclérotes, nématodes et champignons terricoles (*Plasmodiophora*, *Pythium*, *Rhizoctonia*).
 
 ### 5. Guide de santé végétale & Edge Vision 100 % hors-ligne (`DiagnosticEngine`)
-- **Diagnostic différentiel dichotomique :** Analyse pas-à-pas des symptômes selon les organes touchés (feuille, tige, collet, fruit, racine) sur 14 pathologies courantes.
-- **Diagnostic photo sur l'appareil (en préparation) :** un petit modèle (MobileNetV3, environ 1 Mo, LiteRT) reconnaîtra sur le téléphone le mildiou, l'oïdium et l'alternariose, et répondra « je ne sais pas » sous un seuil de confiance calibré sur des photos de terrain. La fonction n'apparaît dans l'appli que lorsqu'un modèle entraîné est embarqué ; le pipeline d'entraînement est dans [`tools/ml`](tools/ml/README.md). Aucune image ne transite sur internet.
-- **Pharmacopée biologique certifiée :** Préconisations strictes en biocontrôle respectant le cahier des charges de l'Agriculture Biologique (décoction de prêle pour sa silice renforçant la cuticule, bicarbonate de potassium à action osmotique contre l'oïdium, cuivre raisonné plafonné à moins de 4 g/m²/an).
+- **Diagnostic différentiel dichotomique :** Analyse pas-à-pas des symptômes selon les organes touchés (feuille, tige, collet, fruit, racine) sur 21 maladies et ravageurs courants.
+- **Diagnostic photo sur l'appareil (LiteRT / TFLite) :** deux modèles embarqués (`sillon_detector.tflite` 3,0 Mo et `sillon_disease.tflite` 3,2 Mo, 14 classes dans `disease_labels.json`) associés à un viseur intelligent (`SmartCameraViewfinder`, `LeafDetector`, `FrameQualityAnalyzer`, `PhotoClassifier`) analysent les feuilles localement sans transmettre aucune image sur Internet. Le pipeline d'entraînement est dans [`tools/ml`](tools/ml/README.md).
+- **Remèdes de biocontrôle :** Préconisations strictes en biocontrôle respectant le cahier des charges de l'Agriculture Biologique (décoction de prêle pour sa silice renforçant la cuticule, bicarbonate de potassium à action osmotique contre l'oïdium, cuivre raisonné plafonné à moins de 4 g/m²/an).
 
 ---
 
 ## Les Engagements Éthiques et Techniques Pilmil Studio
 
-Comme l'ensemble des créations de **Pilmil Studio**, Sillon est conçu selon une charte d'éthique radicale :
+Comme l'ensemble des créations de **Pilmil Studio**, Sillon est conçu selon une charte éthique :
 
 - **Zéro permission INTERNET :** Aucune autorisation réseau n'est déclarée dans le manifeste (`AndroidManifest.xml`). L'application est structurellement incapable d'émettre ou de recevoir le moindre paquet sur le réseau.
 - **0 compte, 0 mot de passe, 0 serveur :** Aucune authentification requise, aucun écran d'onboarding verbeux, aucun profilage utilisateur.
 - **0 traceur, 0 publicité, 0 télémétrie :** Aucun kit d'analyse (Google Analytics, Firebase, etc.) n'est embarqué dans le code binaire.
 - **Données souveraines & formats ouverts :** Votre potager vous appartient. Les données sont enregistrées localement dans un fichier JSON clair et accessible (`sillon_garden.json`).
-- **Sauvegarde & Restauration 1-tap :** Exportation et réimportation instantanées en JSON et au format tableur CSV (compatible LibreOffice Calc et Microsoft Excel) via le Storage Access Framework (SAF) d'Android.
+- **Sauvegarde & Restauration :** Exportation et réimportation en **coffre chiffré `.pilmil`** (AES-256-GCM via `pilmil-core`), en JSON et au format tableur CSV (compatible LibreOffice Calc et Microsoft Excel) via le Storage Access Framework (SAF) d'Android.
 - **Copie dans le compte Google, à votre choix :** désactivée par défaut. Sillon n'envoie rien et n'a aucun serveur. Si vous l'activez dans les réglages (Android 12 ou plus, avec un verrouillage d'écran), Android copie le potager dans votre compte Google, chiffré de bout en bout avec le code de votre téléphone : Google ne peut pas le lire, et il faudra le code de l'ancien téléphone pour restaurer. Le transfert direct vers un nouveau téléphone et l'export JSON et CSV enregistré où vous voulez restent toujours possibles. Ces fichiers ne sont pas chiffrés.
 - **Bien commun libre :** Publié sous licence [Mozilla Public License 2.0](LICENSE) (MPL-2.0).
 
@@ -68,42 +68,41 @@ Comme l'ensemble des créations de **Pilmil Studio**, Sillon est conçu selon un
 
 ## Architecture Logicielle
 
-Le projet est conçu selon les standards modernes d'ingénierie logicielle Android :
+Le projet s'appuie sur Kotlin Multiplatform / Compose Multiplatform (`:shared`), une coque Android (`:app`), une coque iOS (`iosApp/`) et le sous-module `pilmil-core` :
 
 ```
-fr.pilmil.sillon
+shared/src/commonMain/kotlin/fr/pilmil/sillon/
 ├── data/
-│   ├── DiseaseCatalog.kt       # Base des 14 maladies et ravageurs majeurs
-│   ├── FrenchFrostCatalog.kt   # Normales climatiques des 101 départements français
-│   ├── GardenRepository.kt     # Persistance locale JSON atomique & exports SAF/CSV
-│   └── VegetableCatalog.kt      # Référentiel des 62 espèces maraîchères et compagnes
+│   ├── DiseaseCatalog.kt         # Base des 21 maladies et ravageurs
+│   ├── FrenchFrostCatalog.kt     # Normales climatiques des 105 territoires (tempéré + tropical)
+│   ├── GardenCodec.kt / Store    # Sérialisation et persistance locale multiplateforme
+│   └── VegetableCatalog.kt       # Référentiel des 74 espèces maraîchères et compagnes
 ├── engine/
-│   ├── CompanionEngine.kt      # Graphe relationnel & calcul spatial d'allélopathie
-│   ├── DiagnosticEngine.kt     # Moteur d'inférence de diagnostic différentiel
-│   ├── EdgeVisionClassifier.kt # Vision sur appareil : indices chromatiques agronomiques
-│   ├── FrostEngine.kt          # Phénologie dynamique indexée sur J_gel (Degrés Jours)
-│   └── RotationEngine.kt       # Gestion de la fatigue des sols & cycle quadriennal
-├── model/
-│   ├── BotanicalFamily.kt      # Familles botaniques, besoins trophiques et pauses
-│   ├── CompanionRelation.kt    # Typologie des synergies et risques biologiques
-│   ├── Disease.kt              # Modélisation des pathologies et remèdes bio
-│   ├── GardenModels.kt         # Modèles de parcelles, slots et historiques
-│   └── Vegetable.kt            # Fiche technique agronomique d'une espèce
-└── ui/
-    ├── catalog/CatalogScreen.kt# Exploration du catalogue & fiches détaillées
-    ├── dashboard/DashboardScreen.kt # Tableau de bord hebdomadaire des travaux
-    ├── doctor/DoctorScreen.kt  # Diagnostic phytosanitaire & Edge Vision
-    ├── garden/GardenScreen.kt  # Grille interactive des parcelles & alertes
-    ├── settings/SettingsScreen.kt # Calage climatique & exports JSON/CSV
-    └── theme/                  # Material 3 aux tonalités telluriques naturelles
+│   ├── CompanionEngine.kt        # Graphe relationnel & calcul spatial d'allélopathie
+│   ├── DashboardPlanner.kt       # Planification hebdomadaire des travaux
+│   ├── DiagnosticEngine.kt       # Moteur d'inférence de diagnostic différentiel
+│   ├── FrostEngine.kt            # Phénologie dynamique indexée sur J_gel / saison
+│   ├── GrowthEngine.kt           # Stades de croissance et délai avant récolte
+│   ├── LightEstimator.kt         # Estimation d'ensoleillement (balcon / intérieur)
+│   └── RotationEngine.kt         # Gestion de la fatigue des sols & cycle quadriennal
+├── model/                        # BotanicalFamily, Climate, CompanionRelation, Disease, GardenModels, Vegetable
+└── ui/                           # Onboarding, Dashboard, Garden (GardenProjection/Scene), Catalog, Doctor, Settings
+
+app/src/main/java/fr/pilmil/sillon/
+├── backup/                       # BackupPolicy & SillonBackupAgent
+├── data/GardenRepository.kt      # Coffre .pilmil (AndroidBackupVault) & exports SAF/CSV
+├── reminders/SowingReminders.kt  # Rappels hebdomadaires WorkManager
+└── vision/                       # LeafDetector, PhotoClassifier, FrameQualityAnalyzer (LiteRT)
+
+iosApp/                           # Coque Xcode / SwiftUI iOS (SillonApp.swift)
 ```
 
 ### Spécifications techniques
-- **Langage :** Kotlin 2.0+ (100% Kotlin).
-- **Interface :** Jetpack Compose & Material 3 (Material You avec support natif du thème sombre).
+- **Langage & Plateformes :** Kotlin Multiplatform 2.0+, Compose Multiplatform (`androidTarget`, `iosX64`, `iosArm64`, `iosSimulatorArm64`).
+- **Interface :** Material 3 (thème clair/sombre) et ~60 icônes vectorielles CC0.
 - **Typographie :** *Fraunces* (titrages agronomiques chaleureux) et *Nunito* (lisibilité optimale en plein soleil).
-- **Cible :** Android 15 / 14 (compileSdk 36, targetSdk 36, minSdk 26).
-- **Moteurs purs sans dépendance Android :** Les moteurs de calcul agronomique sont découplés du framework Android pour garantir une testabilité unitaire totale et des performances instantanées.
+- **Cible Android :** `compileSdk 36`, `targetSdk 36`, `minSdk 26`. Permissions : `POST_NOTIFICATIONS` et `CAMERA` (optionnelles), zéro `INTERNET`.
+- **Moteurs purs sans dépendance plateforme :** Les moteurs de calcul agronomique sont découplés d'Android/iOS pour garantir une testabilité unitaire totale et des performances instantanées.
 
 ---
 

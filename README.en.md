@@ -7,7 +7,9 @@
 [![Offline](https://img.shields.io/badge/Network-100%25%20Offline-orange.svg)](app/src/main/AndroidManifest.xml)
 [![Android](https://img.shields.io/badge/Android-8.0%2B%20(API%2026%2B)-brightgreen.svg)](app/build.gradle.kts)
 
-An Android application for **living vegetable gardens & agronomic planning**, 100% offline, free, open-source, ad-free, with no account, no tracking, and zero internet permission. Part of the **Pilmil Studio** public interest suite (along with *Sauve*, *Sommelle*, *Lunaison*, and *Respire*).
+A **living vegetable garden & agronomic planning** application (Android & iOS via Kotlin Multiplatform / Compose Multiplatform), 100% offline, free, open-source, ad-free, with no account, no tracking, and zero internet permission. Part of the **Pilmil Studio** public interest suite (*Sauve*, *Sommelle*, *Lunaison*, *Respire*, *Fredonne*).
+
+> The app interface is currently available in French only.
 
 Designing a thriving and resilient food garden should not rely on folklore or arbitrary monthly calendars. Fixed-date schedules ignore regional climates and seasonal shifts, while commercial apps demand intrusive accounts, subscriptions, or upload private garden pictures to remote servers.
 
@@ -23,16 +25,16 @@ Designing a thriving and resilient food garden should not rely on folklore or ar
 
 ### 1. Dynamic Phenological Calendar Indexed to Last Frost ($J_{\text{frost}}$)
 - **Beyond rigid calendar months:** Rigid guidelines like "sow tomatoes in March" fail to account for altitude and microclimates. Sillon shifts every indoor sowing, direct seeding, transplanting, and harvest window relative to the **median date of the last spring frost** ($J_{\text{frost}}$).
-- **101 pre-configured French departments:** Integrated 30-year climatological normal database (`FrenchFrostCatalog`), customizable down to the exact day to fit local microclimates (hillside, sheltered valley, urban heat island).
-- **Weekly gardening dashboard:** "Today" screen instantly highlights indoor seed starting, direct ground sowing, transplanting, and active harvest windows for the current fortnight ($\pm 7$ day phenological tolerance).
+- **105 pre-configured French territories:** Integrated 30-year climatological normal database (`FrenchFrostCatalog`, covering 101 departments + overseas territories in **tropical** climate), customizable down to the exact day to fit local microclimates (hillside, sheltered valley, urban heat island).
+- **Weekly gardening dashboard:** "Today" screen with swipeable forecasts, indoor seed starting, direct ground sowing, transplanting, and active harvest windows for the current fortnight ($\pm 7$ day tolerance), plus optional **weekly sowing reminders**.
 
-### 2. Visual Garden Bed & Raised Square Planner
-- **Modular layouts:** Easily configure raised square beds (3x3, 4x4) or traditional in-ground row plots.
+### 2. Visual Garden Bed, Balcony & Indoor Planner
+- **Modular layouts:** Configure raised square beds (3x3, 4x4), traditional in-ground row plots, **balcony planters or indoor pots** (with light estimation via `LightEstimator` and lux sensor), flat/perspective view toggle (`GardenProjection`, `GardenScene`), and CC0 vector icons.
 - **Tailored densities:** Automatic calculation of Square Foot Gardening densities (1, 4, 9, or 16 plants per slot) or standard centimeter spacing between plants and rows.
 - **A garden that grows:** each square shows the stage of its crop (settling in, young plant, growing, almost ready, ready to harvest) with a gauge and the time left before harvest, computed from the catalogue durations. The stage is always written and announced by screen readers, never carried by the picture alone.
 
 ### 3. Allelopathy & Companion Planting Engine (`CompanionEngine`)
-- **62 modeled vegetable crops, aromatic herbs, and companion flowers** (`VegetableCatalog`) with botanical families, water requirements, sun exposure, and germination temperature thresholds.
+- **74 modeled vegetable crops, aromatic herbs, and companion flowers** (`VegetableCatalog`) with botanical families, water requirements, sun exposure, and germination temperature thresholds.
 - **2D spatial relational graph:** Automated evaluation of neighboring cells (orthogonal and diagonal adjacency using Chebyshev distance).
 - **Documented synergies:** Detection of olfactory pest masking between Alliums and Apiaceae (*Psila rosae* vs. *Acrolepiopsis assectella*), nematicidal root exudates ($\alpha$-terthienyl from *Tagetes*), and root depth stratification.
 - **Biological antagonism alerts:** Immediate warning for critical conflicts (shared blight vectors between tomatoes and potatoes, allelopathic growth inhibition from fennel or walnut).
@@ -46,9 +48,9 @@ Designing a thriving and resilient food garden should not rely on folklore or ar
 - **Soil-borne pest breaking:** Identifies family replanting violations within a 3- to 5-year exclusion window to break the lifecycle of resting spores, root-knot nematodes, and fungal pathogens (*Plasmodiophora*, *Pythium*, *Rhizoctonia*).
 
 ### 5. Plant Health Doctor & 100% Offline Edge Vision (`DiagnosticEngine`)
-- **Dichotomous differential diagnosis:** Step-by-step symptomatic triage across affected organs (leaf, stem, fruit, collar, roots) covering 14 common garden diseases and pests.
-- **On-device photo diagnosis (in preparation):** a small model (MobileNetV3, about 1 MB, LiteRT) will recognise late blight, powdery mildew and early blight on the phone, and answer "not sure" below a confidence threshold calibrated on field photos. The feature only appears once a trained model is bundled; the training pipeline lives in [`tools/ml`](tools/ml/README.md). No image ever leaves the device.
-- **Certified organic remedies:** Strictly organic biocontrol treatments (horsetail silica decoction to strengthen leaf cuticles, potassium bicarbonate for osmotic powdery mildew lysis, and copper strictly capped below 4 g/m²/year).
+- **Dichotomous differential diagnosis:** Step-by-step symptomatic triage across affected organs (leaf, stem, fruit, collar, roots) covering 21 common garden diseases and pests.
+- **On-device photo diagnosis (LiteRT / TFLite):** two bundled models (`sillon_detector.tflite` 3.0 MB and `sillon_disease.tflite` 3.2 MB, 14 classes in `disease_labels.json`) paired with a smart viewfinder (`SmartCameraViewfinder`, `LeafDetector`, `FrameQualityAnalyzer`, `PhotoClassifier`) analyze leaves locally without sending any image over the network. The training pipeline lives in [`tools/ml`](tools/ml/README.md).
+- **Biocontrol remedies:** Strictly organic biocontrol treatments (horsetail silica decoction to strengthen leaf cuticles, potassium bicarbonate for osmotic powdery mildew lysis, and copper strictly capped below 4 g/m²/year).
 
 ---
 
@@ -60,7 +62,7 @@ Like all applications created by **Pilmil Studio**, Sillon follows a strict ethi
 - **0 accounts, 0 passwords, 0 servers:** No login walls, no onboarding delays, no personal profiling.
 - **0 trackers, 0 telemetry, 0 ads:** Completely free of tracking SDKs (no Firebase, no Google Analytics, no third-party ad libraries).
 - **Sovereign, open data:** Your garden data belongs exclusively to you. Stored locally in human-readable JSON (`sillon_garden.json`).
-- **1-tap backup & restore:** Seamless JSON and CSV spreadsheet exports/imports via Android's native Storage Access Framework (SAF).
+- **Backup & restore:** Export and import as an **encrypted `.pilmil` vault** (AES-256-GCM via `pilmil-core`), JSON, and CSV spreadsheet format via Android's native Storage Access Framework (SAF).
 - **Copy to your Google account, your choice:** off by default. Sillon sends nothing and has no server. If you turn it on in settings (Android 12 or later, with a screen lock), Android copies the garden to your Google account, end-to-end encrypted with your phone's lock code: Google cannot read it, and the old phone's code is needed to restore. Direct transfer to a new phone and a JSON and CSV export saved wherever you want always remain possible. Those files are not encrypted.
 - **Free & Open Source:** Published under the [Mozilla Public License 2.0](LICENSE) (MPL-2.0).
 
@@ -68,42 +70,41 @@ Like all applications created by **Pilmil Studio**, Sillon follows a strict ethi
 
 ## Software Architecture
 
-Built using modern, clean Android engineering practices:
+Built using Kotlin Multiplatform / Compose Multiplatform (`:shared`), an Android shell (`:app`), an iOS shell (`iosApp/`), and the `pilmil-core` submodule:
 
 ```
-fr.pilmil.sillon
+shared/src/commonMain/kotlin/fr/pilmil/sillon/
 ├── data/
-│   ├── DiseaseCatalog.kt       # Catalog of 14 major garden diseases and pests
-│   ├── FrenchFrostCatalog.kt   # Climate normals for 101 French departments
-│   ├── GardenRepository.kt     # Atomic JSON local storage & SAF/CSV exporters
-│   └── VegetableCatalog.kt      # Scientific profiles for 62 garden crops
+│   ├── DiseaseCatalog.kt         # Catalog of 21 garden diseases and pests
+│   ├── FrenchFrostCatalog.kt     # Climate normals for 105 territories (temperate + tropical)
+│   ├── GardenCodec.kt / Store    # Cross-platform serialization and local persistence
+│   └── VegetableCatalog.kt       # Scientific profiles for 74 garden crops
 ├── engine/
-│   ├── CompanionEngine.kt      # Relational graph & spatial allelopathy evaluator
-│   ├── DiagnosticEngine.kt     # Rule-based differential diagnostic engine
-│   ├── EdgeVisionClassifier.kt # On-device vision: agronomic chrominance indices
-│   ├── FrostEngine.kt          # Dynamic phenology indexed to J_frost (Degree Days)
-│   └── RotationEngine.kt       # Soil fatigue prevention & 4-year cycle engine
-├── model/
-│   ├── BotanicalFamily.kt      # Botanical families, trophic needs & pause periods
-│   ├── CompanionRelation.kt    # Taxonomy of biological synergies and risks
-│   ├── Disease.kt              # Pathogen definitions & organic treatment guidelines
-│   ├── GardenModels.kt         # Parcel, slot, and crop history data structures
-│   └── Vegetable.kt            # Agronomic botanical model of a plant
-└── ui/
-    ├── catalog/CatalogScreen.kt# Crop catalog & technical specification sheets
-    ├── dashboard/DashboardScreen.kt # Weekly task overview & calendar windows
-    ├── doctor/DoctorScreen.kt  # Symptom triage & Edge Vision screen
-    ├── garden/GardenScreen.kt  # Interactive parcel grid & companion overlay
-    ├── settings/SettingsScreen.kt # Frost calibration & JSON/CSV import/export
-    └── theme/                  # Earthy Material 3 design system
+│   ├── CompanionEngine.kt        # Relational graph & spatial allelopathy evaluator
+│   ├── DashboardPlanner.kt       # Weekly task planner
+│   ├── DiagnosticEngine.kt       # Rule-based differential diagnostic engine
+│   ├── FrostEngine.kt            # Dynamic phenology indexed to J_frost / season
+│   ├── GrowthEngine.kt           # Growth stages & days-to-harvest engine
+│   ├── LightEstimator.kt         # Light estimation for balcony & indoor growing
+│   └── RotationEngine.kt         # Soil fatigue prevention & 4-year cycle engine
+├── model/                        # BotanicalFamily, Climate, CompanionRelation, Disease, GardenModels, Vegetable
+└── ui/                           # Onboarding, Dashboard, Garden (GardenProjection/Scene), Catalog, Doctor, Settings
+
+app/src/main/java/fr/pilmil/sillon/
+├── backup/                       # BackupPolicy & SillonBackupAgent
+├── data/GardenRepository.kt      # .pilmil vault (AndroidBackupVault) & SAF/CSV exporters
+├── reminders/SowingReminders.kt  # WorkManager weekly reminders
+└── vision/                       # LeafDetector, PhotoClassifier, FrameQualityAnalyzer (LiteRT)
+
+iosApp/                           # Xcode / SwiftUI iOS shell (SillonApp.swift)
 ```
 
 ### Technical specifications
-- **Language:** Kotlin 2.0+ (100% pure Kotlin).
-- **User Interface:** Jetpack Compose & Material 3 (Material You with full dark theme support).
+- **Language & Targets:** Kotlin Multiplatform 2.0+, Compose Multiplatform (`androidTarget`, `iosX64`, `iosArm64`, `iosSimulatorArm64`).
+- **User Interface:** Material 3 (light & dark themes) and ~60 CC0 vector icons.
 - **Typography:** *Fraunces* (warm serif titles) and *Nunito* (sunlight-readable clean sans-serif).
-- **Target:** Android 15 / 14 (compileSdk 36, targetSdk 36, minSdk 26 - Android 8.0+).
-- **Pure Kotlin engines:** Calculation engines are decoupled from Android platform classes for fast unit testing (< 2s) and deterministic execution.
+- **Android Target:** `compileSdk 36`, `targetSdk 36`, `minSdk 26` (Android 8.0+). Permissions: optional `POST_NOTIFICATIONS` and `CAMERA`, zero `INTERNET`.
+- **Pure Kotlin engines:** Calculation engines are decoupled from Android/iOS platform classes for fast unit testing and deterministic execution.
 
 ---
 
