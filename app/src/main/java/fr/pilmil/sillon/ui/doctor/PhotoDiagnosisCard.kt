@@ -186,7 +186,7 @@ fun PhotoDiagnosisCard(onOpenDisease: (String) -> Unit) {
                 }
             }
             Text(
-                "Reconnaît pour l'instant le mildiou, l'oïdium et l'alternariose sur tomate, pomme de terre, poivron, courge et fraisier. C'est une piste à confirmer avec la clé ci-dessous, pas un diagnostic certain.",
+                "Reconnaît une dizaine de maladies et de ravageurs courants (mildiou, oïdium, pucerons, limaces, doryphore…) et répond « je ne sais pas » quand il n'est pas assez sûr. Aide indicative, en amélioration continue : à confirmer avec la clé ci-dessous, pas un diagnostic certain.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

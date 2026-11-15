@@ -4,16 +4,18 @@ KEY FEATURES
 
 • Personalized agronomic calendar: indoor seed starting, direct sowing, transplanting, and harvesting dates calculated automatically from your region's last spring frost date.
 • Living companion planting: instantly identify beneficial plant associations (growth stimulators, pest repellents) and avoid harmful allelopathic pairings between crops.
-• Garden bed & square-foot planner: organize raised beds, track parcel occupancy, and optimize planting density effortlessly.
+• Garden bed & square-foot planner: organize beds, pots and planters, with a flat or perspective view.
+• Balcony and indoor modes: frost-free calendar for pots and shelves, orientation, wind and light estimate. Tropical climate supported for overseas territories.
 • Crop rotation engine: protect soil fertility and prevent soil-borne pests and diseases through a 4-year botanical family rotation cycle.
 • Plant health doctor & organic remedies: observe symptoms on leaves or stems, diagnose common garden diseases (mildew, powdery mildew, blossom end rot, aphids), and treat them with natural remedies (nettle slurry, horsetail decoction, soft soap).
+• On-device photo diagnosis: a leaf photo is analysed on your phone and never sent anywhere. The app says "I don't know" when it is not sure enough. It is an aid that keeps improving, not a certain diagnosis.
 • Comprehensive vegetable encyclopedia: detailed guides for each plant covering germination temperatures, spacing, sunlight, watering needs, and cultivation tips.
 
 YOUR DATA STAYS WITH YOU
 
 • No account required, no ads, no trackers.
 • The app does not request Internet permission: nothing ever leaves your device.
-• All garden logs and plans remain stored locally on your phone.
+• Garden data stays on your phone, with encrypted (.pilmil), JSON and CSV export.
 • Free and open source (MPL-2.0): transparent, auditable, and community-friendly.
 
 Note: the app interface is currently available in French only.

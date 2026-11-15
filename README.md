@@ -9,9 +9,11 @@
 
 Application de **potager vivant & calendrier agronomique** (Android & iOS via Kotlin Multiplatform / Compose Multiplatform), 100 % hors-ligne, libre, gratuite, sans publicité, sans inscription et sans la moindre collecte de données. Fait partie de la suite d'applications d'intérêt général **Pilmil Studio** (*Sauve*, *Sommelle*, *Lunaison*, *Respire*, *Fredonne*).
 
-Concevoir un potager nourricier et résilient ne s'improvise pas : les calendriers par mois fixes ignorent les disparités climatiques locales, les associations empiriques colportent des mythes non prouvés et les applications commerciales exigent des comptes en ligne, des abonnements ou l'envoi de photos sur des serveurs distants.
+Sillon est un compagnon de potager qui fonctionne sans réseau. Il vous dit quoi semer, repiquer ou récolter ces quinze prochains jours, d'après la date des dernières gelées chez vous. Il dessine vos parcelles (potager, balcon ou intérieur), signale les plantes qui s'entraident ou se gênent, vous rappelle de changer de famille de légumes d'une année à l'autre, et vous aide à reconnaître un mal sur une feuille à partir d'une photo, sans que la photo quitte le téléphone.
 
-**Sillon** remet l'agronomie rationnelle et la biologie végétale au centre du jardin, directement dans votre poche, même au fond du potager sans réseau : calcul dynamique des périodes culturales indexées sur la date médiane de dernière gelée ($J_{\text{gel}}$), détection spatiale des synergies et antagonismes allélopathiques, respect du cycle de rotation des cultures sur 4 ans et diagnostic foliaire embarqué 100 % local.
+Gratuit, sans compte, sans publicité, et il ne demande même pas l'autorisation d'accéder à Internet. L'interface est pour l'instant en français uniquement.
+
+**Pour les curieux (partie technique).** Les fenêtres de culture sont calculées par rapport à la date médiane de dernière gelée ($J_{\text{gel}}$) plutôt que par mois fixes, la détection des voisinages utilise les relations d'allélopathie documentées, la rotation suit un cycle de 4 ans et la reconnaissance de feuille s'appuie sur des modèles embarqués. Le détail est plus bas.
 
 ---
 
@@ -47,7 +49,9 @@ Concevoir un potager nourricier et résilient ne s'improvise pas : les calendrie
 
 ### 5. Guide de santé végétale & Edge Vision 100 % hors-ligne (`DiagnosticEngine`)
 - **Diagnostic différentiel dichotomique :** Analyse pas-à-pas des symptômes selon les organes touchés (feuille, tige, collet, fruit, racine) sur 21 maladies et ravageurs courants.
-- **Diagnostic photo sur l'appareil (LiteRT / TFLite) :** deux modèles embarqués (`sillon_detector.tflite` 3,0 Mo et `sillon_disease.tflite` 3,2 Mo, 14 classes dans `disease_labels.json`) associés à un viseur intelligent (`SmartCameraViewfinder`, `LeafDetector`, `FrameQualityAnalyzer`, `PhotoClassifier`) analysent les feuilles localement sans transmettre aucune image sur Internet. Le pipeline d'entraînement est dans [`tools/ml`](tools/ml/README.md).
+- **Diagnostic photo sur l'appareil (aide indicative, en amélioration continue) :** la photo est analysée sur le téléphone, rien n'est envoyé. Le modèle (`sillon_disease.tflite`, 3,2 Mo, images de 288 × 288 px) distingue 13 classes : feuille saine, hors sujet, « autre » et 10 maladies ou ravageurs (mildiou, oïdium, alternariose, rouille, botrytis, pucerons, altises, limaces, piéride du chou, doryphore). Sous un seuil de confiance de 65 %, l'appli répond qu'elle ne reconnaît rien avec assez de certitude plutôt que de deviner. Mildiou et alternariose se ressemblent : l'appli les présente ensemble comme « tache foliaire » et renvoie vers les deux fiches.
+- **Précision mesurée :** sur 1 182 photos de terrain mises de côté (non utilisées à l'entraînement), le modèle donne la bonne classe dans 86 % des cas (intervalle de confiance à 95 % : 84 à 88 %). Au seuil de 65 %, l'appli répond pour environ 86 % des photos, et 93 % de ces réponses sont justes. C'est plus faible pour mildiou et alternariose (précision d'environ 49 % et 40 %). Ces chiffres viennent de `sillon_disease.json` et ne garantissent rien sur vos propres photos : c'est une aide, pas un diagnostic certain, à recouper avec la clé de diagnostic de l'écran. Le modèle est entraîné de nouveau régulièrement (pipeline dans [`tools/ml`](tools/ml/README.md)).
+- **Viseur et pré-cadrage :** un viseur intelligent (`SmartCameraViewfinder`, `FrameQualityAnalyzer`) contrôle netteté et part de végétal, et un détecteur de feuille (`sillon_detector.tflite`, `LeafDetector`) cadre la photo avant analyse (`PhotoClassifier`, lecture sur deux vues). Moteur d'inférence : LiteRT.
 - **Remèdes de biocontrôle :** Préconisations strictes en biocontrôle respectant le cahier des charges de l'Agriculture Biologique (décoction de prêle pour sa silice renforçant la cuticule, bicarbonate de potassium à action osmotique contre l'oïdium, cuivre raisonné plafonné à moins de 4 g/m²/an).
 
 ---

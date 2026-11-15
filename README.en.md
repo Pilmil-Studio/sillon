@@ -9,11 +9,11 @@
 
 A **living vegetable garden & agronomic planning** application (Android & iOS via Kotlin Multiplatform / Compose Multiplatform), 100% offline, free, open-source, ad-free, with no account, no tracking, and zero internet permission. Part of the **Pilmil Studio** public interest suite (*Sauve*, *Sommelle*, *Lunaison*, *Respire*, *Fredonne*).
 
-> The app interface is currently available in French only.
+Sillon is a vegetable-garden companion that works without a network. It tells you what to sow, transplant or harvest over the next two weeks, based on the last frost date where you live. It draws your beds (garden, balcony or indoors), flags plants that help or hinder each other, reminds you to rotate vegetable families from one year to the next, and helps you recognise a problem on a leaf from a photo, without the photo ever leaving your phone.
 
-Designing a thriving and resilient food garden should not rely on folklore or arbitrary monthly calendars. Fixed-date schedules ignore regional climates and seasonal shifts, while commercial apps demand intrusive accounts, subscriptions, or upload private garden pictures to remote servers.
+Free, no account, no ads, and it does not even ask for permission to use the internet. The interface is currently available in French only.
 
-**Sillon** brings evidence-based agronomy and plant biology straight into your pocket, operational even in the deepest rural dead zones: dynamic phenological planning indexed against median last frost dates ($J_{\text{frost}}$), spatial 2D allelopathy and companion planting analysis, 4-year crop rotation schedules to preserve soil microbiology, and fully local on-device leaf health diagnostics.
+**For the curious (technical part).** Growing windows are computed from the median last-frost date ($J_{\text{frost}}$) instead of fixed months, neighbour checks use documented allelopathy relations, rotation follows a 4-year cycle, and leaf recognition relies on bundled on-device models. Details below.
 
 ---
 
@@ -49,7 +49,9 @@ Designing a thriving and resilient food garden should not rely on folklore or ar
 
 ### 5. Plant Health Doctor & 100% Offline Edge Vision (`DiagnosticEngine`)
 - **Dichotomous differential diagnosis:** Step-by-step symptomatic triage across affected organs (leaf, stem, fruit, collar, roots) covering 21 common garden diseases and pests.
-- **On-device photo diagnosis (LiteRT / TFLite):** two bundled models (`sillon_detector.tflite` 3.0 MB and `sillon_disease.tflite` 3.2 MB, 14 classes in `disease_labels.json`) paired with a smart viewfinder (`SmartCameraViewfinder`, `LeafDetector`, `FrameQualityAnalyzer`, `PhotoClassifier`) analyze leaves locally without sending any image over the network. The training pipeline lives in [`tools/ml`](tools/ml/README.md).
+- **On-device photo diagnosis (an indicative aid, continuously improving):** the photo is analysed on the phone and nothing is sent. The model (`sillon_disease.tflite`, 3.2 MB, 288 × 288 px input) tells 13 classes apart: healthy leaf, off-topic, "other" and 10 diseases or pests (downy mildew, powdery mildew, early blight, rust, grey mould, aphids, flea beetles, slugs, cabbage white, Colorado beetle). Below a 65% confidence threshold the app says it cannot recognise anything with enough certainty instead of guessing. Downy mildew and early blight look alike: the app shows them together as "leaf spot" and points to both sheets.
+- **Measured accuracy:** on 1,182 held-out field photos (not used for training) the model returns the right class 86% of the time (95% confidence interval: 84 to 88%). At the 65% threshold the app answers on about 86% of photos, and 93% of those answers are correct. It is weaker for downy mildew and early blight (precision around 49% and 40%). These figures come from `sillon_disease.json` and promise nothing about your own photos: it is an aid, not a certain diagnosis, to be cross-checked with the in-app diagnostic key. The model is retrained regularly (pipeline in [`tools/ml`](tools/ml/README.md)).
+- **Viewfinder and pre-framing:** a smart viewfinder (`SmartCameraViewfinder`, `FrameQualityAnalyzer`) checks sharpness and plant share, and a leaf detector (`sillon_detector.tflite`, `LeafDetector`) frames the photo before analysis (`PhotoClassifier`, two-view reading). Inference engine: LiteRT.
 - **Biocontrol remedies:** Strictly organic biocontrol treatments (horsetail silica decoction to strengthen leaf cuticles, potassium bicarbonate for osmotic powdery mildew lysis, and copper strictly capped below 4 g/m²/year).
 
 ---
