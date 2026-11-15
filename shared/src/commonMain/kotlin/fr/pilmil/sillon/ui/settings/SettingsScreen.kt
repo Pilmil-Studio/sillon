@@ -781,7 +781,7 @@ fun SettingsScreen(
                                 fontWeight = FontWeight.Bold,
                             )
                             Text(
-                                text = "Alfortville, France",
+                                text = "France",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -789,7 +789,7 @@ fun SettingsScreen(
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "• Éditeur : Pilmil Studio (Alfortville, France).\n" +
+                        text = "• Éditeur : Pilmil Studio (France).\n" +
                                "• Aucune permission Internet dans le manifeste Android.\n" +
                                "• Zéro traceur, zéro SDK publicitaire, zéro compte.\n" +
                                "• Calendrier, associations et diagnostic 100 % calculés sur votre téléphone.\n" +
