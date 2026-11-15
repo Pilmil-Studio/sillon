@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>FunctionNaming:GardenScene.kt$fun P(x: Float, y: Float, z: Float)</ID>
+    <ID>UnusedParameter:CatalogScreen.kt$onSelectVegetable: (Vegetable) -&gt; Unit = {}</ID>
+    <ID>UnusedParameter:DoctorScreen.kt$onSelectDisease: (Disease) -&gt; Unit = {}</ID>
+    <ID>UnusedParameter:GardenCodec.kt$GardenCodec$from: Int</ID>
+    <ID>UnusedParameter:GardenScreen.kt$onDeleteParcel: (parcelId: String) -&gt; Unit</ID>
+    <ID>UnusedParameter:PlantArt.kt$p: Sub</ID>
+    <ID>UnusedPrivateMember:Theme.kt$@Composable private fun rememberFrauncesFontFamily(): FontFamily</ID>
+    <ID>UnusedPrivateProperty:CompanionEngine.kt$CompanionEngine$val slotMap = parcel.slots.associateBy { SlotPosition(it.row, it.col) }</ID>
+    <ID>UnusedPrivateProperty:DoctorScreen.kt$val photoAvailable = photoDiagnosisContent != null</ID>
+  </CurrentIssues>
+</SmellBaseline>
