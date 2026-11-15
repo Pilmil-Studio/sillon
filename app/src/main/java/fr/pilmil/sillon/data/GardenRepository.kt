@@ -18,9 +18,6 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 
-/** Résultat d'une modification : le potager à afficher, et si son enregistrement sur disque a réussi. */
-data class GardenUpdate(val garden: Garden, val saved: Boolean)
-
 class GardenRepository(private val dir: File) {
 
     constructor(context: Context) : this(context.filesDir)
