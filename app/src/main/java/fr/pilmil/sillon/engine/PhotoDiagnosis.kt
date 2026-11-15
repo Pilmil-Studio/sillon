@@ -134,4 +134,42 @@ object PhotoDiagnosis {
         }
         return suggestions.toList()
     }
+
+    /** Miroir horizontal d'une image ARGB déjà mise à la taille cible, pour TTA 2 vues sans réallocation Bitmap. */
+    fun flipHorizontal(argb: IntArray, width: Int, height: Int): IntArray {
+        require(argb.size == width * height) { "taille de pixels incohérente" }
+        val out = IntArray(argb.size)
+        for (y in 0 until height) {
+            val rowStart = y * width
+            for (x in 0 until width) {
+                out[rowStart + (width - 1 - x)] = argb[rowStart + x]
+            }
+        }
+        return out
+    }
+
+    /** Moyenne les vecteurs de probabilités de plusieurs vues (ex. original + miroir horizontal). */
+    fun averageProbabilities(views: List<FloatArray>): FloatArray {
+        require(views.isNotEmpty()) { "aucune vue à moyenner" }
+        val size = views.first().size
+        val out = FloatArray(size)
+        for (view in views) {
+            require(view.size == size) { "dimensions de probabilités incohérentes" }
+            for (i in 0 until size) out[i] += view[i]
+        }
+        val inv = 1f / views.size.toFloat()
+        for (i in 0 until size) out[i] *= inv
+        return out
+    }
+
+    /**
+     * Lorsque mildiou et alternariose apparaissent ensemble en pistes principales
+     * et dépassent 55 % cumulés, signale une tache foliaire probable à départager.
+     */
+    fun leafSpotCombinedConfidence(leads: List<Pair<String, Float>>): Float? {
+        val mildiou = leads.firstOrNull { it.first == "mildiou" }?.second ?: return null
+        val alternariose = leads.firstOrNull { it.first == "alternariose" }?.second ?: return null
+        val combined = mildiou + alternariose
+        return if (combined >= 0.55f) combined else null
+    }
 }

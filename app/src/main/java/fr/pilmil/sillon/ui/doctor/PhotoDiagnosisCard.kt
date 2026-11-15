@@ -228,10 +228,19 @@ private fun VerdictText(verdict: PhotoVerdict, onOpenDisease: (String) -> Unit) 
             }
 
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(
-                    "Je ne reconnais pas de maladie foliaire franche avec assez de certitude.",
-                    style = MaterialTheme.typography.bodyLarge,
-                )
+                val leafSpotConfidence = PhotoDiagnosis.leafSpotCombinedConfidence(verdict.leads)
+                if (leafSpotConfidence != null) {
+                    Text(
+                        "Tache foliaire probable (mildiou ou alternariose, ${percent(leafSpotConfidence)} cumulés) : comparez les deux fiches ci-dessous.",
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                } else {
+                    Text(
+                        "Je ne reconnais pas de maladie foliaire franche avec assez de certitude.",
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
                 verdict.leads.forEach { (id, p) ->
                     val name = DiseaseCatalog.getById(id)?.name ?: id
                     TextButton(onClick = { onOpenDisease(id) }) { Text("Piste possible : $name (${percent(p)})") }

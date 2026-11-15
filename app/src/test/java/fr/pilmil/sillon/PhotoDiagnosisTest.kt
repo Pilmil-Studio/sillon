@@ -143,4 +143,39 @@ class PhotoDiagnosisTest {
             runCatching { PhotoDiagnosis.interpret(floatArrayOf(0.5f, 0.5f), spec) }.exceptionOrNull() is IllegalArgumentException,
         )
     }
+
+    @Test
+    fun flipHorizontalMirrorsEachRowIndependently() {
+        val pixels = intArrayOf(1, 2, 3, 4, 5, 6)
+        assertArrayEquals(intArrayOf(3, 2, 1, 6, 5, 4), PhotoDiagnosis.flipHorizontal(pixels, 3, 2))
+    }
+
+    @Test
+    fun averageProbabilitiesCombinesMultipleViews() {
+        val avg = PhotoDiagnosis.averageProbabilities(
+            listOf(
+                floatArrayOf(0.2f, 0.6f, 0.2f),
+                floatArrayOf(0.1f, 0.8f, 0.1f),
+            ),
+        )
+        assertArrayEquals(floatArrayOf(0.15f, 0.70f, 0.15f), avg, 1e-5f)
+    }
+
+    @Test
+    fun leafSpotCombinedConfidenceHighlightsMildiouPlusAlternariose() {
+        val combined = PhotoDiagnosis.leafSpotCombinedConfidence(
+            listOf("mildiou" to 0.40f, "alternariose" to 0.35f),
+        )
+        assertEquals(0.75f, combined ?: 0f, 1e-5f)
+
+        val tooLow = PhotoDiagnosis.leafSpotCombinedConfidence(
+            listOf("mildiou" to 0.25f, "alternariose" to 0.20f),
+        )
+        assertEquals(null, tooLow)
+
+        val unrelated = PhotoDiagnosis.leafSpotCombinedConfidence(
+            listOf("oidium" to 0.45f, "rouille" to 0.35f),
+        )
+        assertEquals(null, unrelated)
+    }
 }

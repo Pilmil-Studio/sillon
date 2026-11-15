@@ -74,8 +74,15 @@ class PhotoClassifier private constructor(
         val scaled = Bitmap.createScaledBitmap(square, w, h, true)
         val pixels = IntArray(w * h)
         scaled.getPixels(pixels, 0, w, 0, 0, w, h)
-        val values = PhotoDiagnosis.toInput(pixels, w, h)
 
+        val directProbs = runInference(pixels, w, h) ?: return null
+        val flippedProbs = runInference(PhotoDiagnosis.flipHorizontal(pixels, w, h), w, h) ?: return null
+        val avgProbs = PhotoDiagnosis.averageProbabilities(listOf(directProbs, flippedProbs))
+        return PhotoDiagnosis.interpret(avgProbs, spec)
+    }
+
+    private fun runInference(argb: IntArray, width: Int, height: Int): FloatArray? {
+        val values = PhotoDiagnosis.toInput(argb, width, height)
         val input = ByteBuffer.allocateDirect(values.size * 4).order(ByteOrder.nativeOrder())
         input.asFloatBuffer().put(values)
         val output = Array(1) { FloatArray(spec.classes.size) }
@@ -83,7 +90,7 @@ class PhotoClassifier private constructor(
             if (closed) return null
             interpreter.run(input, output)
         }
-        return PhotoDiagnosis.interpret(output[0], spec)
+        return output[0]
     }
 
     override fun close() {
