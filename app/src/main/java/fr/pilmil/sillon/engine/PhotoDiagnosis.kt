@@ -58,6 +58,9 @@ enum class AbioticSymptomHint(val frenchLabel: String) {
     GNATS_FROM_SOIL("Moucherons noirs sur le terreau"),
 }
 
+/** Confiance dite en mots : on n'affiche jamais le score brut du modèle. */
+enum class ConfidenceTier { PROBABLE, POSSIBLE, UNSURE }
+
 object PhotoDiagnosis {
 
     const val HEALTHY_LABEL = "sain"
@@ -77,6 +80,16 @@ object PhotoDiagnosis {
             out[i * 3 + 2] = (p and 0xFF).toFloat()
         }
         return out
+    }
+
+    /**
+     * Score -> palier : « probable » dès le seuil du modèle (celui qui sépare un verdict d'une piste),
+     * « possible » à partir du plancher des pistes, « je ne sais pas » en dessous. Bornes comprises.
+     */
+    fun confidenceTier(score: Float, threshold: Float): ConfidenceTier = when {
+        score >= threshold -> ConfidenceTier.PROBABLE
+        score >= MIN_LEAD -> ConfidenceTier.POSSIBLE
+        else -> ConfidenceTier.UNSURE
     }
 
     /** Probabilités du modèle -> verdict, avec le seuil calibré sur des photos de terrain. */

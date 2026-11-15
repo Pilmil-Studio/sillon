@@ -66,7 +66,7 @@ import fr.pilmil.sillon.ui.theme.SillonTheme
 fun DoctorScreen(
     diseases: List<Disease>,
     onSelectDisease: (Disease) -> Unit = {},
-    photoDiagnosisContent: (@Composable (onOpenDisease: (String) -> Unit) -> Unit)? = null,
+    photoDiagnosisContent: (@Composable (onOpenDisease: (String) -> Unit, onOpenKey: () -> Unit) -> Unit)? = null,
 ) {
     var selectedOrgan by remember { mutableStateOf<PlantOrgan?>(null) }
     var selectedDiseaseId by remember { mutableStateOf<String?>(null) }
@@ -109,13 +109,17 @@ fun DoctorScreen(
 
         // Diagnostic photo sur le téléphone, seulement si un modèle est embarqué.
         if (photoDiagnosisContent != null) item {
-            photoDiagnosisContent { id ->
-                // Ouvre la fiche dans la liste complète, puis y fait défiler l'écran.
-                selectedOrgan = null
-                selectedDiseaseId = id
-                val index = diseases.indexOfFirst { it.id == id }
-                if (index >= 0) scope.launch { listState.animateScrollToItem(DISEASE_LIST_OFFSET + index) }
-            }
+            photoDiagnosisContent(
+                { id ->
+                    // Ouvre la fiche dans la liste complète, puis y fait défiler l'écran.
+                    selectedOrgan = null
+                    selectedDiseaseId = id
+                    val index = diseases.indexOfFirst { it.id == id }
+                    if (index >= 0) scope.launch { listState.animateScrollToItem(DISEASE_LIST_OFFSET + index) }
+                },
+                // Amène le sélecteur d'organe, premier pas de la clé de diagnostic.
+                { scope.launch { listState.animateScrollToItem(KEY_START_INDEX) } },
+            )
         }
 
         // Sélecteur d'organe touché
@@ -344,3 +348,6 @@ private fun DiseaseCard(
 
 /** Nombre d'éléments avant la liste des maladies quand la photo est proposée : en-tête, photo, organe, titre. */
 private const val DISEASE_LIST_OFFSET = 4
+
+/** Position du sélecteur d'organe dans la liste (après l'en-tête et la carte photo). */
+private const val KEY_START_INDEX = 2

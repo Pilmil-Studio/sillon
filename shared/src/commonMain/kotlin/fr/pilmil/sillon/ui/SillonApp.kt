@@ -75,7 +75,7 @@ enum class SillonScreen(val title: String, val icon: ImageVector) {
 fun SillonApp(
     externalGarden: Garden? = null,
     onGardenReplaced: (Garden) -> Unit = {},
-    photoDiagnosisContent: (@Composable (onOpenDisease: (String) -> Unit) -> Unit)? = null,
+    photoDiagnosisContent: (@Composable (onOpenDisease: (String) -> Unit, onOpenKey: () -> Unit) -> Unit)? = null,
     onApplyReminders: (enabled: Boolean, garden: Garden) -> Unit = { _, _ -> },
     cloudBackupAvailable: Boolean = false,
     cloudBackupPossible: Boolean = false,

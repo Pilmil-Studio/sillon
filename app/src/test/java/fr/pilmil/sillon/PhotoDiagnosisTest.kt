@@ -2,6 +2,7 @@ package fr.pilmil.sillon
 
 import fr.pilmil.sillon.data.DiseaseCatalog
 import fr.pilmil.sillon.engine.AbioticSymptomHint
+import fr.pilmil.sillon.engine.ConfidenceTier
 import fr.pilmil.sillon.engine.PhotoDiagnosis
 import fr.pilmil.sillon.engine.PhotoModelSpec
 import fr.pilmil.sillon.engine.PhotoVerdict
@@ -177,5 +178,16 @@ class PhotoDiagnosisTest {
             listOf("oidium" to 0.45f, "rouille" to 0.35f),
         )
         assertEquals(null, unrelated)
+    }
+
+    @Test
+    fun confidenceTierBounds() {
+        val t = 0.65f
+        assertEquals(ConfidenceTier.PROBABLE, PhotoDiagnosis.confidenceTier(1f, t))
+        assertEquals(ConfidenceTier.PROBABLE, PhotoDiagnosis.confidenceTier(0.65f, t))
+        assertEquals(ConfidenceTier.POSSIBLE, PhotoDiagnosis.confidenceTier(0.6499f, t))
+        assertEquals(ConfidenceTier.POSSIBLE, PhotoDiagnosis.confidenceTier(0.20f, t))
+        assertEquals(ConfidenceTier.UNSURE, PhotoDiagnosis.confidenceTier(0.1999f, t))
+        assertEquals(ConfidenceTier.UNSURE, PhotoDiagnosis.confidenceTier(0f, t))
     }
 }

@@ -50,6 +50,7 @@ import androidx.core.content.FileProvider
 import fr.pilmil.sillon.data.DiseaseCatalog
 import fr.pilmil.sillon.data.SillonPrefs
 import fr.pilmil.sillon.engine.AbioticSymptomHint
+import fr.pilmil.sillon.engine.ConfidenceTier
 import fr.pilmil.sillon.engine.PhotoDiagnosis
 import fr.pilmil.sillon.engine.PhotoVerdict
 import fr.pilmil.sillon.engine.SubstrateMoisture
@@ -59,6 +60,7 @@ import fr.pilmil.sillon.ui.components.SillonOutlinedButton
 import fr.pilmil.sillon.vision.PhotoClassifier
 import fr.pilmil.sillon.vision.PhotoResult
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -69,7 +71,7 @@ import java.io.File
  * ou vers la clé de diagnostic quand le modèle n'est pas assez sûr.
  */
 @Composable
-fun PhotoDiagnosisCard(onOpenDisease: (String) -> Unit) {
+fun PhotoDiagnosisCard(onOpenDisease: (String) -> Unit, onOpenKey: () -> Unit) {
     val context = LocalContext.current
     // Le modèle se charge hors du fil principal ; la carte n'apparaît que s'il est disponible.
     var classifier by remember { mutableStateOf<PhotoClassifier?>(null) }
@@ -81,24 +83,29 @@ fun PhotoDiagnosisCard(onOpenDisease: (String) -> Unit) {
     var verdict by remember { mutableStateOf<PhotoVerdict?>(null) }
     var failed by remember { mutableStateOf(false) }
 
+    val photoFile = remember { File(context.cacheDir, "photos/feuille.jpg").apply { parentFile?.mkdirs() } }
+
     fun analyse(uri: Uri) {
         val active = classifier ?: return
         busy = true
         failed = false
         scope.launch {
-            val result = withContext(Dispatchers.Default) { active.analyse(context, uri) }
-            when (result) {
-                is PhotoResult.Success -> { verdict = result.verdict; failed = false }
-                is PhotoResult.Cancelled -> Unit
-                is PhotoResult.DecodeFailed, is PhotoResult.InferenceFailed -> { verdict = null; failed = true }
+            // Que l'analyse réussisse, échoue ou soit interrompue (écran quitté), la photo ne reste pas dans le cache.
+            try {
+                val result = withContext(Dispatchers.Default) { active.analyse(context, uri) }
+                when (result) {
+                    is PhotoResult.Success -> { verdict = result.verdict; failed = false }
+                    is PhotoResult.Cancelled -> Unit
+                    is PhotoResult.DecodeFailed, is PhotoResult.InferenceFailed -> { verdict = null; failed = true }
+                }
+            } finally {
+                withContext(NonCancellable + Dispatchers.IO) { PhotoCache.discard(photoFile) }
+                busy = false
             }
-            busy = false
         }
     }
 
-    if (classifier == null) return
-
-    val photoFile = remember { File(context.cacheDir, "photos/feuille.jpg").apply { parentFile?.mkdirs() } }
+    val threshold = classifier?.spec?.threshold ?: return
     val photoUri = remember { FileProvider.getUriForFile(context, "${context.packageName}.photos", photoFile) }
     var showSmartViewfinder by remember { mutableStateOf(false) }
 
@@ -182,7 +189,7 @@ fun PhotoDiagnosisCard(onOpenDisease: (String) -> Unit) {
                         Text("Analyse en cours…", style = MaterialTheme.typography.bodyMedium)
                     }
                     failed -> Text("La photo n'a pas pu être lue. Réessayez avec une autre image.", style = MaterialTheme.typography.bodyMedium)
-                    else -> verdict?.let { VerdictText(it, onOpenDisease) }
+                    else -> verdict?.let { VerdictText(it, threshold, onOpenDisease, onOpenKey) }
                 }
             }
             Text(
@@ -196,12 +203,25 @@ fun PhotoDiagnosisCard(onOpenDisease: (String) -> Unit) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun VerdictText(verdict: PhotoVerdict, onOpenDisease: (String) -> Unit) {
-    fun percent(p: Float) = "${(p * 100).toInt()} %"
+private fun VerdictText(
+    verdict: PhotoVerdict,
+    threshold: Float,
+    onOpenDisease: (String) -> Unit,
+    onOpenKey: () -> Unit,
+) {
+    fun tier(score: Float) = when (PhotoDiagnosis.confidenceTier(score, threshold)) {
+        ConfidenceTier.PROBABLE -> "probable"
+        ConfidenceTier.POSSIBLE -> "possible"
+        ConfidenceTier.UNSURE -> "je ne sais pas"
+    }
+    // Le verdict, même sûr, reste une piste : la clé de diagnostic est toujours proposée.
+    val keyButton: @Composable () -> Unit = {
+        TextButton(onClick = onOpenKey) { Text("Vérifier avec la clé") }
+    }
     when (verdict) {
         is PhotoVerdict.Healthy -> {
             Text(
-                "Feuille d'apparence saine (confiance ${percent(verdict.confidence)}).",
+                "Feuille d'apparence saine (${tier(verdict.confidence)}).",
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.SemiBold,
             )
@@ -210,15 +230,17 @@ private fun VerdictText(verdict: PhotoVerdict, onOpenDisease: (String) -> Unit) 
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+            keyButton()
         }
         is PhotoVerdict.Disease -> {
             val name = DiseaseCatalog.getById(verdict.catalogId)?.name ?: verdict.catalogId
             Text(
-                "Ressemble à : $name (confiance ${percent(verdict.confidence)}).",
+                "Ressemble à : $name (${tier(verdict.confidence)}).",
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.SemiBold,
             )
             TextButton(onClick = { onOpenDisease(verdict.catalogId) }) { Text("Voir la fiche $name") }
+            keyButton()
         }
         is PhotoVerdict.Unsure -> {
             var selectedMoisture by remember { mutableStateOf<SubstrateMoisture?>(null) }
@@ -228,10 +250,9 @@ private fun VerdictText(verdict: PhotoVerdict, onOpenDisease: (String) -> Unit) 
             }
 
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                val leafSpotConfidence = PhotoDiagnosis.leafSpotCombinedConfidence(verdict.leads)
-                if (leafSpotConfidence != null) {
+                if (PhotoDiagnosis.leafSpotCombinedConfidence(verdict.leads) != null) {
                     Text(
-                        "Tache foliaire probable (mildiou ou alternariose, ${percent(leafSpotConfidence)} cumulés) : comparez les deux fiches ci-dessous.",
+                        "Tache foliaire probable (mildiou ou alternariose) : comparez les deux fiches ci-dessous.",
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.SemiBold,
                     )
@@ -243,7 +264,7 @@ private fun VerdictText(verdict: PhotoVerdict, onOpenDisease: (String) -> Unit) 
                 }
                 verdict.leads.forEach { (id, p) ->
                     val name = DiseaseCatalog.getById(id)?.name ?: id
-                    TextButton(onClick = { onOpenDisease(id) }) { Text("Piste possible : $name (${percent(p)})") }
+                    TextButton(onClick = { onOpenDisease(id) }) { Text("Piste ${tier(p)} : $name") }
                 }
 
                 Text(
@@ -324,6 +345,7 @@ private fun VerdictText(verdict: PhotoVerdict, onOpenDisease: (String) -> Unit) 
                         Text("Fiche conseillée : $name", fontWeight = FontWeight.SemiBold)
                     }
                 }
+                keyButton()
             }
         }
     }

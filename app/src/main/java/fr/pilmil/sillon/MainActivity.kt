@@ -196,7 +196,7 @@ class MainActivity : ComponentActivity() {
                     externalGarden = importedGarden,
                     onGardenReplaced = { importedGarden = null },
                     photoDiagnosisContent = if (photoAvailable) {
-                        { onOpenDisease -> PhotoDiagnosisCard(onOpenDisease = onOpenDisease) }
+                        { onOpenDisease, onOpenKey -> PhotoDiagnosisCard(onOpenDisease = onOpenDisease, onOpenKey = onOpenKey) }
                     } else {
                         null
                     },
