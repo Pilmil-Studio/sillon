@@ -3,6 +3,7 @@ package fr.pilmil.sillon.data
 import fr.pilmil.sillon.model.Garden
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
@@ -54,10 +55,32 @@ object GardenCodec {
 
     /**
      * Point d'accroche des migrations : amène un document de la version [from] à [SCHEMA_VERSION].
-     * Aujourd'hui, la version 1 est la seule : rien à transformer. Une version 2 ajoutera ici
+     * Aujourd'hui, la version 1 est la seule : le format ne change pas. Une version 2 ajoutera ici
      * un `if (from < 2) { ... }` qui réécrit l'objet avant le décodage.
+     *
+     * Les identifiants de plantes disparus du catalogue ([VegetableCatalog.LEGACY_IDS]) sont remplacés
+     * à chaque lecture, quelle que soit la version : un potager, une sauvegarde JSON ou un fichier
+     * `.pilmil` enregistrés avant la fusion de deux fiches continuent de s'ouvrir. L'opération ne change
+     * rien à un fichier déjà à jour, donc le numéro de version reste 1 et les anciennes versions de
+     * l'appli lisent toujours les fichiers écrits par celle-ci.
      */
-    private fun migrate(root: JsonObject, from: Int): JsonObject = root
+    private fun migrate(root: JsonObject, from: Int): JsonObject =
+        renameLegacyVegetableIds(root) as JsonObject
+
+    /** Remplace toute valeur de champ `vegetableId` (cases et historique de cultures) par l'identifiant courant. */
+    internal fun renameLegacyVegetableIds(element: JsonElement): JsonElement = when (element) {
+        is JsonObject -> JsonObject(
+            element.mapValues { (key, value) ->
+                if (key == "vegetableId" && value is JsonPrimitive && value.isString) {
+                    JsonPrimitive(VegetableCatalog.canonicalId(value.content))
+                } else {
+                    renameLegacyVegetableIds(value)
+                }
+            },
+        )
+        is JsonArray -> JsonArray(element.map { renameLegacyVegetableIds(it) })
+        else -> element
+    }
 
     /** Lecture d'un fichier importé : refuse tout ce qui sortirait du cadre de l'appli. */
     fun decodeAndValidate(content: String, now: Long = Clock.System.now().toEpochMilliseconds()): Garden {
