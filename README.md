@@ -13,7 +13,7 @@ Sillon est un compagnon de potager qui fonctionne sans réseau. Il vous dit quoi
 
 Gratuit, sans compte, sans publicité, et il ne demande même pas l'autorisation d'accéder à Internet. L'interface est pour l'instant en français uniquement.
 
-**Pour les curieux (partie technique).** Les fenêtres de culture sont calculées par rapport à la date médiane de dernière gelée ($J_{\text{gel}}$) plutôt que par mois fixes, la détection des voisinages utilise les relations d'allélopathie documentées, la rotation suit un cycle de 4 ans et la reconnaissance de feuille s'appuie sur des modèles embarqués. Le détail est plus bas.
+**Pour les curieux (partie technique).** Les fenêtres de culture sont calculées par rapport à la date médiane de dernière gelée ($J_{\text{gel}}$) plutôt que par mois fixes, la détection des voisinages s'appuie sur des relations de compagnonnage dont le niveau de preuve est affiché (étayé par des essais, plausible, ou simple tradition), la rotation suit un cycle de 4 ans et la reconnaissance de feuille s'appuie sur des modèles embarqués. Le détail est plus bas.
 
 ## En quoi Sillon est différente
 
