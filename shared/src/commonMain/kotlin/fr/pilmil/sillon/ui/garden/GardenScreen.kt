@@ -66,12 +66,15 @@ import fr.pilmil.sillon.engine.GrowthEngine
 import fr.pilmil.sillon.engine.GrowthStage
 import fr.pilmil.sillon.engine.RotationEngine
 import fr.pilmil.sillon.engine.RotationSeverity
+import fr.pilmil.sillon.model.EVIDENCE_EXPLANATION
 import fr.pilmil.sillon.model.Garden
 import fr.pilmil.sillon.model.GrowingEnvironment
 import fr.pilmil.sillon.model.Parcel
 import fr.pilmil.sillon.model.ParcelSlot
 import fr.pilmil.sillon.model.ParcelType
 import fr.pilmil.sillon.model.Vegetable
+import fr.pilmil.sillon.model.badRelationsWith
+import fr.pilmil.sillon.model.goodRelationsWith
 import fr.pilmil.sillon.ui.components.SillonBadge
 import fr.pilmil.sillon.ui.components.SillonButton
 import fr.pilmil.sillon.ui.components.SillonCard
@@ -686,25 +689,22 @@ private fun ParcelGridView(
                         val slot = parcel.getSlot(r, c)
                         val veg = vegetables.find { it.id == slot?.vegetableId }
 
-                        // Calcul simple des synergies / alertes avec voisins directs
-                        val neighborVegs = listOfNotNull(
-                            parcel.getSlot(r - 1, c)?.vegetableId?.let { id -> vegetables.find { it.id == id } },
-                            parcel.getSlot(r + 1, c)?.vegetableId?.let { id -> vegetables.find { it.id == id } },
-                            parcel.getSlot(r, c - 1)?.vegetableId?.let { id -> vegetables.find { it.id == id } },
-                            parcel.getSlot(r, c + 1)?.vegetableId?.let { id -> vegetables.find { it.id == id } },
-                        )
+                        // Synergies et alertes avec les voisins directs, lues dans les deux sens
+                        val neighborVegs = orthogonalNeighbors(parcel, vegetables, r, c)
                         val hasGoodCompanion = veg != null && neighborVegs.any { neighbor ->
-                            veg.goodCompanions.any { it.targetPlantId == neighbor.id }
+                            veg.goodRelationsWith(neighbor).isNotEmpty()
                         }
                         val hasBadCompanion = veg != null && neighborVegs.any { neighbor ->
-                            veg.badCompanions.any { it.targetPlantId == neighbor.id }
+                            veg.badRelationsWith(neighbor).isNotEmpty()
                         }
+                        val neighborNote = if (veg != null) neighborSpokenNote(veg, neighborVegs) else null
 
                         SlotCell(
                             vegetable = veg,
                             growth = slotGrowth(slot, veg, today),
                             hasGoodCompanion = hasGoodCompanion,
                             hasBadCompanion = hasBadCompanion,
+                            neighborNote = neighborNote,
                             modifier = Modifier
                                 .weight(1f)
                                 .aspectRatio(1f),
@@ -723,6 +723,7 @@ private fun SlotCell(
     growth: Growth?,
     hasGoodCompanion: Boolean,
     hasBadCompanion: Boolean,
+    neighborNote: String?,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
@@ -731,7 +732,7 @@ private fun SlotCell(
         vegetable == null -> "Case libre"
         growth != null -> "${vegetable.name}. ${growth.summary()}"
         else -> vegetable.name
-    }
+    }.let { base -> if (neighborNote != null) "$base. $neighborNote" else base }
     Surface(
         modifier = modifier
             .clickable(onClickLabel = "Ouvrir l'emplacement", onClick = onClick)
@@ -913,12 +914,7 @@ private fun NeighborhoodCard(parcel: Parcel, vegetables: List<Vegetable>) {
                 )
             }
             for (link in links.take(6)) {
-                val second = link.second.name.replaceFirstChar { it.lowercase() }
-                val sentence = when {
-                    link.positive && link.protects -> "${link.first.name} et $second se protègent mutuellement"
-                    link.positive -> "${link.first.name} et $second s'entraident"
-                    else -> "${link.first.name} et $second se gênent : à éloigner"
-                }
+                val sentence = link.sentence()
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         modifier = Modifier
@@ -927,17 +923,32 @@ private fun NeighborhoodCard(parcel: Parcel, vegetables: List<Vegetable>) {
                             .background(if (link.positive) SillonPalette.Sage else SillonPalette.AlertAmber),
                     )
                     Spacer(modifier = Modifier.width(10.dp))
-                    Text(
-                        text = sentence,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
+                    Column {
+                        Text(
+                            text = sentence,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                        // Le niveau de preuve est écrit : la couleur de la pastille ne porte pas seule le sens.
+                        Text(
+                            text = link.evidence.frenchLabel,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                 }
             }
             if (links.size > 6) {
                 Text(
                     text = "et ${links.size - 6} autres",
                     style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            if (links.isNotEmpty()) {
+                Text(
+                    text = EVIDENCE_EXPLANATION,
+                    style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
