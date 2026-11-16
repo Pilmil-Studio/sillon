@@ -1665,7 +1665,7 @@ object VegetableCatalog {
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = emptyList(),
         badCompanions = listOf(
-            CompanionRelation("tomate", "Allélopathie puissante inhibant la nouaison de la tomate", CompanionRiskType.ALLELOPATHY, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("tomate", "Peut inhiber la nouaison de la tomate", CompanionRiskType.ALLELOPATHY, EvidenceLevel.PLAUSIBLE),
             CompanionRelation("carotte", "Arrêt de développement racinaire", CompanionRiskType.ALLELOPATHY, EvidenceLevel.PLAUSIBLE),
             CompanionRelation("coriandre", "Inhibition réciproque de croissance", CompanionRiskType.ALLELOPATHY, EvidenceLevel.PLAUSIBLE),
             CompanionRelation("haricot_nain", "Inhibition stricte des nodosités", CompanionRiskType.ALLELOPATHY, EvidenceLevel.PLAUSIBLE),
