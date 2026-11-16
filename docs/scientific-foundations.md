@@ -160,7 +160,7 @@ J_gel - 8 sem.                          J_gel                         J_gel + 3 
    - Toutes les plantations extérieures sans protection thermique sont asservies à :
      $$\text{Date}_{\text{plantation pleine terre}} = J_{\text{gel}} + \Delta t_{\text{sécurité}}$$
      *(ex. $+1$ semaine pour les tomates en zone tempérée, $+2$ semaines pour les cucurbitacées frileuses).*
-3. **Précision territoriale locale :** Sillon intègre dans `FrenchFrostCatalog` les dates médianes validées pour les **101 départements métropolitains et d'outre-mer**, ajustables manuellement au jour près par l'utilisateur pour tenir compte des microclimats de versant, d'ubac ou d'îlots de chaleur urbains.
+3. **Précision territoriale locale :** Sillon intègre dans `FrenchFrostCatalog` les dates médianes validées pour les **104 entrées** (96 départements métropolitains, Corse comprise, et 8 territoires d'outre-mer), ajustables manuellement au jour près par l'utilisateur pour tenir compte des microclimats de versant, d'ubac ou d'îlots de chaleur urbains.
 
 ---
 
@@ -317,7 +317,7 @@ Les principes scientifiques décrits ci-dessus sont transcrits au sein d'une arc
                                     │
 ┌───────────────────────────────────▼────────────────────────────────────┐
 │                          FROST ENGINE                                  │
-│ - Référentiel phénologique des 101 départements français               │
+│ - Référentiel phénologique des 104 entrées françaises                  │
 │ - Somme thermique et translation dynamique par rapport à J_gel         │
 │ - Fenêtrage temporel tolérant (±7 jours) pour les actions culturales   │
 └───────────────────────────────────┬────────────────────────────────────┘
