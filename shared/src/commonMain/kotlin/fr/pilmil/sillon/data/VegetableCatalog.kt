@@ -5,6 +5,7 @@ import fr.pilmil.sillon.model.Climate
 import fr.pilmil.sillon.model.CompanionBenefitType
 import fr.pilmil.sillon.model.CompanionRelation
 import fr.pilmil.sillon.model.CompanionRiskType
+import fr.pilmil.sillon.model.EvidenceLevel
 import fr.pilmil.sillon.model.SunExposure
 import fr.pilmil.sillon.model.Vegetable
 import fr.pilmil.sillon.model.WaterNeed
@@ -34,16 +35,15 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("basilic", "Stimule la saveur, renforce la vigueur et repousse certains pucerons", CompanionBenefitType.GROWTH_STIMULATOR),
-            CompanionRelation("tagete", "Effet nématicide racinaire éprouvé et répulsif contre les aleurodes", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("oeillet_d_inde", "Sécrétions racinaires nématicides assainissant le sol", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("carotte", "Exploitation racinaire complémentaire sans concurrence", CompanionBenefitType.GENERAL_SYNERGY),
-            CompanionRelation("persil", "Stimulation foliaire et compagnonnage traditionnel", CompanionBenefitType.GROWTH_STIMULATOR),
+            CompanionRelation("basilic", "Moins d'aleurodes et meilleur rendement observés en essais, sans effet constant sur la saveur", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.ETAYE, "Mutisya et al. 2016 ; Bomford 2004"),
+            CompanionRelation("tagete", "Réduit les nématodes à galles quand il est cultivé avant la tomate ; en serre, il gêne aussi les aleurodes", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.ETAYE, "Hooks et al. 2010 (culture avant la plante) ; Conboy et al. 2019 (serre) ; UF/IFAS"),
+            CompanionRelation("carotte", "Exploitation racinaire complémentaire sans concurrence", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
+            CompanionRelation("persil", "Stimulation foliaire et compagnonnage traditionnel", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("pomme_de_terre", "Vecteur partagé du mildiou (Phytophthora infestans) et doryphores", CompanionRiskType.SHARED_DISEASE_OR_PEST),
-            CompanionRelation("fenouil", "Sécrétions allélopathiques inhibitrices de croissance", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("chou_pomme", "Concurrence nutritive sévère et ralentissement végétatif", CompanionRiskType.NUTRIENT_COMPETITION),
+            CompanionRelation("pomme_de_terre", "Vecteur partagé du mildiou (Phytophthora infestans) et doryphores", CompanionRiskType.SHARED_DISEASE_OR_PEST, EvidenceLevel.ETAYE, "UMass Extension"),
+            CompanionRelation("fenouil", "Sécrétions allélopathiques inhibitrices de croissance", CompanionRiskType.ALLELOPATHY, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("chou_pomme", "Concurrence nutritive sévère et ralentissement végétatif", CompanionRiskType.NUTRIENT_COMPETITION, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Arroser impérativement au pied sans jamais mouiller les feuilles pour prévenir le mildiou. Pailler sur 10 cm après réchauffement du sol.",
     )
@@ -68,11 +68,11 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("basilic", "Renforce la vigueur végétative et protège des parasites", CompanionBenefitType.GROWTH_STIMULATOR),
-            CompanionRelation("tagete", "Protection contre les nématodes du sol", CompanionBenefitType.PEST_REPELLENT),
+            CompanionRelation("basilic", "Renforce la vigueur végétative et protège des parasites", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.ETAYE, "Mutisya et al. 2016 ; Bomford 2004"),
+            CompanionRelation("tagete", "Protection contre les nématodes du sol", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.ETAYE, "Hooks et al. 2010 (culture avant la plante) ; Conboy et al. 2019 (serre) ; UF/IFAS"),
         ),
         badCompanions = listOf(
-            CompanionRelation("pomme_de_terre", "Transmission croisée du mildiou", CompanionRiskType.SHARED_DISEASE_OR_PEST),
+            CompanionRelation("pomme_de_terre", "Transmission croisée du mildiou", CompanionRiskType.SHARED_DISEASE_OR_PEST, EvidenceLevel.ETAYE, "UMass Extension"),
         ),
         advice = "Plus hâtive et résistante que la tomate standard. Inutile d'ébourgeonner drastiquement si la plante est tuteurée en buisson.",
     )
@@ -97,13 +97,13 @@ object VegetableCatalog {
         waterNeed = WaterNeed.HIGH,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("haricot_nain", "Apport d'azote symbiotique bénéfique et répulsion mutuelle", CompanionBenefitType.NITROGEN_FIXATION),
-            CompanionRelation("tagete", "Effet assainissant sur les ravageurs du sol", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("thym", "Détourne les insectes phytophages par ses huiles essentielles", CompanionBenefitType.PEST_REPELLENT),
+            CompanionRelation("haricot_nain", "Apport d'azote symbiotique bénéfique et répulsion mutuelle", CompanionBenefitType.NITROGEN_FIXATION, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("tagete", "Effet assainissant sur les ravageurs du sol", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.ETAYE, "Hooks et al. 2010 (culture avant la plante) ; Conboy et al. 2019 (serre) ; UF/IFAS"),
+            CompanionRelation("thym", "Détourne les insectes phytophages par ses huiles essentielles", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("pomme_de_terre", "Attraction démultipliée des doryphores", CompanionRiskType.SHARED_DISEASE_OR_PEST),
-            CompanionRelation("tomate", "Même sensibilité aux virus et aux maladies cryptogamiques", CompanionRiskType.SHARED_DISEASE_OR_PEST),
+            CompanionRelation("pomme_de_terre", "Attraction démultipliée des doryphores", CompanionRiskType.SHARED_DISEASE_OR_PEST, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("tomate", "Même sensibilité aux virus et aux maladies cryptogamiques", CompanionRiskType.SHARED_DISEASE_OR_PEST, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Exige beaucoup de chaleur (sol > 15°C au repiquage). Limiter à 4-6 fruits par pied en climat tempéré pour garantir leur maturité.",
     )
@@ -128,13 +128,13 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("basilic", "Stimule la croissance et masque les odeurs", CompanionBenefitType.GROWTH_STIMULATOR),
-            CompanionRelation("carotte", "Structure de canopée compatible", CompanionBenefitType.GENERAL_SYNERGY),
-            CompanionRelation("origan", "Répulsif naturel contre les pucerons", CompanionBenefitType.PEST_REPELLENT),
+            CompanionRelation("basilic", "Stimule la croissance et masque les odeurs", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.TRADITION),
+            CompanionRelation("carotte", "Structure de canopée compatible", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
+            CompanionRelation("origan", "Répulsif naturel contre les pucerons", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("haricot_rames", "Risque d'étouffement par l'ombrage", CompanionRiskType.CANOPY_OR_ROOT_SHADOW),
-            CompanionRelation("chou_pomme", "Concurrence azotée et allélopathie", CompanionRiskType.NUTRIENT_COMPETITION),
+            CompanionRelation("haricot_rames", "Risque d'étouffement par l'ombrage", CompanionRiskType.CANOPY_OR_ROOT_SHADOW, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("chou_pomme", "Concurrence azotée et allélopathie", CompanionRiskType.NUTRIENT_COMPETITION, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Arroser régulièrement pour éviter la chute des boutons floraux. Ne planter en plein air que quand les nuits dépassent 12°C.",
     )
@@ -159,11 +159,11 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("basilic", "Action synergique aromatique", CompanionBenefitType.GROWTH_STIMULATOR),
-            CompanionRelation("origan", "Effet protecteur répulsif", CompanionBenefitType.PEST_REPELLENT),
+            CompanionRelation("basilic", "Action synergique aromatique", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.TRADITION),
+            CompanionRelation("origan", "Effet protecteur répulsif", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("haricot_rames", "Ombrage néfaste pour le mûrissement des fruits", CompanionRiskType.CANOPY_OR_ROOT_SHADOW),
+            CompanionRelation("haricot_rames", "Ombrage néfaste pour le mûrissement des fruits", CompanionRiskType.CANOPY_OR_ROOT_SHADOW, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Aime un sol drainant et une exposition chaude contre un mur exposé au sud.",
     )
@@ -188,14 +188,13 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("haricot_nain", "Éloigne mutuellement les doryphores et apporte de l'azote", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("pois", "Enrichissement du sol en azote organique", CompanionBenefitType.NITROGEN_FIXATION),
-            CompanionRelation("souci", "Stimule la vie microbienne du sol", CompanionBenefitType.GROWTH_STIMULATOR),
+            CompanionRelation("haricot_nain", "Éloigne mutuellement les doryphores et apporte de l'azote", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
+            CompanionRelation("pois", "Enrichissement du sol en azote organique", CompanionBenefitType.NITROGEN_FIXATION, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("souci", "Stimule la vie microbienne du sol", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("tomate", "Partage des mêmes maladies cryptogamiques dévastatrices (mildiou) et concurrence nutritive de Solanacées", CompanionRiskType.SHARED_DISEASE_OR_PEST),
-            CompanionRelation("aubergine", "Foyer commun d'infestation par le doryphore", CompanionRiskType.SHARED_DISEASE_OR_PEST),
-            CompanionRelation("courgette", "Sensibilité croisée aux maladies fongiques du sol", CompanionRiskType.SHARED_DISEASE_OR_PEST),
+            CompanionRelation("tomate", "Partage des mêmes maladies cryptogamiques dévastatrices (mildiou) et concurrence nutritive de Solanacées", CompanionRiskType.SHARED_DISEASE_OR_PEST, EvidenceLevel.ETAYE, "UMass Extension"),
+            CompanionRelation("aubergine", "Foyer commun d'infestation par le doryphore", CompanionRiskType.SHARED_DISEASE_OR_PEST, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Planter les tubercules germés dans un sillon de 10 cm. Butter dès que les tiges atteignent 15 cm de hauteur pour protéger les tubercules de la lumière.",
     )
@@ -223,16 +222,16 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("carotte", "L'azote fixé favorise le feuillage et le développement de la carotte", CompanionBenefitType.NITROGEN_FIXATION),
-            CompanionRelation("aubergine", "Association favorable de strate", CompanionBenefitType.GROWTH_STIMULATOR),
-            CompanionRelation("pomme_de_terre", "Répulsion conjointe des coléoptères nuisibles", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("radis", "Les haricots rendent les radis plus tendres", CompanionBenefitType.GROWTH_STIMULATOR),
+            CompanionRelation("carotte", "L'azote fixé favorise le feuillage et le développement de la carotte", CompanionBenefitType.NITROGEN_FIXATION, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("aubergine", "Association favorable de strate", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.TRADITION),
+            CompanionRelation("pomme_de_terre", "Répulsion conjointe des coléoptères nuisibles", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
+            CompanionRelation("radis", "Les haricots rendent les radis plus tendres", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.PLAUSIBLE),
         ),
         badCompanions = listOf(
-            CompanionRelation("oignon", "Sécrétions allélopathiques des Alliacées inhibant les rhizobiums fixateurs d'azote", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("ail", "Effet bactéricide allélopathique bloquant les nodosités racinaires", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("echalote", "Inhibition de la fixation d'azote symbiotique", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("poireau", "Antagonisme agronomique documenté des alliacées envers les légumineuses", CompanionRiskType.ALLELOPATHY),
+            CompanionRelation("oignon", "Sécrétions allélopathiques des Alliacées inhibant les rhizobiums fixateurs d'azote", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
+            CompanionRelation("ail", "Effet bactéricide allélopathique bloquant les nodosités racinaires", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
+            CompanionRelation("echalote", "Inhibition de la fixation d'azote symbiotique", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
+            CompanionRelation("poireau", "Antagonisme agronomique documenté des alliacées envers les légumineuses", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
         ),
         advice = "Semer en terre réchauffée (> 12-15°C). Butter légèrement lorsque le pied atteint 10 cm pour stabiliser la tige.",
     )
@@ -257,14 +256,14 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("mais_doux", "Le maïs sert de tuteur naturel rigide (technique de la Milpa)", CompanionBenefitType.PHYSICAL_SUPPORT),
-            CompanionRelation("courge_butternut", "Paillis végétal vivant conservant l'humidité au pied des haricots", CompanionBenefitType.SHADE_OR_GROUND_COVER),
-            CompanionRelation("carotte", "Partage optimal des nutriments et fixateur d'azote", CompanionBenefitType.NITROGEN_FIXATION),
+            CompanionRelation("mais_doux", "Le maïs sert de tuteur naturel rigide (technique de la Milpa)", CompanionBenefitType.PHYSICAL_SUPPORT, EvidenceLevel.ETAYE, "Zhang et al. 2014 ; Postma et Lynch 2012"),
+            CompanionRelation("courge_butternut", "Paillis végétal vivant conservant l'humidité au pied des haricots", CompanionBenefitType.SHADE_OR_GROUND_COVER, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("carotte", "Partage optimal des nutriments et fixateur d'azote", CompanionBenefitType.NITROGEN_FIXATION, EvidenceLevel.PLAUSIBLE),
         ),
         badCompanions = listOf(
-            CompanionRelation("oignon", "Inhibition de la symbiose rhizobienne", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("ail", "Sécrétions allélopathiques nocives aux nodosités", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("betterave", "Ralentissement mutuel de végétation", CompanionRiskType.GENERAL_ANTAGONISM),
+            CompanionRelation("oignon", "Inhibition de la symbiose rhizobienne", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
+            CompanionRelation("ail", "Sécrétions allélopathiques nocives aux nodosités", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
+            CompanionRelation("betterave", "Ralentissement mutuel de végétation", CompanionRiskType.GENERAL_ANTAGONISM, EvidenceLevel.TRADITION),
         ),
         advice = "Installer de solides tuteurs ou tipi avant le semis. Récolter deux fois par semaine pour stimuler la floraison continue.",
     )
@@ -289,14 +288,14 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("carotte", "Fixation d'azote printanière bénéfique pour la carotte précoce", CompanionBenefitType.NITROGEN_FIXATION),
-            CompanionRelation("radis", "Complémentarité racinaire et développement sans concurrence", CompanionBenefitType.GENERAL_SYNERGY),
-            CompanionRelation("laitue", "Les pois procurent un léger ombrage printanier évitant la montaison précoce", CompanionBenefitType.SHADE_OR_GROUND_COVER),
+            CompanionRelation("carotte", "Fixation d'azote printanière bénéfique pour la carotte précoce", CompanionBenefitType.NITROGEN_FIXATION, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("radis", "Complémentarité racinaire et développement sans concurrence", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("laitue", "Les pois procurent un léger ombrage printanier évitant la montaison précoce", CompanionBenefitType.SHADE_OR_GROUND_COVER, EvidenceLevel.PLAUSIBLE),
         ),
         badCompanions = listOf(
-            CompanionRelation("oignon", "Inhibition des nodosités symbiotiques par les alliacées", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("ail", "Effet allélopathique néfaste sur la germination et la rhizosphère", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("echalote", "Inhibition réciproque", CompanionRiskType.ALLELOPATHY),
+            CompanionRelation("oignon", "Inhibition des nodosités symbiotiques par les alliacées", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
+            CompanionRelation("ail", "Effet allélopathique néfaste sur la germination et la rhizosphère", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
+            CompanionRelation("echalote", "Inhibition réciproque", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
         ),
         advice = "Préfère la fraîcheur du printemps. Craint les fortes chaleurs qui provoquent l'avortement des fleurs.",
     )
@@ -321,12 +320,12 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("laitue", "Protection contre les vents froids de début de saison", CompanionBenefitType.SHADE_OR_GROUND_COVER),
-            CompanionRelation("epinard", "Occupation optimale de la surface au pied des fèves", CompanionBenefitType.SHADE_OR_GROUND_COVER),
+            CompanionRelation("laitue", "Protection contre les vents froids de début de saison", CompanionBenefitType.SHADE_OR_GROUND_COVER, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("epinard", "Occupation optimale de la surface au pied des fèves", CompanionBenefitType.SHADE_OR_GROUND_COVER, EvidenceLevel.PLAUSIBLE),
         ),
         badCompanions = listOf(
-            CompanionRelation("oignon", "Blocage de l'activité biologique fixatrice", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("ail", "Effet antagoniste marqué", CompanionRiskType.ALLELOPATHY),
+            CompanionRelation("oignon", "Blocage de l'activité biologique fixatrice", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
+            CompanionRelation("ail", "Effet antagoniste marqué", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
         ),
         advice = "Semis possible dès février (ou automne en région méditerranéenne). Pincer la tête au-dessus du 6e bouquet pour limiter les pucerons noirs.",
     )
@@ -351,10 +350,10 @@ object VegetableCatalog {
         waterNeed = WaterNeed.LOW,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("carotte", "Apport d'azote atmosphérique dans les sols pauvres", CompanionBenefitType.NITROGEN_FIXATION),
+            CompanionRelation("carotte", "Apport d'azote atmosphérique dans les sols pauvres", CompanionBenefitType.NITROGEN_FIXATION, EvidenceLevel.PLAUSIBLE),
         ),
         badCompanions = listOf(
-            CompanionRelation("oignon", "Incompatibilité symbiotique", CompanionRiskType.ALLELOPATHY),
+            CompanionRelation("oignon", "Incompatibilité symbiotique", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
         ),
         advice = "Plante frugale convenant aux sols légers, caillouteux et pauvres en matières organiques.",
     )
@@ -379,10 +378,10 @@ object VegetableCatalog {
         waterNeed = WaterNeed.LOW,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("romarin", "Protection contre les ravageurs par masquage d'odeurs", CompanionBenefitType.PEST_REPELLENT),
+            CompanionRelation("romarin", "Protection contre les ravageurs par masquage d'odeurs", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("ail", "Inhibition mutuelle de la rhizosphère", CompanionRiskType.ALLELOPATHY),
+            CompanionRelation("ail", "Inhibition mutuelle de la rhizosphère", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
         ),
         advice = "Résiste remarquablement à la sécheresse estivale. Craint l'humidité stagnante au niveau du collet.",
     )
@@ -409,16 +408,11 @@ object VegetableCatalog {
         harvestDurationWeeks = 6,
         waterNeed = WaterNeed.HIGH,
         sunExposure = SunExposure.FULL_SUN,
-        goodCompanions = listOf(
-            CompanionRelation("menthe", "Odeur forte masquant les glucosinolates et repoussant la piéride du chou", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("sauge", "Action aromatique perturbant la ponte de la piéride", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("thym", "Détourne les papillons de la piéride du chou", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("romarin", "Répulsif naturel contre les insectes piqueurs des crucifères", CompanionBenefitType.PEST_REPELLENT),
-        ),
+        goodCompanions = emptyList(),
         badCompanions = listOf(
-            CompanionRelation("tomate", "Concurrence nutritive lourde et sensibilité aux mêmes parasites du sol", CompanionRiskType.NUTRIENT_COMPETITION),
-            CompanionRelation("haricot_rames", "Incompatibilité de vigueur et d'enracinement", CompanionRiskType.GENERAL_ANTAGONISM),
-            CompanionRelation("radis", "Attraction démultipliée des altises sur la même parcelle", CompanionRiskType.SHARED_DISEASE_OR_PEST),
+            CompanionRelation("tomate", "Concurrence nutritive lourde et sensibilité aux mêmes parasites du sol", CompanionRiskType.NUTRIENT_COMPETITION, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("haricot_rames", "Incompatibilité de vigueur et d'enracinement", CompanionRiskType.GENERAL_ANTAGONISM, EvidenceLevel.TRADITION),
+            CompanionRelation("radis", "Attraction démultipliée des altises sur la même parcelle", CompanionRiskType.SHARED_DISEASE_OR_PEST, EvidenceLevel.ETAYE, "RHS (altises)"),
         ),
         advice = "Poser impérativement un voile anti-insectes pour empêcher les pontes dévastatrices de la piéride. Exige un sol riche et frais.",
     )
@@ -442,12 +436,9 @@ object VegetableCatalog {
         harvestDurationWeeks = 4,
         waterNeed = WaterNeed.HIGH,
         sunExposure = SunExposure.FULL_SUN,
-        goodCompanions = listOf(
-            CompanionRelation("menthe", "Masquage olfactif efficace contre la piéride", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("celeri_branche", "Détourne les chenilles par son arôme puissant", CompanionBenefitType.PEST_REPELLENT),
-        ),
+        goodCompanions = emptyList(),
         badCompanions = listOf(
-            CompanionRelation("tomate", "Épuisement rapide de la réserve azotée du sol", CompanionRiskType.NUTRIENT_COMPETITION),
+            CompanionRelation("tomate", "Épuisement rapide de la réserve azotée du sol", CompanionRiskType.NUTRIENT_COMPETITION, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Rabattre les feuilles intérieures sur la pomme pour la maintenir d'un blanc immaculé à l'abri du soleil.",
     )
@@ -471,12 +462,9 @@ object VegetableCatalog {
         harvestDurationWeeks = 6,
         waterNeed = WaterNeed.HIGH,
         sunExposure = SunExposure.FULL_SUN,
-        goodCompanions = listOf(
-            CompanionRelation("menthe", "Répulsion active de la piéride", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("romarin", "Effet aromatique barrière", CompanionBenefitType.PEST_REPELLENT),
-        ),
+        goodCompanions = emptyList(),
         badCompanions = listOf(
-            CompanionRelation("tomate", "Concurrence nutritive de deux cultures très gourmandes", CompanionRiskType.NUTRIENT_COMPETITION),
+            CompanionRelation("tomate", "Concurrence nutritive de deux cultures très gourmandes", CompanionRiskType.NUTRIENT_COMPETITION, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Après la récolte de la tête centrale, laisser le pied en place pour récolter de multiples rejets latéraux tendres.",
     )
@@ -501,12 +489,12 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.PARTIAL_SHADE,
         goodCompanions = listOf(
-            CompanionRelation("carotte", "Semis mélangé idéal : lève rapidement, marque le rang et est récolté avant que la carotte n'ait besoin de place", CompanionBenefitType.GROWTH_STIMULATOR),
-            CompanionRelation("laitue", "Les salades tempèrent le sol et rendent les radis plus doux et moins piquants", CompanionBenefitType.SHADE_OR_GROUND_COVER),
-            CompanionRelation("pois", "Enrichissement du sol au profit de la croissance rapide du radis", CompanionBenefitType.NITROGEN_FIXATION),
+            CompanionRelation("carotte", "Semis mélangé idéal : lève rapidement, marque le rang et est récolté avant que la carotte n'ait besoin de place", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("laitue", "Les salades tempèrent le sol et rendent les radis plus doux et moins piquants", CompanionBenefitType.SHADE_OR_GROUND_COVER, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("pois", "Enrichissement du sol au profit de la croissance rapide du radis", CompanionBenefitType.NITROGEN_FIXATION, EvidenceLevel.PLAUSIBLE),
         ),
         badCompanions = listOf(
-            CompanionRelation("chou_pomme", "Concentration des altises destructrices", CompanionRiskType.SHARED_DISEASE_OR_PEST),
+            CompanionRelation("chou_pomme", "Concentration des altises destructrices", CompanionRiskType.SHARED_DISEASE_OR_PEST, EvidenceLevel.ETAYE, "RHS (altises)"),
         ),
         advice = "Arroser tous les deux jours en petite quantité : un manque d'eau rend le radis piquant et creux. Échelonner les semis toutes les 2 semaines.",
     )
@@ -531,11 +519,10 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.PARTIAL_SHADE,
         goodCompanions = listOf(
-            CompanionRelation("pois", "Fixation symbiotique d'azote favorisant le développement de la racine", CompanionBenefitType.NITROGEN_FIXATION),
-            CompanionRelation("romarin", "Éloigne la mouche du chou et les altises", CompanionBenefitType.PEST_REPELLENT),
+            CompanionRelation("pois", "Fixation symbiotique d'azote favorisant le développement de la racine", CompanionBenefitType.NITROGEN_FIXATION, EvidenceLevel.PLAUSIBLE),
         ),
         badCompanions = listOf(
-            CompanionRelation("radis", "Attraction combinée d'altises sur les plantules", CompanionRiskType.SHARED_DISEASE_OR_PEST),
+            CompanionRelation("radis", "Attraction combinée d'altises sur les plantules", CompanionRiskType.SHARED_DISEASE_OR_PEST, EvidenceLevel.ETAYE, "RHS (altises)"),
         ),
         advice = "Maintenir le sol humide pour éviter que la racine ne devienne fibreuse et amère.",
     )
@@ -560,11 +547,11 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.PARTIAL_SHADE,
         goodCompanions = listOf(
-            CompanionRelation("laitue", "Microclimat frais limitant la montée à graines précoce", CompanionBenefitType.SHADE_OR_GROUND_COVER),
-            CompanionRelation("carotte", "Partage harmonieux de l'espace foliaire", CompanionBenefitType.GENERAL_SYNERGY),
+            CompanionRelation("laitue", "Microclimat frais limitant la montée à graines précoce", CompanionBenefitType.SHADE_OR_GROUND_COVER, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("carotte", "Partage harmonieux de l'espace foliaire", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("chou_pomme", "Même sensibilité accrue aux attaques d'altises", CompanionRiskType.SHARED_DISEASE_OR_PEST),
+            CompanionRelation("chou_pomme", "Même sensibilité accrue aux attaques d'altises", CompanionRiskType.SHARED_DISEASE_OR_PEST, EvidenceLevel.ETAYE, "RHS (altises)"),
         ),
         advice = "Couper les feuilles régulièrement pour stimuler de nouvelles repousses tendres.",
     )
@@ -588,12 +575,9 @@ object VegetableCatalog {
         harvestDurationWeeks = 16,
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
-        goodCompanions = listOf(
-            CompanionRelation("menthe", "Répulsif contre la piéride", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("thym", "Masquage des senteurs de crucifères", CompanionBenefitType.PEST_REPELLENT),
-        ),
+        goodCompanions = emptyList(),
         badCompanions = listOf(
-            CompanionRelation("tomate", "Concurrence racinaire", CompanionRiskType.NUTRIENT_COMPETITION),
+            CompanionRelation("tomate", "Concurrence racinaire", CompanionRiskType.NUTRIENT_COMPETITION, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Extrêmement rustique au gel (jusqu'à -15°C). Les premières gelées d'automne adoucissent sa saveur en transformant l'amidon en sucres.",
     )
@@ -618,11 +602,11 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("laitue", "Culture intercalaire idéale récoltée rapidement", CompanionBenefitType.GROWTH_STIMULATOR),
-            CompanionRelation("betterave", "Strate et enracinement équilibrés", CompanionBenefitType.GENERAL_SYNERGY),
+            CompanionRelation("laitue", "Culture intercalaire idéale récoltée rapidement", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.TRADITION),
+            CompanionRelation("betterave", "Strate et enracinement équilibrés", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("tomate", "Ralentissement mutuel", CompanionRiskType.NUTRIENT_COMPETITION),
+            CompanionRelation("tomate", "Ralentissement mutuel", CompanionRiskType.NUTRIENT_COMPETITION, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Récolter jeune dès que la pomme atteint la taille d'une balle de tennis pour éviter qu'il ne devienne filandreux.",
     )
@@ -650,16 +634,15 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("poireau", "Confusion olfactive croisée : le poireau repousse la mouche de la carotte tandis que la carotte éloigne la teigne du poireau", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("oignon", "Forte odeur d'allicine masquant les carottes face à la mouche Psila rosae", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("ail", "Effet répulsif sur les mouches des racines", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("radis", "Semis compagne : le radis aère le lit de semence et marque la ligne", CompanionBenefitType.GROWTH_STIMULATOR),
-            CompanionRelation("ciboulette", "Masque olfactif contre la mouche de la carotte", CompanionBenefitType.PEST_REPELLENT),
+            CompanionRelation("poireau", "Confusion olfactive croisée : le poireau repousse la mouche de la carotte tandis que la carotte éloigne la teigne du poireau", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("oignon", "Forte odeur d'allicine masquant les carottes face à la mouche Psila rosae", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.ETAYE, "Uvah et Coaker 1984 ; Varis 1991"),
+            CompanionRelation("ail", "Effet répulsif sur les mouches des racines", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("radis", "Semis compagne : le radis aère le lit de semence et marque la ligne", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("ciboulette", "Masque olfactif contre la mouche de la carotte", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.PLAUSIBLE),
         ),
         badCompanions = listOf(
-            CompanionRelation("aneth", "Hybridation et ralentissement végétatif allélopathique", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("fenouil", "Antagonisme fort et arrêt de croissance racinaire", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("celeri_rave", "Partage de la mouche de la carotte et concurrence sur le calibre", CompanionRiskType.SHARED_DISEASE_OR_PEST),
+            CompanionRelation("fenouil", "Antagonisme fort et arrêt de croissance racinaire", CompanionRiskType.ALLELOPATHY, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("celeri_rave", "Partage de la mouche de la carotte et concurrence sur le calibre", CompanionRiskType.SHARED_DISEASE_OR_PEST, EvidenceLevel.ETAYE, "RHS (mouche de la carotte)"),
         ),
         advice = "Semer en terre fine, sans cailloux ni fumier frais (cause de racines fourchues). Maintenir le lit de semence humide jusqu'à la levée.",
     )
@@ -684,12 +667,12 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("radis", "Indicateur de ligne durant la très lente levée du panais", CompanionBenefitType.GROWTH_STIMULATOR),
-            CompanionRelation("oignon", "Répulsif contre la mouche des ombellifères", CompanionBenefitType.PEST_REPELLENT),
+            CompanionRelation("radis", "Indicateur de ligne durant la très lente levée du panais", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("oignon", "Répulsif contre la mouche des ombellifères", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.PLAUSIBLE),
         ),
         badCompanions = listOf(
-            CompanionRelation("carotte", "Même sensibilité aux maladies racinaires", CompanionRiskType.SHARED_DISEASE_OR_PEST),
-            CompanionRelation("celeri_rave", "Compétition de même famille botanique", CompanionRiskType.SHARED_DISEASE_OR_PEST),
+            CompanionRelation("carotte", "Même sensibilité aux maladies racinaires", CompanionRiskType.SHARED_DISEASE_OR_PEST, EvidenceLevel.ETAYE, "RHS (mouche de la carotte)"),
+            CompanionRelation("celeri_rave", "Compétition de même famille botanique", CompanionRiskType.SHARED_DISEASE_OR_PEST, EvidenceLevel.ETAYE, "RHS (mouche de la carotte)"),
         ),
         advice = "Graines fraîches indispensables (le panais perd sa faculté germinative en 1 an). Les gelées d'automne subliment sa saveur sucrée.",
     )
@@ -714,12 +697,11 @@ object VegetableCatalog {
         waterNeed = WaterNeed.HIGH,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("chou_pomme", "Éloigne mutuellement les parasites spécifiques", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("poireau", "Synergie de croissance et d'irrigation", CompanionBenefitType.GENERAL_SYNERGY),
+            CompanionRelation("poireau", "Synergie de croissance et d'irrigation", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("carotte", "Sensibilité croisée à la mouche de la carotte", CompanionRiskType.SHARED_DISEASE_OR_PEST),
-            CompanionRelation("panais", "Concurrence racinaire au sein des Apiacées", CompanionRiskType.SHARED_DISEASE_OR_PEST),
+            CompanionRelation("carotte", "Sensibilité croisée à la mouche de la carotte", CompanionRiskType.SHARED_DISEASE_OR_PEST, EvidenceLevel.ETAYE, "RHS (mouche de la carotte)"),
+            CompanionRelation("panais", "Concurrence racinaire au sein des Apiacées", CompanionRiskType.SHARED_DISEASE_OR_PEST, EvidenceLevel.ETAYE, "RHS (mouche de la carotte)"),
         ),
         advice = "Exige un sol très riche en humus et un arrosage constant sans le moindre coup de sec sous peine de pomme creuse.",
     )
@@ -744,11 +726,10 @@ object VegetableCatalog {
         waterNeed = WaterNeed.HIGH,
         sunExposure = SunExposure.PARTIAL_SHADE,
         goodCompanions = listOf(
-            CompanionRelation("chou_fleur", "Protection contre la piéride par émanation aromatique", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("tomate", "Microclimat frais bénéfique", CompanionBenefitType.GENERAL_SYNERGY),
+            CompanionRelation("tomate", "Microclimat frais bénéfique", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("carotte", "Ravageurs communs", CompanionRiskType.SHARED_DISEASE_OR_PEST),
+            CompanionRelation("carotte", "Ravageurs communs", CompanionRiskType.SHARED_DISEASE_OR_PEST, EvidenceLevel.ETAYE, "RHS (mouche de la carotte)"),
         ),
         advice = "Butte ou blanchir les côtes 3 semaines avant récolte pour atténuer l'amertume et les rendre croquantes.",
     )
@@ -776,15 +757,15 @@ object VegetableCatalog {
         waterNeed = WaterNeed.LOW,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("carotte", "Confusion olfactive croisée contre la mouche de la carotte", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("betterave", "Stimule la croissance sans concurrence foliaire", CompanionBenefitType.GROWTH_STIMULATOR),
-            CompanionRelation("laitue", "Protection fongicide légère des bulbes", CompanionBenefitType.GENERAL_SYNERGY),
+            CompanionRelation("carotte", "Confusion olfactive croisée contre la mouche de la carotte", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.ETAYE, "Uvah et Coaker 1984 ; Varis 1991"),
+            CompanionRelation("betterave", "Stimule la croissance sans concurrence foliaire", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.TRADITION),
+            CompanionRelation("laitue", "Protection fongicide légère des bulbes", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("haricot_nain", "Inhibition allélopathique des nodosités fixatrices d'azote", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("haricot_rames", "Effet toxique sur les bactéries symbiotiques rhizobiums", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("pois", "Blocage de l'assimilation d'azote chez les légumineuses", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("feve", "Incompatibilité agronomique stricte", CompanionRiskType.ALLELOPATHY),
+            CompanionRelation("haricot_nain", "Inhibition allélopathique des nodosités fixatrices d'azote", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
+            CompanionRelation("haricot_rames", "Effet toxique sur les bactéries symbiotiques rhizobiums", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
+            CompanionRelation("pois", "Blocage de l'assimilation d'azote chez les légumineuses", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
+            CompanionRelation("feve", "Incompatibilité agronomique stricte", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
         ),
         advice = "Ne jamais apporter de fumier frais (provoque le pourrissement des bulbes). Cesser tout arrosage 3 semaines avant la récolte.",
     )
@@ -809,14 +790,14 @@ object VegetableCatalog {
         waterNeed = WaterNeed.LOW,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("carotte", "L'allicine volatile désoriente les parasites de la racine", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("tomate", "Action antifongique naturelle préventive", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("betterave", "Cohabitation très harmonieuse au potager", CompanionBenefitType.GENERAL_SYNERGY),
+            CompanionRelation("carotte", "L'allicine volatile désoriente les parasites de la racine", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("tomate", "Action antifongique naturelle préventive", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
+            CompanionRelation("betterave", "Cohabitation très harmonieuse au potager", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("haricot_nain", "Effet bactéricide destructeur pour les bactéries fixatrices d'azote", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("pois", "Inhibition de croissance des légumineuses", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("feve", "Incompatibilité racinaire sévère", CompanionRiskType.ALLELOPATHY),
+            CompanionRelation("haricot_nain", "Effet bactéricide destructeur pour les bactéries fixatrices d'azote", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
+            CompanionRelation("pois", "Inhibition de croissance des légumineuses", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
+            CompanionRelation("feve", "Incompatibilité racinaire sévère", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
         ),
         advice = "Planter les gousses pointe vers le haut à 3 cm de profondeur dans un sol parfaitement drainé (former un billon en sol lourd).",
     )
@@ -841,12 +822,12 @@ object VegetableCatalog {
         waterNeed = WaterNeed.LOW,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("carotte", "Éloigne la mouche de la carotte", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("betterave", "Synergie racinaire", CompanionBenefitType.GROWTH_STIMULATOR),
+            CompanionRelation("carotte", "Éloigne la mouche de la carotte", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("betterave", "Synergie racinaire", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("haricot_nain", "Inhibition des légumineuses", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("pois", "Ralentit la levée et la nodulation", CompanionRiskType.ALLELOPATHY),
+            CompanionRelation("haricot_nain", "Inhibition des légumineuses", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
+            CompanionRelation("pois", "Ralentit la levée et la nodulation", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
         ),
         advice = "Planter en sol meuble non fumé récemment. Récolter par temps sec quand les feuilles sont aux 2/3 sèches.",
     )
@@ -871,14 +852,14 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("carotte", "Confusion olfactive croisée : la carotte repousse la teigne du poireau et le poireau repousse la mouche de la carotte", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("celeri_branche", "Association classique contre la teigne et la rouille", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("tomate", "Optimisation de l'espace vertical et protection mutuelle", CompanionBenefitType.GENERAL_SYNERGY),
+            CompanionRelation("carotte", "Confusion olfactive croisée : la carotte repousse la teigne du poireau et le poireau repousse la mouche de la carotte", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("celeri_branche", "Association classique contre la teigne et la rouille", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
+            CompanionRelation("tomate", "Optimisation de l'espace vertical et protection mutuelle", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("haricot_nain", "Inhibition de la fixation de l'azote", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("pois", "Ralentissement mutuel", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("betterave", "Compétition racinaire", CompanionRiskType.GENERAL_ANTAGONISM),
+            CompanionRelation("haricot_nain", "Inhibition de la fixation de l'azote", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
+            CompanionRelation("pois", "Ralentissement mutuel", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
+            CompanionRelation("betterave", "Compétition racinaire", CompanionRiskType.GENERAL_ANTAGONISM, EvidenceLevel.TRADITION),
         ),
         advice = "Habiller les plants avant repiquage (raccourcir racines à 2 cm et feuilles d'un tiers). Planter en trou profond de 15 cm et butter pour allonger le blanc.",
     )
@@ -903,12 +884,12 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("carotte", "Action répulsive contre la mouche des racines", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("tomate", "Rehausse la saveur et repousse les pucerons", CompanionBenefitType.GROWTH_STIMULATOR),
+            CompanionRelation("carotte", "Action répulsive contre la mouche des racines", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("tomate", "Rehausse la saveur et repousse les pucerons", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("haricot_nain", "Inhibition allélopathique", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("pois", "Incompatibilité générale des alliacées", CompanionRiskType.ALLELOPATHY),
+            CompanionRelation("haricot_nain", "Inhibition allélopathique", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
+            CompanionRelation("pois", "Incompatibilité générale des alliacées", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
         ),
         advice = "Plante vivace très facile. Rabattre régulièrement pour stimuler l'apparition de nouvelles tiges tendres et savoureuses.",
     )
@@ -936,14 +917,13 @@ object VegetableCatalog {
         waterNeed = WaterNeed.HIGH,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("haricot_rames", "Apport d'azote symbiotique bénéfique", CompanionBenefitType.NITROGEN_FIXATION),
-            CompanionRelation("mais_doux", "Ombre légère bienfaisante aux heures les plus brûlantes", CompanionBenefitType.SHADE_OR_GROUND_COVER),
-            CompanionRelation("bourrache", "Attire les bourdons pour une pollinisation parfaite des fleurs femelles", CompanionBenefitType.POLLINATOR_ATTRACTOR),
-            CompanionRelation("capucine", "Plante piège à pucerons détournant les attaques", CompanionBenefitType.PEST_REPELLENT),
+            CompanionRelation("haricot_rames", "Apport d'azote symbiotique bénéfique", CompanionBenefitType.NITROGEN_FIXATION, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("mais_doux", "Ombre légère bienfaisante aux heures les plus brûlantes", CompanionBenefitType.SHADE_OR_GROUND_COVER, EvidenceLevel.ETAYE, "Zhang et al. 2014 ; Postma et Lynch 2012"),
+            CompanionRelation("bourrache", "Attire les bourdons pour une pollinisation parfaite des fleurs femelles", CompanionBenefitType.POLLINATOR_ATTRACTOR, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("capucine", "Plante piège à pucerons détournant les attaques", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("pomme_de_terre", "Concurrence hydrique et risque d'oïdium et pourritures", CompanionRiskType.SHARED_DISEASE_OR_PEST),
-            CompanionRelation("concombre", "Sensibilité croisée à l'oïdium et aux virus de la mosaïque", CompanionRiskType.SHARED_DISEASE_OR_PEST),
+            CompanionRelation("concombre", "Sensibilité croisée à l'oïdium et aux virus de la mosaïque", CompanionRiskType.SHARED_DISEASE_OR_PEST, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Récolter les courgettes jeunes (18-22 cm) pour inciter la plante à produire continuellement de nouvelles fleurs.",
     )
@@ -968,13 +948,12 @@ object VegetableCatalog {
         waterNeed = WaterNeed.HIGH,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("basilic", "Améliore la vigueur et repousse les acariens", CompanionBenefitType.GROWTH_STIMULATOR),
-            CompanionRelation("haricot_nain", "Azote et couverture racinaire", CompanionBenefitType.NITROGEN_FIXATION),
-            CompanionRelation("bourrache", "Forte attraction des pollinisateurs indispensables", CompanionBenefitType.POLLINATOR_ATTRACTOR),
+            CompanionRelation("basilic", "Améliore la vigueur et repousse les acariens", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.TRADITION),
+            CompanionRelation("haricot_nain", "Azote et couverture racinaire", CompanionBenefitType.NITROGEN_FIXATION, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("bourrache", "Forte attraction des pollinisateurs indispensables", CompanionBenefitType.POLLINATOR_ATTRACTOR, EvidenceLevel.PLAUSIBLE),
         ),
         badCompanions = listOf(
-            CompanionRelation("pomme_de_terre", "Sensibilité commune aux maladies cryptogamiques", CompanionRiskType.SHARED_DISEASE_OR_PEST),
-            CompanionRelation("courgette", "Surpopulation de cucurbitacées attirant l'oïdium", CompanionRiskType.SHARED_DISEASE_OR_PEST),
+            CompanionRelation("courgette", "Surpopulation de cucurbitacées attirant l'oïdium", CompanionRiskType.SHARED_DISEASE_OR_PEST, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Cultiver sur treillis vertical pour aérer les fruits, éviter la pourriture au sol et faciliter la cueillette.",
     )
@@ -999,12 +978,10 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("bourrache", "Attraction d'auxiliaires pollinisateurs pour féconder les fleurs", CompanionBenefitType.POLLINATOR_ATTRACTOR),
-            CompanionRelation("tagete", "Protection contre les nématodes", CompanionBenefitType.PEST_REPELLENT),
+            CompanionRelation("bourrache", "Attraction d'auxiliaires pollinisateurs pour féconder les fleurs", CompanionBenefitType.POLLINATOR_ATTRACTOR, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("tagete", "Protection contre les nématodes", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.ETAYE, "Hooks et al. 2010 (culture avant la plante) ; Conboy et al. 2019 (serre) ; UF/IFAS"),
         ),
-        badCompanions = listOf(
-            CompanionRelation("pomme_de_terre", "Foyer d'oïdium et concurrence", CompanionRiskType.SHARED_DISEASE_OR_PEST),
-        ),
+        badCompanions = emptyList(),
         advice = "Pincer la tige principale au-dessus de la 3e ou 4e feuille pour provoquer l'émission de rameaux fructifères.",
     )
 
@@ -1028,11 +1005,11 @@ object VegetableCatalog {
         waterNeed = WaterNeed.HIGH,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("mais_doux", "Élément du trio précolombien de la Milpa : couvre le sol et conserve l'eau", CompanionBenefitType.SHADE_OR_GROUND_COVER),
-            CompanionRelation("haricot_rames", "Profite de l'azote fourni par le haricot grimpant sur le maïs", CompanionBenefitType.NITROGEN_FIXATION),
+            CompanionRelation("mais_doux", "Élément du trio précolombien de la Milpa : couvre le sol et conserve l'eau", CompanionBenefitType.SHADE_OR_GROUND_COVER, EvidenceLevel.ETAYE, "Zhang et al. 2014 ; Postma et Lynch 2012"),
+            CompanionRelation("haricot_rames", "Profite de l'azote fourni par le haricot grimpant sur le maïs", CompanionBenefitType.NITROGEN_FIXATION, EvidenceLevel.PLAUSIBLE),
         ),
         badCompanions = listOf(
-            CompanionRelation("pomme_de_terre", "Compétition extrême pour le potassium et l'eau", CompanionRiskType.NUTRIENT_COMPETITION),
+            CompanionRelation("pomme_de_terre", "Compétition extrême pour le potassium et l'eau", CompanionRiskType.NUTRIENT_COMPETITION, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Isoler le fruit du sol humide avec une tuile ou une planche en fin de saison pour éviter le pourrissement.",
     )
@@ -1057,11 +1034,11 @@ object VegetableCatalog {
         waterNeed = WaterNeed.HIGH,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("mais_doux", "Couverture vivante du sol dans le système de la Milpa", CompanionBenefitType.SHADE_OR_GROUND_COVER),
-            CompanionRelation("haricot_rames", "Bénéficie de l'azote fixé dans la rhizosphère", CompanionBenefitType.NITROGEN_FIXATION),
+            CompanionRelation("mais_doux", "Couverture vivante du sol dans le système de la Milpa", CompanionBenefitType.SHADE_OR_GROUND_COVER, EvidenceLevel.ETAYE, "Zhang et al. 2014 ; Postma et Lynch 2012"),
+            CompanionRelation("haricot_rames", "Bénéficie de l'azote fixé dans la rhizosphère", CompanionBenefitType.NITROGEN_FIXATION, EvidenceLevel.PLAUSIBLE),
         ),
         badCompanions = listOf(
-            CompanionRelation("pomme_de_terre", "Concurrence alimentaire majeure", CompanionRiskType.NUTRIENT_COMPETITION),
+            CompanionRelation("pomme_de_terre", "Concurrence alimentaire majeure", CompanionRiskType.NUTRIENT_COMPETITION, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Récolter avec son pédoncule bien sec avant les gelées d'automne. Se conserve plusieurs mois au sec à 15°C.",
     )
@@ -1086,11 +1063,9 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("bourrache", "Pollinisation optimisée", CompanionBenefitType.POLLINATOR_ATTRACTOR),
+            CompanionRelation("bourrache", "Pollinisation optimisée", CompanionBenefitType.POLLINATOR_ATTRACTOR, EvidenceLevel.PLAUSIBLE),
         ),
-        badCompanions = listOf(
-            CompanionRelation("pomme_de_terre", "Sensibilité partagée aux champignons terricoles", CompanionRiskType.SHARED_DISEASE_OR_PEST),
-        ),
+        badCompanions = emptyList(),
         advice = "Requiert un maximum d'ensoleillement et un sol très sableux et chaud.",
     )
 
@@ -1117,13 +1092,13 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("oignon", "Association bénéfique stimulant la saveur et la croissance", CompanionBenefitType.GROWTH_STIMULATOR),
-            CompanionRelation("laitue", "Feuillage couvrant maintenant la fraîcheur", CompanionBenefitType.SHADE_OR_GROUND_COVER),
-            CompanionRelation("chou_rave", "Strate et enracinement compatibles", CompanionBenefitType.GENERAL_SYNERGY),
+            CompanionRelation("oignon", "Association bénéfique stimulant la saveur et la croissance", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.TRADITION),
+            CompanionRelation("laitue", "Feuillage couvrant maintenant la fraîcheur", CompanionBenefitType.SHADE_OR_GROUND_COVER, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("chou_rave", "Strate et enracinement compatibles", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("haricot_rames", "Antagonisme agronomique entraînant un retard de développement", CompanionRiskType.GENERAL_ANTAGONISM),
-            CompanionRelation("epinard", "Même famille botanique et concurrence d'assimilation minérale", CompanionRiskType.NUTRIENT_COMPETITION),
+            CompanionRelation("haricot_rames", "Antagonisme agronomique entraînant un retard de développement", CompanionRiskType.GENERAL_ANTAGONISM, EvidenceLevel.TRADITION),
+            CompanionRelation("epinard", "Même famille botanique et concurrence d'assimilation minérale", CompanionRiskType.NUTRIENT_COMPETITION, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Chaque glomérule contenant plusieurs graines, éclaircir impérativement à 10 cm pour ne laisser que le plus beau plant.",
     )
@@ -1148,12 +1123,12 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.PARTIAL_SHADE,
         goodCompanions = listOf(
-            CompanionRelation("feve", "Couvre-sol vivant captant l'azote exsudé par la fève", CompanionBenefitType.NITROGEN_FIXATION),
-            CompanionRelation("pois", "Synergie printanière idéale", CompanionBenefitType.GROWTH_STIMULATOR),
-            CompanionRelation("radis", "Compagnonnage intercalaire parfait", CompanionBenefitType.GENERAL_SYNERGY),
+            CompanionRelation("feve", "Couvre-sol vivant captant l'azote exsudé par la fève", CompanionBenefitType.NITROGEN_FIXATION, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("pois", "Synergie printanière idéale", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.TRADITION),
+            CompanionRelation("radis", "Compagnonnage intercalaire parfait", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.PLAUSIBLE),
         ),
         badCompanions = listOf(
-            CompanionRelation("betterave", "Concurrence des Chénopodiacées", CompanionRiskType.NUTRIENT_COMPETITION),
+            CompanionRelation("betterave", "Concurrence des Chénopodiacées", CompanionRiskType.NUTRIENT_COMPETITION, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Craint la chaleur et les jours longs qui provoquent la montée en graines. Privilégier les semis d'automne et de fin d'hiver.",
     )
@@ -1178,11 +1153,11 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.PARTIAL_SHADE,
         goodCompanions = listOf(
-            CompanionRelation("carotte", "Partage équilibré de l'espace racinaire", CompanionBenefitType.GENERAL_SYNERGY),
-            CompanionRelation("radis", "Semis intercalaire de démarrage", CompanionBenefitType.GROWTH_STIMULATOR),
+            CompanionRelation("carotte", "Partage équilibré de l'espace racinaire", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
+            CompanionRelation("radis", "Semis intercalaire de démarrage", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.PLAUSIBLE),
         ),
         badCompanions = listOf(
-            CompanionRelation("betterave", "Même espèce botanique : risque d'appauvrissement minéral ciblé", CompanionRiskType.NUTRIENT_COMPETITION),
+            CompanionRelation("betterave", "Même espèce botanique : risque d'appauvrissement minéral ciblé", CompanionRiskType.NUTRIENT_COMPETITION, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Récolter feuille par feuille en cassant les côtes extérieures au ras de la base : le cœur continue de produire sans discontinuer.",
     )
@@ -1210,14 +1185,14 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.PARTIAL_SHADE,
         goodCompanions = listOf(
-            CompanionRelation("carotte", "Strate foliaire basse complétant la racine profonde de la carotte", CompanionBenefitType.GENERAL_SYNERGY),
-            CompanionRelation("radis", "Adoucit le goût du radis et partage harmonieusement le sol", CompanionBenefitType.GROWTH_STIMULATOR),
-            CompanionRelation("betterave", "Couvre-sol limitant l'évaporation pour les betteraves", CompanionBenefitType.SHADE_OR_GROUND_COVER),
-            CompanionRelation("chou_pomme", "Culture intercalaire récoltée bien avant le grossissement du chou", CompanionBenefitType.GROWTH_STIMULATOR),
+            CompanionRelation("carotte", "Strate foliaire basse complétant la racine profonde de la carotte", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
+            CompanionRelation("radis", "Adoucit le goût du radis et partage harmonieusement le sol", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("betterave", "Couvre-sol limitant l'évaporation pour les betteraves", CompanionBenefitType.SHADE_OR_GROUND_COVER, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("chou_pomme", "Culture intercalaire récoltée bien avant le grossissement du chou", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("persil", "Allélopathie néfaste inhibant la formation de la pomme de la laitue", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("tournesol", "Ombre excessive et substances inhibitrices", CompanionRiskType.CANOPY_OR_ROOT_SHADOW),
+            CompanionRelation("persil", "Allélopathie néfaste inhibant la formation de la pomme de la laitue", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
+            CompanionRelation("tournesol", "Ombre excessive et substances inhibitrices", CompanionRiskType.CANOPY_OR_ROOT_SHADOW, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Semer très superficiellement (la graine a besoin de lumière pour germer). En été, ombrer le lit de semence pour éviter la dormance induite par la chaleur (> 22°C).",
     )
@@ -1242,8 +1217,8 @@ object VegetableCatalog {
         waterNeed = WaterNeed.LOW,
         sunExposure = SunExposure.PARTIAL_SHADE,
         goodCompanions = listOf(
-            CompanionRelation("poireau", "S'installe au pied des poireaux en fin d'été comme couvre-sol hivernal", CompanionBenefitType.SHADE_OR_GROUND_COVER),
-            CompanionRelation("oignon", "Parfaite compagne d'intersaison", CompanionBenefitType.GENERAL_SYNERGY),
+            CompanionRelation("poireau", "S'installe au pied des poireaux en fin d'été comme couvre-sol hivernal", CompanionBenefitType.SHADE_OR_GROUND_COVER, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("oignon", "Parfaite compagne d'intersaison", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
         ),
         badCompanions = emptyList(),
         advice = "Tasser énergiquement le sol avant et après le semis avec le dos du râteau : la mâche exige une terre ferme pour bien s'enraciner.",
@@ -1269,11 +1244,11 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("carotte", "Cohabitation très positive", CompanionBenefitType.GENERAL_SYNERGY),
-            CompanionRelation("radis", "Marqueur de semis", CompanionBenefitType.GROWTH_STIMULATOR),
+            CompanionRelation("carotte", "Cohabitation très positive", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
+            CompanionRelation("radis", "Marqueur de semis", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.PLAUSIBLE),
         ),
         badCompanions = listOf(
-            CompanionRelation("persil", "Inhibition foliaire", CompanionRiskType.ALLELOPATHY),
+            CompanionRelation("persil", "Inhibition foliaire", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
         ),
         advice = "Blanchir le cœur 10 jours avant la récolte sous une cloche opaque pour réduire l'amertume naturelle.",
     )
@@ -1301,12 +1276,12 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("tomate", "Synergie majeure : sublime la saveur de la tomate et repousse pucerons et mouches blanches", CompanionBenefitType.GROWTH_STIMULATOR),
-            CompanionRelation("poivron", "Protection par ses effluves terpéniques répulsifs", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("concombre", "Renforce la résistance générale aux attaques", CompanionBenefitType.GROWTH_STIMULATOR),
+            CompanionRelation("tomate", "Synergie majeure : sublime la saveur de la tomate et repousse pucerons et mouches blanches", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.ETAYE, "Mutisya et al. 2016 ; Bomford 2004"),
+            CompanionRelation("poivron", "Protection par ses effluves terpéniques répulsifs", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
+            CompanionRelation("concombre", "Renforce la résistance générale aux attaques", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("fenouil", "Incompatibilité agronomique allélopathique", CompanionRiskType.ALLELOPATHY),
+            CompanionRelation("fenouil", "Incompatibilité agronomique allélopathique", CompanionRiskType.ALLELOPATHY, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Pincer régulièrement l'extrémité des tiges pour empêcher la floraison et favoriser une ramification buissonnante riche en feuilles tendres.",
     )
@@ -1331,12 +1306,10 @@ object VegetableCatalog {
         waterNeed = WaterNeed.HIGH,
         sunExposure = SunExposure.PARTIAL_SHADE,
         goodCompanions = listOf(
-            CompanionRelation("chou_pomme", "Action répulsive très puissante masquant les glucosinolates face à la piéride du chou", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("brocoli", "Répulsion efficace des ravageurs du feuillage", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("tomate", "Détourne les pucerons", CompanionBenefitType.PEST_REPELLENT),
+            CompanionRelation("tomate", "Détourne les pucerons", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("carotte", "Envahissement racinaire excessif étouffant les racines douces", CompanionRiskType.CANOPY_OR_ROOT_SHADOW),
+            CompanionRelation("carotte", "Envahissement racinaire excessif étouffant les racines douces", CompanionRiskType.CANOPY_OR_ROOT_SHADOW, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Très envahissante par ses stolons traçants. À cultiver de préférence en pot enterré au milieu des planches de choux.",
     )
@@ -1360,10 +1333,7 @@ object VegetableCatalog {
         harvestDurationWeeks = 40,
         waterNeed = WaterNeed.LOW,
         sunExposure = SunExposure.FULL_SUN,
-        goodCompanions = listOf(
-            CompanionRelation("chou_pomme", "Éloigne la piéride du chou et les limaces par son arôme puissant de camphre", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("carotte", "Perturbe le vol d'orientation de la mouche de la carotte", CompanionBenefitType.PEST_REPELLENT),
-        ),
+        goodCompanions = emptyList(),
         badCompanions = emptyList(),
         advice = "Arbrisseau méditerranéen vivace exigeant un drainage parfait. Craint les sols lourds et gorgés d'eau en hiver.",
     )
@@ -1388,8 +1358,7 @@ object VegetableCatalog {
         waterNeed = WaterNeed.LOW,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("aubergine", "Répulsif naturel contre les insectes phytophages", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("chou_pomme", "Masquage olfactif limitant les pontes de chenilles", CompanionBenefitType.PEST_REPELLENT),
+            CompanionRelation("aubergine", "Répulsif naturel contre les insectes phytophages", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
         ),
         badCompanions = emptyList(),
         advice = "Plante frugale n'exigeant aucun engrais. Tailler après floraison pour conserver une touffe compacte.",
@@ -1415,8 +1384,8 @@ object VegetableCatalog {
         waterNeed = WaterNeed.LOW,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("poivron", "Effet protecteur répulsif", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("piment", "Améliore la résistance générale", CompanionBenefitType.PEST_REPELLENT),
+            CompanionRelation("poivron", "Effet protecteur répulsif", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
+            CompanionRelation("piment", "Améliore la résistance générale", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
         ),
         badCompanions = emptyList(),
         advice = "Magnifique floraison mellifère attirant abeilles sauvages et syrphes prédateurs de pucerons.",
@@ -1441,10 +1410,7 @@ object VegetableCatalog {
         harvestDurationWeeks = 35,
         waterNeed = WaterNeed.LOW,
         sunExposure = SunExposure.FULL_SUN,
-        goodCompanions = listOf(
-            CompanionRelation("chou_pomme", "Action répulsive majeure sur la piéride du chou", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("carotte", "Masque olfactif réduisant les dégâts de mouche", CompanionBenefitType.PEST_REPELLENT),
-        ),
+        goodCompanions = emptyList(),
         badCompanions = emptyList(),
         advice = "Feuillage persistant aromatique. Tailler légèrement au début du printemps.",
     )
@@ -1469,11 +1435,11 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.PARTIAL_SHADE,
         goodCompanions = listOf(
-            CompanionRelation("tomate", "Stimulation réciproque et rehaussement de la vigueur", CompanionBenefitType.GROWTH_STIMULATOR),
-            CompanionRelation("asperge", "Partenariat traditionnel très équilibré", CompanionBenefitType.GROWTH_STIMULATOR),
+            CompanionRelation("tomate", "Stimulation réciproque et rehaussement de la vigueur", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.TRADITION),
+            CompanionRelation("asperge", "Partenariat traditionnel très équilibré", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("laitue", "Sécrétions foliaires inhibant la pomme de la salade", CompanionRiskType.ALLELOPATHY),
+            CompanionRelation("laitue", "Sécrétions foliaires inhibant la pomme de la salade", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
         ),
         advice = "Faire tremper les graines 24h dans de l'eau tiède avant le semis pour accélérer la levée réputée très lente.",
     )
@@ -1498,11 +1464,10 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.PARTIAL_SHADE,
         goodCompanions = listOf(
-            CompanionRelation("carotte", "Éloigne la mouche de la carotte par son odeur musquée", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("chou_pomme", "Attire les auxiliaires prédateurs des pucerons du chou", CompanionBenefitType.POLLINATOR_ATTRACTOR),
+            CompanionRelation("chou_pomme", "Attire les auxiliaires prédateurs des pucerons du chou", CompanionBenefitType.POLLINATOR_ATTRACTOR, EvidenceLevel.PLAUSIBLE),
         ),
         badCompanions = listOf(
-            CompanionRelation("fenouil", "Inhibition réciproque de la germination", CompanionRiskType.ALLELOPATHY),
+            CompanionRelation("fenouil", "Inhibition réciproque de la germination", CompanionRiskType.ALLELOPATHY, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Semer en sol frais à mi-ombre pour retarder la floraison hâtive.",
     )
@@ -1527,12 +1492,11 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("chou_pomme", "Attire les guêpes parasitoïdes régulatrices des chenilles du chou", CompanionBenefitType.POLLINATOR_ATTRACTOR),
-            CompanionRelation("concombre", "Stimule la croissance et rehausse le goût", CompanionBenefitType.GROWTH_STIMULATOR),
+            CompanionRelation("chou_pomme", "Attire les guêpes parasitoïdes régulatrices des chenilles du chou", CompanionBenefitType.POLLINATOR_ATTRACTOR, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("concombre", "Stimule la croissance et rehausse le goût", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("carotte", "Risque d'hybridation sauvage et rabougrissement des carottes", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("fenouil", "Pollinisation croisée indésirable dégradant les saveurs", CompanionRiskType.FLAVOR_DEGRADATION),
+            CompanionRelation("fenouil", "Pollinisation croisée indésirable dégradant les saveurs", CompanionRiskType.FLAVOR_DEGRADATION, EvidenceLevel.TRADITION),
         ),
         advice = "Ses superbes ombelles jaunes attirent une profusion de syrphes et de coccinelles au potager.",
     )
@@ -1560,39 +1524,13 @@ object VegetableCatalog {
         waterNeed = WaterNeed.LOW,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("tomate", "Effet nématicide racinaire puissant (sécrétion de thiophènes assainissant le sol)", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("aubergine", "Éloigne les aleurodes et les vers nématodes", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("poivron", "Protection sanitaire du système racinaire", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("melon", "Assainissement de la parcelle", CompanionBenefitType.PEST_REPELLENT),
+            CompanionRelation("tomate", "Réduit les nématodes à galles quand il est cultivé avant la tomate", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.ETAYE, "Hooks et al. 2010 (culture avant la plante) ; Conboy et al. 2019 (serre) ; UF/IFAS"),
+            CompanionRelation("aubergine", "Éloigne les aleurodes et les vers nématodes", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.ETAYE, "Hooks et al. 2010 (culture avant la plante) ; Conboy et al. 2019 (serre) ; UF/IFAS"),
+            CompanionRelation("poivron", "Protection sanitaire du système racinaire", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.ETAYE, "Hooks et al. 2010 (culture avant la plante) ; Conboy et al. 2019 (serre) ; UF/IFAS"),
+            CompanionRelation("melon", "Assainissement de la parcelle", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.ETAYE, "Hooks et al. 2010 (culture avant la plante) ; Conboy et al. 2019 (serre) ; UF/IFAS"),
         ),
         badCompanions = emptyList(),
-        advice = "Incontournable au pied des Solanacées. Ses exsudats racinaires détruisent activement les nématodes à galles (Meloidogyne).",
-    )
-
-    val OEILLET_D_INDE = Vegetable(
-        id = "oeillet_d_inde",
-        name = "Œillet d'Inde nain",
-        latinName = "Tagetes erecta",
-        family = BotanicalFamily.ASTERACEAE,
-        squareFootDensity = 4,
-        spacingInRowCm = 20,
-        spacingBetweenRowsCm = 25,
-        tempGerminationMin = 14,
-        tempOptimalMin = 20,
-        tempOptimalMax = 26,
-        daysToEmerge = 5..10,
-        daysToHarvest = 50..70,
-        sowIndoorsWeeksBeforeFrost = 6,
-        sowOutdoorsWeeksAfterFrost = 1,
-        transplantWeeksAfterFrost = 1,
-        harvestDurationWeeks = 18,
-        waterNeed = WaterNeed.LOW,
-        sunExposure = SunExposure.FULL_SUN,
-        goodCompanions = listOf(
-            CompanionRelation("tomate", "Désinfection biologique du sol contre les vers nématodes", CompanionBenefitType.PEST_REPELLENT),
-        ),
-        badCompanions = emptyList(),
-        advice = "Fleur compagne idéale et infatigable jusqu'aux premières gelées d'automne.",
+        advice = "Un classique au pied des Solanacées. Cultivé avant la culture, il fait baisser les nématodes à galles (Meloidogyne) ; en simple voisinage, l'effet est moins sûr.",
     )
 
     val BOURRACHE = Vegetable(
@@ -1615,10 +1553,10 @@ object VegetableCatalog {
         waterNeed = WaterNeed.LOW,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("courgette", "Attire massivement bourdons et abeilles, garantissant une nouaison optimale des fruits", CompanionBenefitType.POLLINATOR_ATTRACTOR),
-            CompanionRelation("concombre", "Augmente le taux de pollinisation croisée", CompanionBenefitType.POLLINATOR_ATTRACTOR),
-            CompanionRelation("tomate", "Éloigne la chenille de la noctuelle de la tomate", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("fraise", "Stimule la croissance et la floraison des fraisiers", CompanionBenefitType.GROWTH_STIMULATOR),
+            CompanionRelation("courgette", "Attire massivement bourdons et abeilles, garantissant une nouaison optimale des fruits", CompanionBenefitType.POLLINATOR_ATTRACTOR, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("concombre", "Augmente le taux de pollinisation croisée", CompanionBenefitType.POLLINATOR_ATTRACTOR, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("tomate", "Éloigne la chenille de la noctuelle de la tomate", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
+            CompanionRelation("fraise", "Attire les pollinisateurs, ce qui profite aux fruits du fraisier", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.ETAYE, "Griffiths-Lee et al. 2023"),
         ),
         badCompanions = emptyList(),
         advice = "Plante compagne reine de la pollinisation. Ses magnifiques fleurs bleues au goût iodé d'huître sont comestibles en salade.",
@@ -1644,9 +1582,8 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("courgette", "Plante sacrifice attirant à elle les pucerons noirs pour épargner les légumes du potager", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("chou_pomme", "Détourne la ponte de la piéride du chou", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("tomate", "Éloigne les aleurodes (mouches blanches)", CompanionBenefitType.PEST_REPELLENT),
+            CompanionRelation("courgette", "Plante sacrifice attirant à elle les pucerons noirs pour épargner les légumes du potager", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
+            CompanionRelation("tomate", "Éloigne les aleurodes (mouches blanches)", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.PLAUSIBLE),
         ),
         badCompanions = emptyList(),
         advice = "Plante sacrifice par excellence : les pucerons colonisent ses tiges tendres, laissant les courgettes et haricots indemnes.",
@@ -1672,8 +1609,8 @@ object VegetableCatalog {
         waterNeed = WaterNeed.LOW,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("courgette", "Aimant à pollinisateurs assurant une fructification abondante", CompanionBenefitType.POLLINATOR_ATTRACTOR),
-            CompanionRelation("tomate", "Attire les syrphes dont les larves dévorent les pucerons", CompanionBenefitType.POLLINATOR_ATTRACTOR),
+            CompanionRelation("courgette", "Aimant à pollinisateurs assurant une fructification abondante", CompanionBenefitType.POLLINATOR_ATTRACTOR, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("tomate", "Attire les syrphes dont les larves dévorent les pucerons", CompanionBenefitType.POLLINATOR_ATTRACTOR, EvidenceLevel.PLAUSIBLE),
         ),
         badCompanions = emptyList(),
         advice = "Engrais vert exceptionnel : étouffe les adventices, décompacte le sol grâce à son chevelu racinaire dense et nourrit les pollinisateurs.",
@@ -1699,9 +1636,9 @@ object VegetableCatalog {
         waterNeed = WaterNeed.LOW,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("tomate", "Répulsif contre les ravageurs et attracteur de pollinisateurs", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("pomme_de_terre", "Stimule la santé biologique de la terre", CompanionBenefitType.GROWTH_STIMULATOR),
-            CompanionRelation("carotte", "Action répulsive sur la mouche de la carotte", CompanionBenefitType.PEST_REPELLENT),
+            CompanionRelation("tomate", "Répulsif contre les ravageurs et attracteur de pollinisateurs", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
+            CompanionRelation("pomme_de_terre", "Stimule la santé biologique de la terre", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.TRADITION),
+            CompanionRelation("carotte", "Action répulsive sur la mouche de la carotte", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
         ),
         badCompanions = emptyList(),
         advice = "Fleur médicinale rustique fleurissant du printemps aux gelées. Se ressème spontanément d'année en année sans jamais être envahissante.",
@@ -1726,14 +1663,12 @@ object VegetableCatalog {
         harvestDurationWeeks = 4,
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
-        goodCompanions = listOf(
-            CompanionRelation("poireau", "Tolérance mutuelle acceptable", CompanionBenefitType.GENERAL_SYNERGY),
-        ),
+        goodCompanions = emptyList(),
         badCompanions = listOf(
-            CompanionRelation("tomate", "Allélopathie puissante inhibant la nouaison de la tomate", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("carotte", "Arrêt de développement racinaire", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("coriandre", "Inhibition réciproque de croissance", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("haricot_nain", "Inhibition stricte des nodosités", CompanionRiskType.ALLELOPATHY),
+            CompanionRelation("tomate", "Allélopathie puissante inhibant la nouaison de la tomate", CompanionRiskType.ALLELOPATHY, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("carotte", "Arrêt de développement racinaire", CompanionRiskType.ALLELOPATHY, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("coriandre", "Inhibition réciproque de croissance", CompanionRiskType.ALLELOPATHY, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("haricot_nain", "Inhibition stricte des nodosités", CompanionRiskType.ALLELOPATHY, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Le fenouil est le mauvais compagnon par excellence au potager en raison de ses exsudats allélopathiques. À cultiver dans un coin isolé.",
     )
@@ -1758,13 +1693,13 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("bourrache", "Stimule la croissance et la floraison par attraction des pollinisateurs", CompanionBenefitType.GROWTH_STIMULATOR),
-            CompanionRelation("ail", "Protège contre la pourriture grise (Botrytis)", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("oignon", "Effet assainissant sur les stolons", CompanionBenefitType.PEST_REPELLENT),
-            CompanionRelation("epinard", "Couverture racinaire fraîche", CompanionBenefitType.SHADE_OR_GROUND_COVER),
+            CompanionRelation("bourrache", "Stimule la croissance et la floraison par attraction des pollinisateurs", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.ETAYE, "Griffiths-Lee et al. 2023"),
+            CompanionRelation("ail", "Protège contre la pourriture grise (Botrytis)", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
+            CompanionRelation("oignon", "Effet assainissant sur les stolons", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
+            CompanionRelation("epinard", "Couverture racinaire fraîche", CompanionBenefitType.SHADE_OR_GROUND_COVER, EvidenceLevel.PLAUSIBLE),
         ),
         badCompanions = listOf(
-            CompanionRelation("chou_pomme", "Inhibition mutuelle de vigueur", CompanionRiskType.GENERAL_ANTAGONISM),
+            CompanionRelation("chou_pomme", "Inhibition mutuelle de vigueur", CompanionRiskType.GENERAL_ANTAGONISM, EvidenceLevel.TRADITION),
         ),
         advice = "Pailler généreusement avec de la paille propre pour maintenir les fruits hors de contact de la terre humide.",
     )
@@ -1789,12 +1724,12 @@ object VegetableCatalog {
         waterNeed = WaterNeed.LOW,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("persil", "Partenariat traditionnel stimulant la vigueur de l'asperge", CompanionBenefitType.GROWTH_STIMULATOR),
-            CompanionRelation("tomate", "La solanine de la tomate repousse le criocère de l'asperge", CompanionBenefitType.PEST_REPELLENT),
+            CompanionRelation("persil", "Partenariat traditionnel stimulant la vigueur de l'asperge", CompanionBenefitType.GROWTH_STIMULATOR, EvidenceLevel.TRADITION),
+            CompanionRelation("tomate", "La solanine de la tomate repousse le criocère de l'asperge", CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.TRADITION),
         ),
         badCompanions = listOf(
-            CompanionRelation("ail", "Concurrence racinaire pérenne", CompanionRiskType.CANOPY_OR_ROOT_SHADOW),
-            CompanionRelation("oignon", "Incompatibilité", CompanionRiskType.GENERAL_ANTAGONISM),
+            CompanionRelation("ail", "Concurrence racinaire pérenne", CompanionRiskType.CANOPY_OR_ROOT_SHADOW, EvidenceLevel.PLAUSIBLE),
+            CompanionRelation("oignon", "Incompatibilité", CompanionRiskType.GENERAL_ANTAGONISM, EvidenceLevel.TRADITION),
         ),
         advice = "Culture pérenne installée pour 10 à 15 ans. Ne récolter qu'à partir de la 3e année pour laisser les griffes s'enraciner profondément.",
     )
@@ -1819,12 +1754,12 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("courge_butternut", "Fournit un tuteur robuste et attire les pollinisateurs", CompanionBenefitType.PHYSICAL_SUPPORT),
-            CompanionRelation("concombre", "Support naturel et attraction d'auxiliaires", CompanionBenefitType.POLLINATOR_ATTRACTOR),
+            CompanionRelation("courge_butternut", "Fournit un tuteur robuste et attire les pollinisateurs", CompanionBenefitType.PHYSICAL_SUPPORT, EvidenceLevel.TRADITION),
+            CompanionRelation("concombre", "Support naturel et attraction d'auxiliaires", CompanionBenefitType.POLLINATOR_ATTRACTOR, EvidenceLevel.PLAUSIBLE),
         ),
         badCompanions = listOf(
-            CompanionRelation("pomme_de_terre", "Allélopathie racinaire négative", CompanionRiskType.ALLELOPATHY),
-            CompanionRelation("haricot_rames", "Concurrence pour la lumière et l'eau", CompanionRiskType.CANOPY_OR_ROOT_SHADOW),
+            CompanionRelation("pomme_de_terre", "Allélopathie racinaire négative", CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION),
+            CompanionRelation("haricot_rames", "Concurrence pour la lumière et l'eau", CompanionRiskType.CANOPY_OR_ROOT_SHADOW, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Ses graines nourrissent les oiseaux en hiver. Ses fleurs géantes orientées vers le soleil sont un repère pour les pollinisateurs.",
     )
@@ -1852,12 +1787,12 @@ object VegetableCatalog {
         waterNeed = WaterNeed.HIGH,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("haricot_rames", "Sert de tuteur vivant solide pour les tiges grimpantes du haricot", CompanionBenefitType.PHYSICAL_SUPPORT),
-            CompanionRelation("courge_butternut", "Le feuillage de la courge retient l'humidité au pied du maïs", CompanionBenefitType.SHADE_OR_GROUND_COVER),
-            CompanionRelation("courgette", "Complémentarité de la Milpa", CompanionBenefitType.SHADE_OR_GROUND_COVER),
+            CompanionRelation("haricot_rames", "Sert de tuteur vivant solide pour les tiges grimpantes du haricot", CompanionBenefitType.PHYSICAL_SUPPORT, EvidenceLevel.ETAYE, "Zhang et al. 2014 ; Postma et Lynch 2012"),
+            CompanionRelation("courge_butternut", "Le feuillage de la courge retient l'humidité au pied du maïs", CompanionBenefitType.SHADE_OR_GROUND_COVER, EvidenceLevel.ETAYE, "Zhang et al. 2014 ; Postma et Lynch 2012"),
+            CompanionRelation("courgette", "Complémentarité de la Milpa", CompanionBenefitType.SHADE_OR_GROUND_COVER, EvidenceLevel.ETAYE, "Zhang et al. 2014 ; Postma et Lynch 2012"),
         ),
         badCompanions = listOf(
-            CompanionRelation("betterave", "Concurrence pour les éléments minéraux", CompanionRiskType.NUTRIENT_COMPETITION),
+            CompanionRelation("betterave", "Concurrence pour les éléments minéraux", CompanionRiskType.NUTRIENT_COMPETITION, EvidenceLevel.PLAUSIBLE),
         ),
         advice = "Toujours semer en bloc carré (minimum 3x3 plants) plutôt qu'en une seule longue ligne pour assurer une bonne pollinisation par le vent.",
     )
@@ -1887,8 +1822,8 @@ object VegetableCatalog {
         waterNeed = WaterNeed.MEDIUM,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("mais_doux", "Association maïs x patate douce x haricot pratiquée en Guadeloupe (Guide tropical CIRAD/RITA, FT17)", CompanionBenefitType.GENERAL_SYNERGY),
-            CompanionRelation("haricot_nain", "Association maïs x patate douce x haricot pratiquée en Guadeloupe (Guide tropical CIRAD/RITA, FT17)", CompanionBenefitType.GENERAL_SYNERGY),
+            CompanionRelation("mais_doux", "Association maïs x patate douce x haricot pratiquée en Guadeloupe (Guide tropical CIRAD/RITA, FT17)", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
+            CompanionRelation("haricot_nain", "Association maïs x patate douce x haricot pratiquée en Guadeloupe (Guide tropical CIRAD/RITA, FT17)", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
         ),
         advice = "Se multiplie par boutures de tige de 25 à 35 cm prises sur des pieds sains de 2 à 3 mois, enterrées en oblique sur 2 à 3 nœuds, sur butte ; arroser à la reprise par temps sec. Tiges rampantes : à tailler pour rester dans la case. Ne pas replanter sur la même famille (Convolvulacées).",
         climates = setOf(Climate.TROPICAL),
@@ -1913,10 +1848,10 @@ object VegetableCatalog {
         waterNeed = WaterNeed.HIGH,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("concombre", "Association igname x concombre x haricot x malanga pratiquée en Guadeloupe (Guide tropical CIRAD/RITA, FT17)", CompanionBenefitType.GENERAL_SYNERGY),
-            CompanionRelation("haricot_nain", "Association igname x concombre x haricot x malanga pratiquée en Guadeloupe ; igname x haricot en Martinique (FT17)", CompanionBenefitType.GENERAL_SYNERGY),
-            CompanionRelation("mais_doux", "Igname associée au maïs ou au haricot en Martinique (Guide tropical CIRAD/RITA, FT17)", CompanionBenefitType.GENERAL_SYNERGY),
-            CompanionRelation("taro_madere", "Association igname x dachine pratiquée en Martinique (Guide tropical CIRAD/RITA, FT17)", CompanionBenefitType.GENERAL_SYNERGY),
+            CompanionRelation("concombre", "Association igname x concombre x haricot x malanga pratiquée en Guadeloupe (Guide tropical CIRAD/RITA, FT17)", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
+            CompanionRelation("haricot_nain", "Association igname x concombre x haricot x malanga pratiquée en Guadeloupe ; igname x haricot en Martinique (FT17)", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
+            CompanionRelation("mais_doux", "Igname associée au maïs ou au haricot en Martinique (Guide tropical CIRAD/RITA, FT17)", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
+            CompanionRelation("taro_madere", "Association igname x dachine pratiquée en Martinique (Guide tropical CIRAD/RITA, FT17)", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
         ),
         advice = "Planter des fragments de tubercule de 80 à 150 g, germés, à 5 cm au sommet d'un billon (janvier à juin en Martinique). Tuteurer à 2 m et palisser ; arroser sans excès (environ 100 mm par mois les trois premiers mois). Ne jamais la faire succéder à elle-même : nématodes et anthracnose, 3 ans de pause. Récolte au jaunissement des feuilles, 5 à 10 mois après plantation.",
         climates = setOf(Climate.TROPICAL),
@@ -1941,9 +1876,9 @@ object VegetableCatalog {
         waterNeed = WaterNeed.HIGH,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("igname", "Association igname x dachine pratiquée en Martinique (Guide tropical CIRAD/RITA, FT17)", CompanionBenefitType.GENERAL_SYNERGY),
-            CompanionRelation("tomate", "Association dachine x tomate x oignon pays à densité réduite (Chambre d'agriculture de la Martinique)", CompanionBenefitType.GENERAL_SYNERGY),
-            CompanionRelation("oignon", "Association dachine x tomate x oignon pays à densité réduite (Chambre d'agriculture de la Martinique)", CompanionBenefitType.GENERAL_SYNERGY),
+            CompanionRelation("igname", "Association igname x dachine pratiquée en Martinique (Guide tropical CIRAD/RITA, FT17)", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
+            CompanionRelation("tomate", "Association dachine x tomate x oignon pays à densité réduite (Chambre d'agriculture de la Martinique)", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
+            CompanionRelation("oignon", "Association dachine x tomate x oignon pays à densité réduite (Chambre d'agriculture de la Martinique)", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
         ),
         advice = "Planter les rejets latéraux de la base des pieds, tôt en saison des pluies, dans un sol frais et riche ; pailler. Plante de zones humides, très gourmande en eau. Récolte étalée, 5 à 11 mois après plantation.",
         climates = setOf(Climate.TROPICAL),
@@ -1991,7 +1926,7 @@ object VegetableCatalog {
         waterNeed = WaterNeed.LOW,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("mais_doux", "Ambrevade associée au maïs à La Réunion (guide du jardinage au naturel, TCO) ; légumineuse fixatrice d'azote", CompanionBenefitType.NITROGEN_FIXATION),
+            CompanionRelation("mais_doux", "Ambrevade associée au maïs à La Réunion (guide du jardinage au naturel, TCO) ; légumineuse fixatrice d'azote", CompanionBenefitType.NITROGEN_FIXATION, EvidenceLevel.TRADITION),
         ),
         advice = "Semer en place au début de la saison des pluies : 2 à 4 graines par trou, à 2-5 cm, un trou par mètre, puis ne garder qu'un plant. Arbuste de 1 m sur 1 m, résistant à la sécheresse, productif surtout les deux premières années. Fixe l'azote : bonne tête de rotation. Sensible au gel.",
         climates = setOf(Climate.TROPICAL),
@@ -2016,8 +1951,8 @@ object VegetableCatalog {
         waterNeed = WaterNeed.LOW,
         sunExposure = SunExposure.FULL_SUN,
         goodCompanions = listOf(
-            CompanionRelation("mais_doux", "Association manioc x maïs ou haricot pratiquée en culture vivrière tropicale", CompanionBenefitType.GENERAL_SYNERGY),
-            CompanionRelation("haricot_nain", "Association manioc x haricot : couverture rapide du sol et apport d'azote", CompanionBenefitType.NITROGEN_FIXATION),
+            CompanionRelation("mais_doux", "Association manioc x maïs ou haricot pratiquée en culture vivrière tropicale", CompanionBenefitType.GENERAL_SYNERGY, EvidenceLevel.TRADITION),
+            CompanionRelation("haricot_nain", "Association manioc x haricot : couverture rapide du sol et apport d'azote", CompanionBenefitType.NITROGEN_FIXATION, EvidenceLevel.TRADITION),
         ),
         advice = "Multiplier par boutures de tige ligneuse de 20 à 25 cm (5 à 7 nœuds) plantées en oblique ou à plat sur sol drainé dès le début des pluies. Très tolérant à la sécheresse une fois repris ; redoute l'eau stagnante. Récolte selon besoin entre 8 et 12 mois.",
         climates = setOf(Climate.TROPICAL),
@@ -2268,7 +2203,6 @@ object VegetableCatalog {
         CORIANDRE,
         ANETH,
         TAGETE,
-        OEILLET_D_INDE,
         BOURRACHE,
         CAPUCINE,
         PHACELIE,
@@ -2304,5 +2238,17 @@ object VegetableCatalog {
         ALL_VEGETABLES.associateBy { it.id }
     }
 
-    fun getById(id: String): Vegetable? = BY_ID[id]
+    /**
+     * Identifiants disparus du catalogue et la plante qui les remplace. Un potager enregistré avant
+     * la fusion garde ainsi ses cases : la lecture du fichier réécrit l'ancien identifiant.
+     * `oeillet_d_inde` et `tagete` désignaient la même plante.
+     */
+    val LEGACY_IDS: Map<String, String> = mapOf(
+        "oeillet_d_inde" to "tagete",
+    )
+
+    /** L'identifiant courant d'une plante, même si [id] est un ancien identifiant. */
+    fun canonicalId(id: String): String = LEGACY_IDS[id] ?: id
+
+    fun getById(id: String): Vegetable? = BY_ID[canonicalId(id)]
 }
