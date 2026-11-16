@@ -124,8 +124,6 @@ private const val DARK_THEME_FLOOR = 0.3f
 private const val MAX_NIGHT_SHARE = 0.7f
 private const val WARM_SHARE = 0.12f
 
-private class SceneLayout(val proj: GardenProjection, val placements: List<Placement>, val horizonY: Float)
-
 /** Emplacement d'une parcelle dans la scène : centre x, début z (m) et échelle. */
 internal data class Slot(val cx: Float, val z0: Float, val s: Float)
 
