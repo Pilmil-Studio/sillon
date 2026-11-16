@@ -50,7 +50,7 @@ Chez de nombreux insectes ravageurs spécialistes, la localisation de l'hôte v�
 #### L'interaction Alliacées (*Allium*) / Apiacées (*Daucus*, *Apium*)
 - **Ravageur 1 :** La mouche de la carotte (*Psila rosae*, Diptère Psilidae). Les femelles pondent au collet des ombellifères, attirées par les dérivés polyacétyléniques (falcarinol) et les phénylpropanoïdes des feuilles de carotte.
 - **Ravageur 2 :** La teigne du poireau (*Acrolepiopsis assectella*, Lépidoptère Glyphipterigidae). Les femelles localisent les Alliacées par leurs émissions de composés soufrés volatils (disulfure de dipropyle, thiosulfinates).
-- **Preuve agronomique :** L'alternance de rangs de poireaux/oignons et de carottes crée un masquage olfactif bidirectionnel documenté (Finch & Collier, 2000, *Horticultural Research International*). Les COV soufrés saturent les sensilles olfactives de *Psila rosae*, réduisant le taux d'oviposition de 40 à 70 % par rapport à une monoculture, à condition que le ratio d'intercalage soit suffisant (écartement entre rangs ≤ 30 cm pour maintenir la canopée mélangée).
+- **Preuve agronomique :** L'alternance de rangs de poireaux/oignons et de carottes crée un masquage olfactif bidirectionnel documenté (Finch & Collier, 2012, *Entomologia Experimentalis et Applicata*). Les COV soufrés saturent les sensilles olfactives de *Psila rosae*, réduisant le taux d'oviposition de 40 à 70 % par rapport à une monoculture, à condition que le ratio d'intercalage soit suffisant (écartement entre rangs ≤ 30 cm pour maintenir la canopée mélangée).
 
 #### L'effet répulsif et nématicide des Astéracées du genre *Tagetes*
 - Les racines d'œillets d'Inde (*Tagetes patula*) et de roses d'Inde (*Tagetes erecta*) exudent dans la rhizosphère un composé photochimique polythiényle : l'**$\alpha$-terthiényle** ($2,2':5',2''\text{-terthiényle}$).
@@ -360,7 +360,7 @@ Les principes scientifiques décrits ci-dessus sont transcrits au sein d'une arc
 ## 7. Corpus Bibliographique et Références Académiques
 
 1. **INRAE (Institut National de Recherche pour l'Agriculture, l'Alimentation et l'Environnement) :**
-   - *Finch, S., & Collier, R. H. (2000).* « Host-plant selection by insects which tamper with host-plant odor: a review of the pest management potential of companion planting. » *Bulletin of Entomological Research*, 90(2), 91-108.
+   - *Finch, S., & Collier, R. H. (2012).* « The influence of host and non-host companion plants on the behaviour of pest insects in field crops. » *Entomologia Experimentalis et Applicata*, 142(2), 87-96. DOI : 10.1111/j.1570-7458.2011.01191.x
    - *Thoyer, S. et al. (2018).* « Pratiques agroécologiques et gestion intégrée de la santé des cultures. » *Innovations Agronomiques*, 65, 45-62.
 2. **Rodale Institute (Kutztown, Pennsylvanie, USA) :**
    - *Lotter, D. W. (2003).* « Organic agriculture: A review of the scientific literature on companion planting and soil microbial networks. » *Journal of Sustainable Agriculture*, 21(4), 59-89.
