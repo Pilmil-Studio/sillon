@@ -47,7 +47,7 @@ Source : `tools/ml/ATTRIBUTIONS.csv`, `app/src/main/assets/models/sillon_disease
 
 - **Fichiers.** 60 fichiers `veg_*.xml` se trouvent dans `shared/src/commonMain/composeResources/drawable/`. Aucun ne comporte de commentaire d'origine, et le dépôt ne contient aucun fichier de crédits pour les icônes.
 - **Indice.** Le commentaire de `shared/src/commonMain/kotlin/fr/pilmil/sillon/ui/components/VegetableEmoji.kt` indique « CC0, Open Crop Icons ». Le README indique « ~60 icônes vectorielles CC0 ».
-- **Vérification.** La page du projet Open Crop Icons (dépôt `openfarmcc/open-crop-icons`, ouvert via le miroir [github.lhy31512.workers.dev/openfarmcc/open-crop-icons](https://github.lhy31512.workers.dev/openfarmcc/open-crop-icons), car github.com n'était pas accessible depuis la session) indique une licence CC0 et un domaine public. Elle demande un crédit « de bonne compagnie », sans l'exiger. Aucun auteur ni année de droits n'y est identifié.
+- **Vérification.** À faire : confirmer la licence CC0 sur la page officielle du projet Open Crop Icons (https://github.com/openfarmcc/open-crop-icons). Elle n'a pas pu être ouverte directement pendant cet audit.
 - **Limite.** Je n'ai pas comparé les 60 fichiers un à un avec le jeu d'origine. La concordance repose sur le commentaire de `VegetableEmoji.kt`.
 - **Résultat.** La licence CC0 est compatible avec la licence MPL-2.0 de l'appli, à condition que l'origine soit bien Open Crop Icons. Il est recommandé d'ajouter un fichier de mentions d'origine pour ces icônes.
 
