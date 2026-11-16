@@ -635,7 +635,7 @@ fun SettingsScreen(
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Viseur avec indicateur dynamique de netteté et d'exposition (vert/jaune/rouge) et déclenchement automatique dès que la feuille est bien cadrée.",
+                        text = "Viseur avec indicateur dynamique de netteté et d'exposition (vert/jaune/rouge) : prenez la photo quand le cadre passe au vert.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         lineHeight = 18.sp,

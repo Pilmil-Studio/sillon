@@ -8,6 +8,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
@@ -70,6 +73,7 @@ import java.io.File
  * Le résultat est une piste, jamais un verdict : il renvoie vers la fiche de la maladie,
  * ou vers la clé de diagnostic quand le modèle n'est pas assez sûr.
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PhotoDiagnosisCard(onOpenDisease: (String) -> Unit, onOpenKey: () -> Unit) {
     val context = LocalContext.current
@@ -82,6 +86,10 @@ fun PhotoDiagnosisCard(onOpenDisease: (String) -> Unit, onOpenKey: () -> Unit) {
     var busy by remember { mutableStateOf(false) }
     var verdict by remember { mutableStateOf<PhotoVerdict?>(null) }
     var failed by remember { mutableStateOf(false) }
+    // Incrémenté à chaque analyse terminée : ramène le résultat à l'écran, même s'il est identique au précédent.
+    var resultVersion by remember { mutableStateOf(0) }
+    val resultRequester = remember { BringIntoViewRequester() }
+    LaunchedEffect(resultVersion) { if (resultVersion > 0) resultRequester.bringIntoView() }
 
     val photoFile = remember { File(context.cacheDir, "photos/feuille.jpg").apply { parentFile?.mkdirs() } }
 
@@ -94,9 +102,9 @@ fun PhotoDiagnosisCard(onOpenDisease: (String) -> Unit, onOpenKey: () -> Unit) {
             try {
                 val result = withContext(Dispatchers.Default) { active.analyse(context, uri) }
                 when (result) {
-                    is PhotoResult.Success -> { verdict = result.verdict; failed = false }
+                    is PhotoResult.Success -> { verdict = result.verdict; failed = false; resultVersion++ }
                     is PhotoResult.Cancelled -> Unit
-                    is PhotoResult.DecodeFailed, is PhotoResult.InferenceFailed -> { verdict = null; failed = true }
+                    is PhotoResult.DecodeFailed, is PhotoResult.InferenceFailed -> { verdict = null; failed = true; resultVersion++ }
                 }
             } finally {
                 withContext(NonCancellable + Dispatchers.IO) { PhotoCache.discard(photoFile) }
@@ -181,7 +189,11 @@ fun PhotoDiagnosisCard(onOpenDisease: (String) -> Unit, onOpenKey: () -> Unit) {
                 onClick = { gallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
             )
 
-            Column(Modifier.semantics { liveRegion = LiveRegionMode.Polite }) {
+            Column(
+                Modifier
+                    .bringIntoViewRequester(resultRequester)
+                    .semantics { liveRegion = LiveRegionMode.Polite },
+            ) {
                 when {
                     busy -> Row(verticalAlignment = Alignment.CenterVertically) {
                         CircularProgressIndicator(Modifier.height(20.dp).width(20.dp), strokeWidth = 2.dp)

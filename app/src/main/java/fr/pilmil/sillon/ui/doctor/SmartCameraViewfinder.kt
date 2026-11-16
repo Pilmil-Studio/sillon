@@ -1,7 +1,6 @@
 package fr.pilmil.sillon.ui.doctor
 
 import android.content.Context
-import android.net.Uri
 import android.view.ViewGroup
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
@@ -39,12 +38,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,16 +56,14 @@ import androidx.core.content.ContextCompat
 import fr.pilmil.sillon.vision.FrameQuality
 import fr.pilmil.sillon.vision.FrameQualityAnalyzer
 import fr.pilmil.sillon.vision.FrameQualityStatus
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.io.File
 import java.util.concurrent.Executors
 
 /**
  * Viseur caméra interactif plein-écran avec assistant de cadrage intelligent :
  * - Cadre dynamique coloré (Vert optimal / Jaune moyen / Rouge inexploitable)
- * - Déclenchement automatique stabilisé après 500 ms de cadrage optimal
- * - Bouton de déclenchement manuel permanent pour forcer la prise en conditions dégradées.
+ * - Déclenchement manuel uniquement : un déclenchement automatique partait trop tôt
+ *   (une image verte et nette passe en « optimal » pendant qu'on s'approche de la plante).
  */
 @Composable
 fun SmartCameraViewfinder(
@@ -88,9 +82,6 @@ fun SmartCameraViewfinder(
     var cameraProvider by remember { mutableStateOf<ProcessCameraProvider?>(null) }
     var isDisposed by remember { mutableStateOf(false) }
     var isCapturing by remember { mutableStateOf(false) }
-
-    // Suivi du temps en condition optimale pour l'auto-déclenchement
-    var optimalSince by remember { mutableLongStateOf(0L) }
 
     val frameColor by animateColorAsState(
         targetValue = when (quality.status) {
@@ -121,20 +112,6 @@ fun SmartCameraViewfinder(
                 }
             },
         )
-    }
-
-    // Déclenchement automatique si optimal pendant plus de 500 ms consécutives
-    LaunchedEffect(quality.status) {
-        if (quality.status == FrameQualityStatus.OPTIMAL) {
-            val start = System.currentTimeMillis()
-            optimalSince = start
-            delay(500)
-            if (optimalSince == start && !isCapturing) {
-                takePhoto()
-            }
-        } else {
-            optimalSince = 0L
-        }
     }
 
     DisposableEffect(Unit) {
@@ -329,7 +306,7 @@ fun SmartCameraViewfinder(
 
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Déclenchement automatique si vert, ou appuyez pour forcer",
+                text = "Appuyez quand le cadre est vert",
                 color = Color.White.copy(alpha = 0.75f),
                 fontSize = 12.sp,
             )
