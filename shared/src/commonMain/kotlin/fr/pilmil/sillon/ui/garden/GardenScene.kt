@@ -148,7 +148,7 @@ private fun lerpSlot(a: Slot, b: Slot, t: Float) =
 
 /** Emplacements à l'avancement [t] (0 = [from], 1 = [to]) ; au-delà de 1 (rebond), seuls les déplacements dépassent. */
 internal fun lerpSlots(from: Map<String, Slot>, to: Map<String, Slot>, t: Float): Map<String, Slot> {
-    if (t >= 1f || from == to) return to
+    if (t == 1f || from == to) return to
     val result = LinkedHashMap<String, Slot>()
     for (id in from.keys + to.keys) {
         val start = from[id]

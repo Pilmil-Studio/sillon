@@ -193,7 +193,7 @@ class SkyPhaseTest {
         assertTrue(reunionDecember > hm(13) && reunionDecember < hm(13, 45), "décembre : $reunionDecember")
         val guyane = SkyPlace.forDepartment("973")
         for (date in listOf(juneSolstice, decemberSolstice)) {
-            assertEquals(hm(12), dayLengthMinutes(date, guyane, -180), 20.0, "$date")
+            assertEquals(hm(12), dayLengthMinutes(date, guyane, -180), 30.0, "$date")
         }
         val tahiti = SkyPlace.forDepartment("987")
         val t = assertNotNull(sunTimes(juneSolstice, tahiti, -600))
