@@ -23,14 +23,16 @@ Source du catalogue : `shared/src/commonMain/kotlin/fr/pilmil/sillon/data/French
 
 ## 2. Comment le compagnonnage est sourcé
 
-Source : `shared/src/commonMain/kotlin/fr/pilmil/sillon/data/VegetableCatalog.kt`, avec le modèle `CompanionRelation.kt`.
+Source : `shared/src/commonMain/kotlin/fr/pilmil/sillon/data/VegetableCatalog.kt`, avec le modèle `CompanionRelation.kt`. L'analyse détaillée, le classement par mécanisme et la liste des sources ouvertes sont dans `docs/sources-compagnonnage.md`, les 255 relations dans `docs/data/compagnonnage.csv`.
 
 - **Nombre de relations : 255.** 166 sont listées comme bénéfiques (`goodCompanions`) et 89 comme risques (`badCompanions`).
-- **Nombre de relations avec une source : 0.** Le modèle `CompanionRelation` n'a aucun champ de source. Chaque relation ne porte qu'un court texte (`rationale`) et un type (bénéfice ou risque).
-- **Renvois.** Le seul renvoi du fichier (ligne 1868) pointe vers une section « Cultures tropicales et saisons » de `docs/scientific-foundations.md`. Cette section n'existe pas dans le document. Le renvoi concerne d'ailleurs les calendriers tropicaux, pas le compagnonnage.
-- **Formulations à revoir.** Certains textes affichés affirment plus que ce que le dépôt démontre. Par exemple, « effet nématicide racinaire éprouvé » pour l'œillet d'Inde (*Tagetes*) : aucune étude n'est rattachée à cette relation. Le document scientifique, lui, cite des travaux (par exemple Finch et Collier, 2000), mais ne les relie à aucune relation précise du catalogue. Il attribue en outre cette revue à deux titres de revue différents (section 2.1 et bibliographie). Ces références n'ont pas été vérifiées dans cette mission.
+- **Origine.** 243 relations sont arrivées d'un bloc dans le commit initial du 6 novembre 2026, 12 relations tropicales ont été ajoutées les 14 et 15 novembre. Aucun script, jeu de données ni message de commit n'indique comment la liste a été constituée. Elle a très probablement été rédigée à partir de connaissances générales de jardinage lors du développement assisté par IA, sans référence par relation. Le dépôt ne permet pas de le démontrer.
+- **Sources dans le code.** Le modèle `CompanionRelation` n'a aucun champ de source ni de niveau de preuve. Dix relations tropicales citent une source dans leur texte (Guide tropical CIRAD/RITA, Chambre d'agriculture de la Martinique, TCO de La Réunion) : ces sources n'ont pas été ouvertes, et elles décrivent des pratiques, pas des effets mesurés. Le renvoi du fichier (ligne 1868) pointe vers une section « Cultures tropicales et saisons » de `docs/scientific-foundations.md` qui n'existe pas.
+- **Ce que les sources ouvertes soutiennent.** Sur 255 relations, 37 sont étayées par au moins un essai ou une source ouverte (en général avec des conditions précises), 84 sont plausibles mais peu étudiées, 113 relèvent de la tradition sans preuve trouvée et 21 sont contredites par des essais (herbes aromatiques censées repousser ou masquer les ravageurs des choux et de la carotte).
+- **Formulations à revoir.** « Effet nématicide racinaire éprouvé » pour l'œillet d'Inde (*Tagetes*) vaut pour une culture de Tagetes avant la culture suivante, pas pour une association simultanée. Les affirmations sur le blocage des nodosités des légumineuses par les alliacées, sur le masquage olfactif et sur l'effet de saveur n'ont pas de source ouverte, ou sont contredites.
+- **Incohérences.** Aucune relation n'est amie dans un sens et ennemie dans l'autre. 123 relations n'ont pas de réciproque. `tagete` et `oeillet_d_inde` désignent le même genre sous deux identifiants.
 
-Conclusion : les 255 relations reposent sur le jugement des auteurs du catalogue, documenté seulement de manière générale. Aucune n'est sourcée individuellement.
+Conclusion : les 255 relations reposent sur le jugement des auteurs du catalogue. Aucune n'est sourcée individuellement dans le code. Des propositions de retrait et de changement de niveau de preuve sont dans `docs/sources-compagnonnage.md` ; elles n'ont pas été appliquées au code.
 
 ## 3. D'où viennent les photos du diagnostic
 
@@ -57,8 +59,8 @@ Source : `tools/ml/ATTRIBUTIONS.csv`, `app/src/main/assets/models/sillon_disease
 2. Consigner les licences de PlantVillage, PlantDoc et des sept jeux `extra_field`, et conserver l'autorisation écrite PlantSeg dans le dépôt privé.
 3. Ajouter un fichier de mentions d'origine pour les icônes.
 4. Corriger le nombre de départements (101 dans le document scientifique, 104 dans le catalogue), le renvoi « section 3.4 » et le renvoi « Cultures tropicales et saisons ».
-5. Sourcer les relations de compagnonnage une par une, ou reformuler les textes affirmatifs qui n'ont pas de source.
+5. Appliquer au catalogue les propositions de `docs/sources-compagnonnage.md` : champ de niveau de preuve et de source, retrait ou reformulation des relations contredites ou sans source.
 
-## Référence à vérifier : Finch et Collier (poireau, oignon et carotte)
+## Référence Finch et Collier (poireau, oignon et carotte)
 
-`docs/scientific-foundations.md` attribue à Finch et Collier (2000) un masquage olfactif et une baisse de ponte de 40 à 70 % chez la mouche de la carotte. Lors de l'audit du 16 novembre 2026, la référence telle qu'elle est écrite (revue, titre) n'a pas été retrouvée, et aucun texte ouvert ne confirme ce chiffre. Les travaux connus de ces auteurs sur le compagnonnage portent sur le comportement d'atterrissage des insectes sur les plantes hôtes et non hôtes. Tant que l'article n'a pas été relu, cette affirmation est à considérer comme non vérifiée.
+`docs/scientific-foundations.md` attribuait à Finch et Collier (2000) un masquage olfactif et une baisse de ponte de 40 à 70 % chez la mouche de la carotte. Aucune source ouverte ne donne ce chiffre : ni le résumé d'Uvah et Coaker (1984), ni les pages de Finch et Collier ouvertes (2003, 2012). Les travaux de Finch et collaborateurs expliquent l'effet des plantes associées par leur feuillage vert et non par leur odeur, et les plantes aromatiques n'y sont pas plus efficaces que les autres. Le chiffre a été retiré du document scientifique et remplacé par les références ouvertes (voir `docs/sources-compagnonnage.md`). Autres affirmations du même document non vérifiées : la baisse de 80 % des galles racinaires attribuée à l'INRAE et au Rodale Institute, et plusieurs références de la bibliographie.
