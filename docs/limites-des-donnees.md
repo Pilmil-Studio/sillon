@@ -58,3 +58,7 @@ Source : `tools/ml/ATTRIBUTIONS.csv`, `app/src/main/assets/models/sillon_disease
 3. Ajouter un fichier de mentions d'origine pour les icônes.
 4. Corriger le nombre de départements (101 dans le document scientifique, 104 dans le catalogue), le renvoi « section 3.4 » et le renvoi « Cultures tropicales et saisons ».
 5. Sourcer les relations de compagnonnage une par une, ou reformuler les textes affirmatifs qui n'ont pas de source.
+
+## Référence à vérifier : Finch et Collier (poireau, oignon et carotte)
+
+`docs/scientific-foundations.md` attribue à Finch et Collier (2000) un masquage olfactif et une baisse de ponte de 40 à 70 % chez la mouche de la carotte. Lors de l'audit du 16 novembre 2026, la référence telle qu'elle est écrite (revue, titre) n'a pas été retrouvée, et aucun texte ouvert ne confirme ce chiffre. Les travaux connus de ces auteurs sur le compagnonnage portent sur le comportement d'atterrissage des insectes sur les plantes hôtes et non hôtes. Tant que l'article n'a pas été relu, cette affirmation est à considérer comme non vérifiée.
