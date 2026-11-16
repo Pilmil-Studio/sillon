@@ -1,0 +1,3 @@
+Diagnostic photo : l'analyse examine aussi la photo retournée en miroir et moyenne les deux résultats. Si mildiou et alternariose ressortent ensemble, l'appli signale une tache foliaire probable et invite à comparer les deux fiches.
+Nouveau modèle de reconnaissance des maladies (version 5).
+Corrections techniques de compilation.

@@ -1,0 +1,3 @@
+Photo diagnosis: the analysis also reviews the photo flipped horizontally and averages the two results. When mildew and alternaria show up together, the app flags a likely leaf spot and suggests comparing both sheets.
+New disease recognition model (version 5).
+Technical build fixes.
