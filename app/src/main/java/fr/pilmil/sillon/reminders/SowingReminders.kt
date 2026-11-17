@@ -60,8 +60,8 @@ object SowingReminders {
 
     fun ensureChannel(context: Context) {
         val manager = context.getSystemService(NotificationManager::class.java) ?: return
-        val channel = NotificationChannel(CHANNEL_ID, "Semis de la quinzaine", NotificationManager.IMPORTANCE_DEFAULT)
-        channel.description = "Un message le samedi matin quand des semis ou des plantations s'ouvrent."
+        val channel = NotificationChannel(CHANNEL_ID, context.getString(R.string.reminder_channel_name), NotificationManager.IMPORTANCE_DEFAULT)
+        channel.description = context.getString(R.string.reminder_channel_desc)
         manager.createNotificationChannel(channel)
     }
 
@@ -90,14 +90,18 @@ class SowingReminderWorker(context: Context, params: WorkerParameters) : Corouti
 
         SowingReminders.ensureChannel(context)
         val shown = names.take(4).joinToString(", ")
-        val text = if (names.size > 4) "$shown et ${names.size - 4} autres." else "$shown."
+        val text = if (names.size > 4) {
+            context.resources.getQuantityString(R.plurals.reminder_list_more, names.size - 4, shown, names.size - 4)
+        } else {
+            context.getString(R.string.reminder_list, shown)
+        }
         val intent = Intent(context, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pending = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         val notification = NotificationCompat.Builder(context, SowingReminders.CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle("Au potager cette quinzaine")
+            .setContentTitle(context.getString(R.string.reminder_title))
             .setContentText(text)
-            .setStyle(NotificationCompat.BigTextStyle().bigText("À semer ou planter : $text"))
+            .setStyle(NotificationCompat.BigTextStyle().bigText(context.getString(R.string.reminder_big, text)))
             .setContentIntent(pending)
             .setAutoCancel(true)
             .build()

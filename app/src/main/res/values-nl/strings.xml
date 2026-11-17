@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reminder_channel_name">Zaaiwerk van de komende twee weken</string>
+    <string name="reminder_channel_desc">Een bericht op zaterdagochtend wanneer zaai- of plantwerken beginnen.</string>
+    <string name="reminder_title">In de moestuin de komende twee weken</string>
+    <string name="reminder_list">%1$s.</string>
+    <plurals name="reminder_list_more">
+        <item quantity="one">%1$s en %2$d andere.</item>
+        <item quantity="other">%1$s en %2$d andere.</item>
+    </plurals>
+    <string name="reminder_big">Te zaaien of te planten: %1$s</string>
+</resources>
