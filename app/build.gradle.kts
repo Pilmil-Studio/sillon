@@ -108,8 +108,8 @@ dependencies {
 
     // Inférence locale du diagnostic photo (Apache 2.0), sans accès réseau.
     implementation("com.google.ai.edge.litert:litert:1.4.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.13.0")
 
     testImplementation("junit:junit:4.13.2")
 }
