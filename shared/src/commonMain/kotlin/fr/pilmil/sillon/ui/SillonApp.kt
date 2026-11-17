@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalResourceApi::class)
+
 package fr.pilmil.sillon.ui
 
 import androidx.compose.foundation.layout.Arrangement
@@ -48,6 +50,7 @@ import fr.pilmil.sillon.engine.FrostEngine
 import fr.pilmil.sillon.model.Garden
 import fr.pilmil.sillon.model.plusDays
 import fr.pilmil.sillon.model.todayLocalDate
+import fr.pilmil.sillon.shared.resources.*
 import fr.pilmil.sillon.ui.catalog.CatalogScreen
 import fr.pilmil.sillon.ui.dashboard.DashboardScreen
 import fr.pilmil.sillon.ui.dashboard.ForecastHorizon
@@ -62,13 +65,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
-enum class SillonScreen(val title: String, val icon: ImageVector) {
-    DASHBOARD("Aujourd'hui", Icons.Filled.CalendarMonth),
-    GARDEN("Parcelles", Icons.Filled.Yard),
-    CATALOG("Plantes", Icons.Filled.Eco),
-    DOCTOR("Diagnostic", Icons.Filled.Healing),
-    SETTINGS("Réglages", Icons.Filled.Settings),
+enum class SillonScreen(val title: StringResource, val icon: ImageVector) {
+    DASHBOARD(Res.string.nav_dashboard, Icons.Filled.CalendarMonth),
+    GARDEN(Res.string.nav_garden, Icons.Filled.Yard),
+    CATALOG(Res.string.nav_catalog, Icons.Filled.Eco),
+    DOCTOR(Res.string.nav_doctor, Icons.Filled.Healing),
+    SETTINGS(Res.string.nav_settings, Icons.Filled.Settings),
 }
 
 @Composable
@@ -118,9 +126,7 @@ fun SillonApp(
                 loadProblem = result
             }
             if (recovered) {
-                snackbarHostState.showSnackbar(
-                    "Le fichier du potager était illisible : un potager neuf a été créé."
-                )
+                snackbarHostState.showSnackbar(getString(Res.string.snack_recovered))
             }
         }
     }
@@ -145,17 +151,13 @@ fun SillonApp(
                 storeMutex.withLock { change() }
             }
             if (result.refused) {
-                snackbarHostState.showSnackbar(
-                    "Le potager n'a pas pu être lu : modification annulée, rien n'a été écrasé."
-                )
+                snackbarHostState.showSnackbar(getString(Res.string.snack_load_refused))
                 return@launch
             }
             loadedGarden = result.garden
             onGardenReplaced(result.garden)
             if (!result.saved) {
-                snackbarHostState.showSnackbar(
-                    "Le potager n'a pas pu être enregistré : vérifiez l'espace libre."
-                )
+                snackbarHostState.showSnackbar(getString(Res.string.snack_save_failed))
             }
         }
     }
@@ -178,9 +180,7 @@ fun SillonApp(
         setReminders(granted, g)
         if (!granted) {
             scope.launch {
-                snackbarHostState.showSnackbar(
-                    "Notifications refusées : activez-les dans les réglages du téléphone."
-                )
+                snackbarHostState.showSnackbar(getString(Res.string.snack_notifications_denied))
             }
         }
     }
@@ -250,33 +250,44 @@ fun SillonApp(
                     val today = remember { todayLocalDate() }
                     val climate = remember(departmentCode) { FrenchFrostCatalog.getClimate(departmentCode) }
                     val frostEngine = remember(climate) { FrostEngine(climate = climate) }
-                    val horizons = remember(garden, today, frostEngine) {
+                    val horizonToday = stringResource(Res.string.horizon_today)
+                    val horizonTodayHint = stringResource(Res.string.horizon_today_hint)
+                    val horizonNextDays = stringResource(Res.string.horizon_next_days)
+                    val horizonNextWeek = stringResource(Res.string.horizon_next_week)
+                    val horizonUpcoming = stringResource(Res.string.horizon_upcoming)
+                    val hint3 = stringResource(Res.string.horizon_hint_days, 3)
+                    val hint7 = stringResource(Res.string.horizon_hint_days, 7)
+                    val hint15 = stringResource(Res.string.horizon_hint_days, 15)
+                    val horizons = remember(garden, today, frostEngine, horizonToday) {
                         listOf(
-                            ForecastHorizon("Aujourd'hui", "Travaux autour du jour J", DashboardPlanner.plan(garden, today, frostEngine)),
-                            ForecastHorizon("Prochains jours", "Horizon à +3 jours", DashboardPlanner.plan(garden, today.plusDays(3), frostEngine)),
-                            ForecastHorizon("Semaine suivante", "Horizon à +7 jours", DashboardPlanner.plan(garden, today.plusDays(7), frostEngine)),
-                            ForecastHorizon("À venir", "Horizon à +15 jours", DashboardPlanner.plan(garden, today.plusDays(15), frostEngine)),
+                            ForecastHorizon(horizonToday, horizonTodayHint, DashboardPlanner.plan(garden, today, frostEngine)),
+                            ForecastHorizon(horizonNextDays, hint3, DashboardPlanner.plan(garden, today.plusDays(3), frostEngine)),
+                            ForecastHorizon(horizonNextWeek, hint7, DashboardPlanner.plan(garden, today.plusDays(7), frostEngine)),
+                            ForecastHorizon(horizonUpcoming, hint15, DashboardPlanner.plan(garden, today.plusDays(15), frostEngine)),
                         )
                     }
                     val activeCropIds = remember(garden) {
                         garden.parcels.flatMap { it.slots }.mapNotNull { it.vegetableId }.toSet()
                     }
-                    val activeGardenMarker = remember(garden, activeCropIds) {
-                        val parcelCount = garden.parcels.size
-                        val plantedCount = garden.parcels.sumOf { p -> p.slots.count { it.vegetableId != null } }
-                        when {
-                            parcelCount == 0 -> null
-                            plantedCount == 0 -> "$parcelCount parcelle${if (parcelCount > 1) "s" else ""} prête${if (parcelCount > 1) "s" else ""} à planter"
-                            else -> "$parcelCount parcelle${if (parcelCount > 1) "s" else ""} · $plantedCount culture${if (plantedCount > 1) "s" else ""} en place"
-                        }
+                    val parcelCount = garden.parcels.size
+                    val plantedCount = garden.parcels.sumOf { p -> p.slots.count { it.vegetableId != null } }
+                    val parcelsReady = pluralStringResource(Res.plurals.parcels_ready, parcelCount, parcelCount)
+                    val parcelsCount = pluralStringResource(Res.plurals.parcels_count, parcelCount, parcelCount)
+                    val cropsInPlace = pluralStringResource(Res.plurals.crops_in_place, plantedCount, plantedCount)
+                    val activeGardenMarker = when {
+                        parcelCount == 0 -> null
+                        plantedCount == 0 -> parcelsReady
+                        else -> "$parcelsCount · $cropsInPlace"
                     }
-                    val tip = remember(today, activeCropIds) {
+                    val tipOnPlots = stringResource(Res.string.tip_on_plots)
+                    val tipLandmark = stringResource(Res.string.tip_landmark)
+                    val tip = remember(today, activeCropIds, tipOnPlots, tipLandmark) {
                         val plantedAdvice = vegetables.filter { it.id in activeCropIds && it.advice.isNotBlank() }
                         val pool = plantedAdvice.ifEmpty {
                             vegetables.filter { it.advice.isNotBlank() }
                         }
                         pool.getOrNull(today.dayOfYear % pool.size.coerceAtLeast(1))?.let {
-                            "${if (plantedAdvice.isNotEmpty()) "Sur vos parcelles" else "Repère"} · ${it.name}" to it.advice
+                            "${if (plantedAdvice.isNotEmpty()) tipOnPlots else tipLandmark} · ${it.name}" to it.advice
                         }
                     }
                     DashboardScreen(
@@ -427,12 +438,12 @@ private fun SillonBottomNavigation(
                 icon = {
                     Icon(
                         imageVector = screen.icon,
-                        contentDescription = screen.title,
+                        contentDescription = stringResource(screen.title),
                     )
                 },
                 label = {
                     Text(
-                        text = screen.title,
+                        text = stringResource(screen.title),
                         style = MaterialTheme.typography.labelSmall,
                     )
                 },
@@ -448,9 +459,9 @@ private fun SillonBottomNavigation(
 private fun GardenLoadProblemScreen(problem: GardenLoad, onRetry: () -> Unit) {
     val message = when (problem) {
         is GardenLoad.NewerVersion ->
-            "Ce potager a été enregistré par une version plus récente de Sillon. Mettez l'appli à jour pour l'ouvrir. Le fichier n'a pas été modifié."
+            stringResource(Res.string.load_newer)
         else ->
-            "Le potager n'a pas pu être lu pour l'instant. Votre fichier n'a pas été touché : réessayez dans un instant."
+            stringResource(Res.string.load_failed)
     }
     Column(
         modifier = Modifier.fillMaxSize().padding(32.dp),
@@ -458,6 +469,6 @@ private fun GardenLoadProblemScreen(problem: GardenLoad, onRetry: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(message, textAlign = TextAlign.Center, style = MaterialTheme.typography.bodyLarge)
-        Button(onClick = onRetry) { Text("Réessayer") }
+        Button(onClick = onRetry) { Text(stringResource(Res.string.retry)) }
     }
 }

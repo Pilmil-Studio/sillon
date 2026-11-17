@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalResourceApi::class)
+
 package fr.pilmil.sillon.ui.dashboard
 
 import androidx.compose.foundation.background
@@ -49,12 +51,16 @@ import androidx.compose.ui.unit.sp
 import fr.pilmil.sillon.engine.DashboardPlan
 import fr.pilmil.sillon.engine.FrostStatus
 import fr.pilmil.sillon.model.Climate
+import fr.pilmil.sillon.shared.resources.*
 import fr.pilmil.sillon.ui.components.SillonBadge
 import fr.pilmil.sillon.ui.components.SillonCard
 import fr.pilmil.sillon.ui.theme.SillonTheme
 import kotlinx.coroutines.launch
 import fr.pilmil.sillon.model.formatDayMonthFr
 import kotlinx.datetime.LocalDate
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 /** Horizon temporel affiché dans le carrousel prévisionnel de l'accueil. */
 data class ForecastHorizon(
@@ -74,7 +80,7 @@ fun DashboardScreen(
     onOpenSettings: () -> Unit = {},
 ) {
     DashboardScreen(
-        horizons = listOf(ForecastHorizon("Aujourd'hui", "Travaux autour du jour J", plan)),
+        horizons = listOf(ForecastHorizon(stringResource(Res.string.horizon_today), stringResource(Res.string.horizon_today_hint), plan)),
         placeLabel = placeLabel,
         tip = tip,
         onNavigateToGarden = onNavigateToGarden,
@@ -122,7 +128,7 @@ fun DashboardScreen(
         item {
             Column(modifier = Modifier.padding(bottom = 4.dp)) {
                 Text(
-                    text = "Au potager aujourd'hui",
+                    text = stringResource(Res.string.dashboard_title),
                     style = MaterialTheme.typography.displaySmall,
                     color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.Bold,
@@ -131,7 +137,7 @@ fun DashboardScreen(
                 Spacer(modifier = Modifier.height(4.dp))
                 val subtitle = when {
                     activeGardenMarker != null -> activeGardenMarker
-                    showIntroHints -> if (tropical) "Calculé pour le début de votre saison de plantation." else "Calculé pour votre date de dernières gelées."
+                    showIntroHints -> stringResource(if (tropical) Res.string.dashboard_subtitle_tropical else Res.string.dashboard_subtitle_frost)
                     else -> null
                 }
                 if (subtitle != null) {
@@ -149,7 +155,7 @@ fun DashboardScreen(
         if (tropical) {
             item {
                 Text(
-                    text = "Seules les cultures tropicales ont un calendrier ici : les plantes tempérées restent plantables dans vos parcelles, sans tâches de calendrier.",
+                    text = stringResource(Res.string.dashboard_tropical_note),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     lineHeight = 20.sp,
@@ -215,7 +221,7 @@ fun DashboardScreen(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = "Prévisions",
+                        text = stringResource(Res.string.dashboard_forecasts),
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.Bold,
@@ -323,7 +329,7 @@ private fun HorizonPageContent(
         } else {
             if (plan.gardenHarvest.isNotEmpty()) {
                 TaskCard(
-                    title = "À récolter dans vos parcelles",
+                    title = stringResource(Res.string.task_harvest_parcels),
                     names = plan.gardenHarvest.map { "${it.vegetable.name} (${it.parcelName})" },
                     icon = Icons.Filled.Eco,
                     accent = SillonTheme.colors.synergy,
@@ -332,7 +338,7 @@ private fun HorizonPageContent(
             }
             if (plan.sowIndoors.isNotEmpty()) {
                 TaskCard(
-                    title = "Semis sous abri, au chaud",
+                    title = stringResource(Res.string.task_sow_indoors),
                     names = plan.sowIndoors.map { it.vegetable.name },
                     icon = Icons.Filled.Spa,
                     accent = MaterialTheme.colorScheme.secondary,
@@ -341,7 +347,7 @@ private fun HorizonPageContent(
             }
             if (plan.sowOutdoors.isNotEmpty()) {
                 TaskCard(
-                    title = "Semis en pleine terre",
+                    title = stringResource(Res.string.task_sow_outdoors),
                     names = plan.sowOutdoors.map { it.vegetable.name },
                     icon = Icons.Filled.Grass,
                     accent = MaterialTheme.colorScheme.primary,
@@ -350,7 +356,7 @@ private fun HorizonPageContent(
             }
             if (plan.transplant.isNotEmpty()) {
                 TaskCard(
-                    title = "Repiquage et plantations",
+                    title = stringResource(Res.string.task_transplant),
                     names = plan.transplant.map { it.vegetable.name },
                     icon = Icons.Filled.LocalFlorist,
                     accent = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -359,7 +365,7 @@ private fun HorizonPageContent(
             }
             if (plan.harvest.isNotEmpty()) {
                 TaskCard(
-                    title = "Saison de récolte",
+                    title = stringResource(Res.string.task_harvest_season),
                     names = plan.harvest.map { it.vegetable.name },
                     icon = Icons.Filled.Eco,
                     accent = SillonTheme.colors.synergy,
@@ -388,9 +394,9 @@ private fun FrostCard(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = when {
-                            frost is FrostStatus.FrostFree -> "Culture en intérieur (hors gel)"
-                            tropical -> "Début de la saison de plantation"
-                            else -> "Dernières gelées repères"
+                            frost is FrostStatus.FrostFree -> stringResource(Res.string.frost_indoor)
+                            tropical -> stringResource(Res.string.season_start)
+                            else -> stringResource(Res.string.frost_landmark)
                         },
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface,
@@ -400,7 +406,7 @@ private fun FrostCard(
                     val subtitleText = when (frost) {
                         is FrostStatus.Upcoming -> listOfNotNull(formatDayMonthFr(frost.date), placeLabel).joinToString(" · ")
                         is FrostStatus.Passed -> listOfNotNull(formatDayMonthFr(frost.date), placeLabel).joinToString(" · ")
-                        FrostStatus.FrostFree -> "Calendrier continu toute l'année"
+                        FrostStatus.FrostFree -> stringResource(Res.string.frost_continuous)
                     }
                     Text(
                         text = subtitleText,
@@ -410,24 +416,24 @@ private fun FrostCard(
                 }
                 when (frost) {
                     is FrostStatus.Upcoming -> SillonBadge(
-                        text = if (frost.days == 0L) "Aujourd'hui" else "Dans ${frost.days} j",
+                        text = if (frost.days == 0L) stringResource(Res.string.horizon_today) else stringResource(Res.string.badge_in_days, frost.days),
                         containerColor = SillonTheme.colors.alertContainer,
                         textColor = SillonTheme.colors.onAlertContainer,
                     )
                     is FrostStatus.Passed -> SillonBadge(
-                        text = "Passées",
+                        text = stringResource(Res.string.badge_passed),
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         textColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                     FrostStatus.FrostFree -> SillonBadge(
-                        text = "Toute l'année",
+                        text = stringResource(Res.string.badge_all_year),
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         textColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                 }
             }
             if (placeLabel == null && frost !is FrostStatus.FrostFree) {
-                TextButton(onClick = onOpenSettings) { Text("Ajuster à mon département") }
+                TextButton(onClick = onOpenSettings) { Text(stringResource(Res.string.adjust_department)) }
             }
         }
     }
@@ -441,7 +447,7 @@ private fun RestCard(nextWorkFrom: LocalDate?, onNavigateToCatalog: () -> Unit) 
     ) {
         Column {
             Text(
-                text = "Le potager se repose",
+                text = stringResource(Res.string.rest_title),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold,
@@ -449,15 +455,15 @@ private fun RestCard(nextWorkFrom: LocalDate?, onNavigateToCatalog: () -> Unit) 
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = if (nextWorkFrom != null) {
-                    "Aucun semis ni plantation sur cette période. Prochains travaux vers le ${formatDayMonthFr(nextWorkFrom)}."
+                    stringResource(Res.string.rest_next_work, formatDayMonthFr(nextWorkFrom))
                 } else {
-                    "Aucun semis ni plantation sur cette période : paillage, compost et préparation des planches."
+                    stringResource(Res.string.rest_no_work)
                 },
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = 20.sp,
             )
-            TextButton(onClick = onNavigateToCatalog) { Text("Préparer la saison dans le catalogue") }
+            TextButton(onClick = onNavigateToCatalog) { Text(stringResource(Res.string.rest_prepare)) }
         }
     }
 }
@@ -472,6 +478,7 @@ private fun TaskCard(
 ) {
     val shown = names.take(5)
     val more = names.size - shown.size
+    val moreText = if (more > 0) " " + pluralStringResource(Res.plurals.tasks_more, more, more) else ""
     SillonCard(
         backgroundColor = MaterialTheme.colorScheme.surface,
         borderColor = MaterialTheme.colorScheme.outline,
@@ -484,7 +491,7 @@ private fun TaskCard(
                 Text(title, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = shown.joinToString(", ") + if (more > 0) " et $more autre${if (more > 1) "s" else ""}" else "",
+                    text = shown.joinToString(", ") + moreText,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
