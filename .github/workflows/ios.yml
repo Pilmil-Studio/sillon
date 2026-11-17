@@ -51,7 +51,7 @@ jobs:
           cd iosApp/build/Build/Products/Debug-iphonesimulator
           zip -qr "$GITHUB_WORKSPACE/Sillon-simulateur.zip" Sillon.app
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: sillon-simulateur-ios
           path: Sillon-simulateur.zip
