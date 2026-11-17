@@ -185,4 +185,17 @@
     <string name="catalog_heirloom_title">Oude / zaadvaste rassen:</string>
     <string name="catalog_good_neighbors">Goede buren:</string>
     <string name="catalog_keep_away">Uit elkaar houden:</string>
+    <string name="doctor_title">Moestuindokter</string>
+    <string name="doctor_subtitle">Offline determinatiesleutel: kies het aangetaste plantendeel en vergelijk dan de symptomen.</string>
+    <string name="doctor_step_organ">1. Welk plantendeel is aangetast?</string>
+    <string name="organ_all">Alle plantendelen</string>
+    <string name="organ_leaf">Bladeren</string>
+    <string name="organ_stem">Stengels / Wortelhals</string>
+    <string name="organ_seedling">Zaailingen / Scheuten</string>
+    <string name="organ_fruit">Vruchten / Groenten</string>
+    <string name="organ_root">Wortels</string>
+    <string name="doctor_step_diagnoses">2. Waarschijnlijke diagnoses (%1$d)</string>
+    <string name="doctor_symptoms">Kenmerkende symptomen:</string>
+    <string name="doctor_remedies">Remedies toegestaan in bio en permacultuur:</string>
+    <string name="doctor_prevention">Preventieve maatregelen:</string>
 </resources>

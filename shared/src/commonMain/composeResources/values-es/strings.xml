@@ -186,4 +186,17 @@
     <string name="catalog_heirloom_title">Variedades antiguas / reproducibles:</string>
     <string name="catalog_good_neighbors">Buenos vecinos:</string>
     <string name="catalog_keep_away">Mantener alejados:</string>
+    <string name="doctor_title">Doctor del Huerto</string>
+    <string name="doctor_subtitle">Clave de diagnóstico sin conexión: elija el órgano afectado y compare los síntomas.</string>
+    <string name="doctor_step_organ">1. ¿Qué órgano está afectado?</string>
+    <string name="organ_all">Todos los órganos</string>
+    <string name="organ_leaf">Hojas</string>
+    <string name="organ_stem">Tallos / Cuello</string>
+    <string name="organ_seedling">Plántulas / Brotes</string>
+    <string name="organ_fruit">Frutos / Hortalizas</string>
+    <string name="organ_root">Raíces</string>
+    <string name="doctor_step_diagnoses">2. Diagnósticos probables (%1$d)</string>
+    <string name="doctor_symptoms">Síntomas característicos:</string>
+    <string name="doctor_remedies">Remedios admitidos en ecológico y permacultura:</string>
+    <string name="doctor_prevention">Medidas preventivas:</string>
 </resources>

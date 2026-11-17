@@ -57,9 +57,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.pilmil.sillon.model.Disease
 import fr.pilmil.sillon.model.PlantOrgan
+import fr.pilmil.sillon.shared.resources.*
 import fr.pilmil.sillon.ui.components.SillonBadge
 import fr.pilmil.sillon.ui.components.SillonCard
 import fr.pilmil.sillon.ui.theme.SillonTheme
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -93,14 +95,14 @@ fun DoctorScreen(
         item {
             Column {
                 Text(
-                    text = "Docteur du Potager",
+                    text = stringResource(Res.string.doctor_title),
                     style = MaterialTheme.typography.displaySmall,
                     color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.Bold,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Clé de diagnostic hors-ligne : choisissez l'organe touché, puis comparez les symptômes.",
+                    text = stringResource(Res.string.doctor_subtitle),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -126,7 +128,7 @@ fun DoctorScreen(
         item {
             Column {
                 Text(
-                    text = "1. Quel organe est affecté ?",
+                    text = stringResource(Res.string.doctor_step_organ),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold,
@@ -134,12 +136,12 @@ fun DoctorScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 val organs = listOf(
-                    null to "Tous les organes",
-                    PlantOrgan.LEAF to "Feuilles",
-                    PlantOrgan.STEM to "Tiges / Collet",
-                    PlantOrgan.SEEDLING to "Semis / Pousses",
-                    PlantOrgan.FRUIT to "Fruits / Légumes",
-                    PlantOrgan.ROOT to "Racines",
+                    null to stringResource(Res.string.organ_all),
+                    PlantOrgan.LEAF to stringResource(Res.string.organ_leaf),
+                    PlantOrgan.STEM to stringResource(Res.string.organ_stem),
+                    PlantOrgan.SEEDLING to stringResource(Res.string.organ_seedling),
+                    PlantOrgan.FRUIT to stringResource(Res.string.organ_fruit),
+                    PlantOrgan.ROOT to stringResource(Res.string.organ_root),
                 )
 
                 LazyRow(
@@ -172,7 +174,7 @@ fun DoctorScreen(
         // Titre liste affections
         item {
             Text(
-                text = "2. Diagnostics probables (${filteredDiseases.size})",
+                text = stringResource(Res.string.doctor_step_diagnoses, filteredDiseases.size),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold,
@@ -278,7 +280,7 @@ private fun DiseaseCard(
                 Column(modifier = Modifier.padding(top = 12.dp)) {
                     // Symptômes
                     Text(
-                        text = "Symptômes caractéristiques :",
+                        text = stringResource(Res.string.doctor_symptoms),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Bold,
@@ -297,7 +299,7 @@ private fun DiseaseCard(
 
                     // Remèdes biologiques
                     Text(
-                        text = "Remèdes certifiés bio & permaculture :",
+                        text = stringResource(Res.string.doctor_remedies),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontWeight = FontWeight.Bold,
@@ -325,7 +327,7 @@ private fun DiseaseCard(
                     if (disease.preventiveMeasures.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = "Mesures préventives d'anticipation :",
+                            text = stringResource(Res.string.doctor_prevention),
                             style = MaterialTheme.typography.labelSmall,
                             color = SillonTheme.colors.synergy,
                             fontWeight = FontWeight.Bold,

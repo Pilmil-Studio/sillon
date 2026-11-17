@@ -185,4 +185,17 @@
     <string name="catalog_heirloom_title">Alte / samenfeste Sorten:</string>
     <string name="catalog_good_neighbors">Gute Nachbarn:</string>
     <string name="catalog_keep_away">Fernhalten:</string>
+    <string name="doctor_title">Gartendoktor</string>
+    <string name="doctor_subtitle">Bestimmungsschlüssel ohne Internet: Wählen Sie das betroffene Organ und vergleichen Sie dann die Symptome.</string>
+    <string name="doctor_step_organ">1. Welches Organ ist betroffen?</string>
+    <string name="organ_all">Alle Organe</string>
+    <string name="organ_leaf">Blätter</string>
+    <string name="organ_stem">Stängel / Wurzelhals</string>
+    <string name="organ_seedling">Sämlinge / Triebe</string>
+    <string name="organ_fruit">Früchte / Gemüse</string>
+    <string name="organ_root">Wurzeln</string>
+    <string name="doctor_step_diagnoses">2. Wahrscheinliche Diagnosen (%1$d)</string>
+    <string name="doctor_symptoms">Typische Symptome:</string>
+    <string name="doctor_remedies">Bio- und Permakultur-konforme Mittel:</string>
+    <string name="doctor_prevention">Vorbeugende Maßnahmen:</string>
 </resources>

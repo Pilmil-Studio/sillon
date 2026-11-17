@@ -186,4 +186,17 @@
     <string name="catalog_heirloom_title">Varietà antiche / riproducibili:</string>
     <string name="catalog_good_neighbors">Buoni vicini:</string>
     <string name="catalog_keep_away">Da tenere lontano:</string>
+    <string name="doctor_title">Dottore dell’Orto</string>
+    <string name="doctor_subtitle">Chiave diagnostica offline: scegliete l’organo colpito, poi confrontate i sintomi.</string>
+    <string name="doctor_step_organ">1. Quale organo è colpito?</string>
+    <string name="organ_all">Tutti gli organi</string>
+    <string name="organ_leaf">Foglie</string>
+    <string name="organ_stem">Steli / Colletto</string>
+    <string name="organ_seedling">Piantine / Germogli</string>
+    <string name="organ_fruit">Frutti / Ortaggi</string>
+    <string name="organ_root">Radici</string>
+    <string name="doctor_step_diagnoses">2. Diagnosi probabili (%1$d)</string>
+    <string name="doctor_symptoms">Sintomi caratteristici:</string>
+    <string name="doctor_remedies">Rimedi ammessi in biologico e permacultura:</string>
+    <string name="doctor_prevention">Misure preventive:</string>
 </resources>

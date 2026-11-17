@@ -185,4 +185,17 @@
     <string name="catalog_heirloom_title">Heirloom / open-pollinated varieties:</string>
     <string name="catalog_good_neighbors">Good neighbours:</string>
     <string name="catalog_keep_away">Keep apart:</string>
+    <string name="doctor_title">Garden Doctor</string>
+    <string name="doctor_subtitle">Offline diagnostic key: choose the affected organ, then compare the symptoms.</string>
+    <string name="doctor_step_organ">1. Which organ is affected?</string>
+    <string name="organ_all">All organs</string>
+    <string name="organ_leaf">Leaves</string>
+    <string name="organ_stem">Stems / Crown</string>
+    <string name="organ_seedling">Seedlings / Shoots</string>
+    <string name="organ_fruit">Fruits / Vegetables</string>
+    <string name="organ_root">Roots</string>
+    <string name="doctor_step_diagnoses">2. Likely diagnoses (%1$d)</string>
+    <string name="doctor_symptoms">Typical symptoms:</string>
+    <string name="doctor_remedies">Organic and permaculture-approved remedies:</string>
+    <string name="doctor_prevention">Preventive measures:</string>
 </resources>
