@@ -15,8 +15,12 @@ android {
         targetSdk = 36
         versionCode = System.getenv("SILLON_VERSION_CODE")?.toIntOrNull() ?: 10000
         versionName = System.getenv("SILLON_VERSION_NAME") ?: "1.0.0-dev"
+        // Sauvegarde Android activée dans le manifeste : sans elle, ni le transfert direct vers un
+        // nouveau téléphone ni le réglage « copie dans le compte Google » ne fonctionnent. C'est
+        // l'agent de sauvegarde qui applique le choix de la personne (copie Google désactivée par
+        // défaut, jamais sans chiffrement de bout en bout).
         manifestPlaceholders["allowAutoBackup"] =
-            providers.gradleProperty("pilmil.allowAutoBackup").getOrElse("false")
+            providers.gradleProperty("pilmil.allowAutoBackup").getOrElse("true")
     }
 
     signingConfigs {
