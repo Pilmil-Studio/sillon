@@ -59,7 +59,7 @@
     <string name="rest_no_work">In diesem Zeitraum keine Aussaat und keine Pflanzung: Mulchen, Kompost und Beete vorbereiten.</string>
     <string name="rest_prepare">Die Saison im Katalog vorbereiten</string>
     <string name="settings_title">Einstellungen &amp; Daten</string>
-    <string name="settings_subtitle">Mikroklima-Einstellungen und Hoheit über Ihre Daten.</string>
+    <string name="settings_subtitle">Mikroklima-Einstellungen und Kontrolle über Ihre Daten.</string>
     <string name="env_title">Anbauumgebung</string>
     <string name="env_outdoor">Freiland</string>
     <string name="env_balcony">Balkon / Terrasse</string>
@@ -190,9 +190,9 @@
     <string name="evidence_tradition">Gärtnertradition</string>
     <string name="evidence_explanation">Durch Versuche belegt: Versuche im Garten oder im Anbau haben die Wirkung beobachtet. Plausibel, wenig untersucht: Die Idee ist nachvollziehbar, aber niemand hat sie wirklich gemessen. Gärtnertradition: seit langem überliefert, ohne Beleg – probieren Sie es selbst aus!</string>
     <string name="companion_note">%1$s: %2$s. %3$s</string>
-    <string name="companion_detail_their_sheet">auf deren Steckbrief beschrieben</string>
+    <string name="companion_detail_their_sheet">im Porträt dieser Pflanze beschrieben</string>
     <string name="companion_detail_rationale">„%1$s“</string>
-    <string name="companion_body_bad_tradition">die Tradition rät von dieser Nachbarschaft ab (%1$s)</string>
+    <string name="companion_body_bad_tradition">Die Tradition rät von dieser Nachbarschaft ab (%1$s)</string>
     <string name="companion_body_bad_plausible">Nachbarschaft vorsichtshalber meiden (%1$s)</string>
     <string name="companion_body_bad_other">Nachbarschaft meiden (%1$s)</string>
     <string name="companion_body_good_tradition">nach der Tradition eine günstige Nachbarschaft (%1$s)</string>
@@ -233,10 +233,10 @@
     <string name="photo_tier_unsure">ich weiß es nicht</string>
     <string name="photo_open_key">Mit dem Schlüssel prüfen</string>
     <string name="photo_healthy">Blatt sieht gesund aus (%1$s).</string>
-    <string name="photo_healthy_hint">Wirkt die Pflanze trotzdem geschwächt (lange dünne Triebe, schlaffes Laub), prüfen Sie unten den Zustand der Erde und den Standort.</string>
+    <string name="photo_healthy_hint">Wirkt die Pflanze trotzdem geschwächt (vergeilte Triebe, schlaffes Laub), prüfen Sie unten den Zustand der Erde und den Standort.</string>
     <string name="photo_resembles">Ähnelt: %1$s (%2$s).</string>
     <string name="photo_open_sheet">Porträt „%1$s“ ansehen</string>
-    <string name="photo_leafspot">Wahrscheinlich eine Blattfleckenkrankheit (Mehltau oder Dürrfleckenkrankheit): Vergleichen Sie die beiden Porträts unten.</string>
+    <string name="photo_leafspot">Wahrscheinlich eine Blattfleckenkrankheit (Falscher Mehltau oder Dürrfleckenkrankheit): Vergleichen Sie die beiden Porträts unten.</string>
     <string name="photo_no_clear">Ich erkenne keine eindeutige Blattkrankheit mit ausreichender Sicherheit.</string>
     <string name="photo_lead">Hinweis (%1$s): %2$s</string>
     <string name="photo_refine">Mit dem Umfeld eingrenzen (Gießen, Licht, Topf):</string>
@@ -256,7 +256,7 @@
     <string name="garden_volume">%1$s l</string>
     <string name="garden_renew_substrate">Substrat zwischen zwei Durchgängen erneuern</string>
     <string name="garden_legend_positive">Gute Nachbarschaft</string>
-    <string name="garden_legend_alert">Warnung Nachbarschaft</string>
+    <string name="garden_legend_alert">Nachbarschaftswarnung</string>
     <string name="garden_empty">Noch kein Beet angelegt. Tippen Sie auf „+“, um Ihr erstes Beet zu erstellen.</string>
     <string name="garden_slot_free">Freies Feld</string>
     <string name="garden_slot_open">Platz öffnen</string>
