@@ -13,7 +13,7 @@ Sillon is a vegetable-garden companion that works without a network. It tells yo
 
 Free, no account, no ads, and it does not even ask for permission to use the internet. The interface is currently available in French only.
 
-**For the curious (technical part).** Growing windows are computed from the median last-frost date ($J_{\text{frost}}$) instead of fixed months, neighbour checks use documented allelopathy relations, rotation follows a 4-year cycle, and leaf recognition relies on bundled on-device models. Details below.
+**For the curious (technical part).** Growing windows are computed from the median last-frost date ($J_{\text{frost}}$) instead of fixed months, neighbour checks rely on companion-planting relations whose level of evidence is shown (backed by trials, plausible, or plain tradition), rotation follows a 4-year cycle, and leaf recognition relies on bundled on-device models. Details below.
 
 ## What sets Sillon apart
 

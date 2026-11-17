@@ -1,8 +1,19 @@
 # Sources du compagnonnage de Sillon
 
-Ce document répond à une question : d'où viennent les 255 relations de compagnonnage du catalogue, et que peut-on en justifier avec des sources que l'on peut ouvrir ? Il décrit le dépôt à la révision `d435751` (branche `audit-novembre`, 16 novembre 2026). Le code Kotlin n'a pas été modifié : les retraits et changements de niveau de preuve ci-dessous sont des propositions, l'auteur tranche.
+**Recommandations appliquées le 16 novembre 2026.** L'auteur a accepté les recommandations de la partie (e) et elles sont dans le code.
 
-Données complètes : `docs/data/compagnonnage.csv` (255 lignes, une par relation).
+- Le modèle `CompanionRelation` porte un niveau de preuve (`EvidenceLevel` : étayé par des essais, plausible mais peu étudié, tradition de jardinage) et une source courte, obligatoire pour les relations étayées. Les trois niveaux sont affichés dans l'appli (fiche d'une plante, carte « Voisinage » du carré, lecture d'écran des cases) avec une phrase d'explication. La catégorie « contredit » n'a plus de relation à afficher.
+- 30 relations retirées : les 21 contredites (M02), les 5 maladies communes pomme de terre et cucurbitacées (M11b), les 2 hybridations aneth et carotte, capucine vers chou pomme, fenouil vers poireau.
+- `tagete` et `oeillet_d_inde` sont fusionnés sous `tagete`. Les deux relations tomate et œillet d'Inde, doublons des relations de `tagete`, disparaissent. Les potagers et sauvegardes enregistrés avec l'ancien identifiant sont convertis à la lecture.
+- Les 109 relations sans réciproque restantes (123 avant les retraits) ne sont pas complétées : l'affichage les lit dans les deux sens.
+- Reformulés : les deux textes « éprouvé » et « puissant » de l'œillet d'Inde, le conseil de la fiche tagète, tomate vers basilic (plus de promesse de saveur), fenouil vers tomate (« puissante » retiré) et bourrache vers fraise (pollinisateurs au lieu de croissance). La source des relations Tagetes précise la condition (culture avant la plante, serre). Non traités : les autres textes de tradition qui énoncent un mécanisme précis, et les fiches tropicales (sources non ouvertes).
+- Écart avec la proposition (e) : trois libellés au lieu de quatre (« Étayé par essais », « Plausible, peu étudié », « Tradition de jardinage »). Les relations tropicales (M16) sont classées en tradition.
+
+Nouveaux totaux : **223 relations** (141 bénéfiques, 82 à risque), soit **35 étayées, 84 plausibles, 104 traditions**. Avant : 255 relations, soit 37 étayées, 84 plausibles, 113 traditions et 21 contredites. Les 37 étayées deviennent 35 parce que les deux doublons de la fusion étaient étayés ; les 113 traditions deviennent 104 parce que 9 sont retirées. Le fichier `docs/data/compagnonnage.csv` garde les 255 lignes d'origine, avec une colonne `statut_16_novembre`. Le reste du document décrit l'état avant l'application, à la révision `d435751`.
+
+Ce document répond à une question : d'où viennent les 255 relations de compagnonnage du catalogue, et que peut-on en justifier avec des sources que l'on peut ouvrir ? Il décrit le dépôt à la révision `d435751` (branche `audit-novembre`, 16 novembre 2026).
+
+Données complètes : `docs/data/compagnonnage.csv` (255 lignes, une par relation d'origine).
 
 ## (a) Origine établie de la liste
 

@@ -65,7 +65,6 @@ fun Vegetable.iconResource(): DrawableResource = when (id) {
     "coriandre" -> Res.drawable.veg_cilantro
     "aneth" -> Res.drawable.veg_dill
     "tagete" -> Res.drawable.veg_generic_flower
-    "oeillet_d_inde" -> Res.drawable.veg_california_poppy
     "bourrache" -> Res.drawable.veg_borage
     "capucine" -> Res.drawable.veg_california_poppy
     "phacelie" -> Res.drawable.veg_lavender
@@ -116,7 +115,7 @@ fun Vegetable.pictogram(): String = when (id) {
     "laitue", "mache", "chicoree", "epinard", "blette", "roquette", "chou_kale" -> "\uD83E\uDD6C"
     "brocoli", "chou_fleur" -> "\uD83E\uDD66"
     "tournesol" -> "\uD83C\uDF3B"
-    "tagete", "oeillet_d_inde", "souci", "bourrache", "phacelie", "capucine" -> "\uD83C\uDF3C"
+    "tagete", "souci", "bourrache", "phacelie", "capucine" -> "\uD83C\uDF3C"
     "basilic", "menthe", "romarin", "thym", "origan", "sauge", "persil", "coriandre", "aneth", "ciboulette" -> "\uD83C\uDF3F"
     "haricot_nain", "haricot_rames", "pois", "feve", "lentille", "pois_chiche" -> "\uD83E\uDED8"
     "radis", "navet", "betterave", "chou_rave", "celeri_rave" -> "\uD83E\uDD55"
