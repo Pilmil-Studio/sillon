@@ -1,0 +1,2 @@
+Diagnostic photo : déclenchement manuel de la prise de vue et résultat ramené à l'écran. La photo est supprimée après l'analyse et la confiance du résultat est exprimée en mots.
+Le potager n'est plus jamais écrasé quand le fichier ne peut pas être lu.
