@@ -9,4 +9,10 @@
         <item quantity="other">%1$s en %2$d andere.</item>
     </plurals>
     <string name="reminder_big">Te zaaien of te planten: %1$s</string>
+    <string name="app_tagline">Levende moestuin &amp; teeltkalender</string>
+    <string name="nav_dashboard">Vandaag</string>
+    <string name="nav_garden">Percelen</string>
+    <string name="nav_catalog">Encyclopedie</string>
+    <string name="nav_doctor">Diagnose</string>
+    <string name="nav_settings">Instellingen</string>
 </resources>

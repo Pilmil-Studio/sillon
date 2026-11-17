@@ -10,4 +10,10 @@
         <item quantity="other">%1$s y %2$d más.</item>
     </plurals>
     <string name="reminder_big">Para sembrar o plantar: %1$s</string>
+    <string name="app_tagline">Huerto vivo y calendario agronómico</string>
+    <string name="nav_dashboard">Hoy</string>
+    <string name="nav_garden">Parcelas</string>
+    <string name="nav_catalog">Enciclopedia</string>
+    <string name="nav_doctor">Diagnóstico</string>
+    <string name="nav_settings">Ajustes</string>
 </resources>

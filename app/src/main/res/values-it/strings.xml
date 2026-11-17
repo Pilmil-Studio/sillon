@@ -10,4 +10,10 @@
         <item quantity="other">%1$s e %2$d altre.</item>
     </plurals>
     <string name="reminder_big">Da seminare o piantare: %1$s</string>
+    <string name="app_tagline">Orto vivo e calendario agronomico</string>
+    <string name="nav_dashboard">Oggi</string>
+    <string name="nav_garden">Aiuole</string>
+    <string name="nav_catalog">Enciclopedia</string>
+    <string name="nav_doctor">Diagnosi</string>
+    <string name="nav_settings">Impostazioni</string>
 </resources>

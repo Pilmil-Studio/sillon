@@ -9,4 +9,10 @@
         <item quantity="other">%1$s and %2$d others.</item>
     </plurals>
     <string name="reminder_big">To sow or plant: %1$s</string>
+    <string name="app_tagline">Living vegetable garden &amp; agronomic calendar</string>
+    <string name="nav_dashboard">Today</string>
+    <string name="nav_garden">Plots</string>
+    <string name="nav_catalog">Encyclopedia</string>
+    <string name="nav_doctor">Diagnosis</string>
+    <string name="nav_settings">Settings</string>
 </resources>

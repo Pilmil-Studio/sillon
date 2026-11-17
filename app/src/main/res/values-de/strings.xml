@@ -9,4 +9,10 @@
         <item quantity="other">%1$s und %2$d weitere.</item>
     </plurals>
     <string name="reminder_big">Auszusäen oder zu pflanzen: %1$s</string>
+    <string name="app_tagline">Lebendiger Gemüsegarten &amp; Anbaukalender</string>
+    <string name="nav_dashboard">Heute</string>
+    <string name="nav_garden">Beete</string>
+    <string name="nav_catalog">Enzyklopädie</string>
+    <string name="nav_doctor">Diagnose</string>
+    <string name="nav_settings">Einstellungen</string>
 </resources>
