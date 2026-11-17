@@ -17,7 +17,7 @@ Constat avant reprise :
 ## Après reprise
 
 1. Corrigé. Sur ordinateur, la galerie est une grille de 4 colonnes (8 captures, 2 rangées, aucun défilement ni barre). Sous 640 px elle reste un bandeau horizontal avec accroche au défilement (`mandatory`), images de `min(62vw,220px)`, sans cadre vide. `loading="lazy"` conservé.
-2. Corrigé. Les images ne sont plus étirées (`align-items:start`, `height:auto`). 210 x 453 devient 247 x 439 (ratio 0,5625) pour les `.webp`.
+2. Corrigé. Les images ne sont plus étirées (`align-items:start`, `height:auto`). 210 x 453 devient 245 x 434 (ratio 0,5625) pour les `.webp`.
 3. Corrigé. Attributs mis aux dimensions réelles des fichiers : 540 x 960 pour les six `.webp`, 1080 x 2340 pour les deux PNG (hauteur ajoutée). Les ratios restent différents d'un format à l'autre, chaque image garde le sien : les hauteurs d'une rangée ne sont pas égales.
 4. Corrigé. Boutons d'horizon, boutons d'organe, onglets et curseur : 44 px de haut (mesuré). Vert du simulateur remplacé par `var(--accent-solid)`. Clics sur les trois onglets, les horizons et les organes vérifiés.
 5. Aucun contraste à corriger (valeurs du constat 6). Fond des cartes passé de dégradé à aplat : texte atténué sur carte 5,08 (clair) et 7,75 (sombre).
