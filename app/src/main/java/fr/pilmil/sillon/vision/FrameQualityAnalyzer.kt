@@ -57,20 +57,33 @@ class FrameQualityAnalyzer(
         yPlane: ImageProxy.PlaneProxy,
         uPlane: ImageProxy.PlaneProxy?,
         vPlane: ImageProxy.PlaneProxy?,
+    ): FrameQuality = evaluatePlanes(
+        width = image.width,
+        height = image.height,
+        yBuffer = yPlane.buffer,
+        yRowStride = yPlane.rowStride,
+        yPixelStride = yPlane.pixelStride,
+        uBuffer = uPlane?.buffer,
+        uRowStride = uPlane?.rowStride ?: 0,
+        uPixelStride = uPlane?.pixelStride ?: 1,
+        vBuffer = vPlane?.buffer,
+        vRowStride = vPlane?.rowStride ?: 0,
+        vPixelStride = vPlane?.pixelStride ?: 1,
+    )
+
+    internal fun evaluatePlanes(
+        width: Int,
+        height: Int,
+        yBuffer: ByteBuffer,
+        yRowStride: Int,
+        yPixelStride: Int,
+        uBuffer: ByteBuffer?,
+        uRowStride: Int,
+        uPixelStride: Int,
+        vBuffer: ByteBuffer?,
+        vRowStride: Int,
+        vPixelStride: Int,
     ): FrameQuality {
-        val width = image.width
-        val height = image.height
-        val yBuffer = yPlane.buffer
-        val yRowStride = yPlane.rowStride
-        val yPixelStride = yPlane.pixelStride
-
-        val uBuffer = uPlane?.buffer
-        val uRowStride = uPlane?.rowStride ?: 0
-        val uPixelStride = uPlane?.pixelStride ?: 1
-
-        val vBuffer = vPlane?.buffer
-        val vRowStride = vPlane?.rowStride ?: 0
-        val vPixelStride = vPlane?.pixelStride ?: 1
 
         // Zone centrale : tiers central (33% à 66%)
         val startX = width / 4
