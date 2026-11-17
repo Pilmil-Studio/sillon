@@ -140,4 +140,25 @@
     <string name="legal_title">Pilmil Studio · Legal notice</string>
     <string name="legal_country">France</string>
     <string name="legal_text">• Publisher: Pilmil Studio (France).\n• No Internet permission in the Android manifest.\n• No trackers, no advertising SDKs, no account.\n• Calendar, companion planting and diagnosis are 100% computed on your phone.\n• Free software under the Mozilla Public License 2.0 (MPL-2.0).\n• Contact: pilmil.studio@proton.me · https://pilmil-studio.github.io\n• Need an offline tool with no ads or tracking? Write to us at pilmil.studio@proton.me.</string>
+    <string name="onboarding_env_title">Where do you grow?</string>
+    <string name="onboarding_env_text">Sillon adapts the calendar and the advice depending on whether you grow in open ground, in pots on a balcony or indoors.</string>
+    <string name="onboarding_outdoor_title">Open ground / Garden</string>
+    <string name="onboarding_outdoor_text">Raised beds or garden rows, a calendar based on the last frosts and rotation of plant families.</string>
+    <string name="onboarding_balcony_title">Balcony / Terrace</string>
+    <string name="onboarding_balcony_text">Growing in pots and planters, a calendar based on frosts with tracking of sun exposure and watering.</string>
+    <string name="onboarding_indoor_title">Indoors (apartment)</string>
+    <string name="onboarding_indoor_text">Windowsill or grow lamp: sowing is possible all year round, whatever the frosts.</string>
+    <string name="onboarding_place_title_balcony">Where is your balcony?</string>
+    <string name="onboarding_place_title_garden">Where is your vegetable garden?</string>
+    <string name="onboarding_place_text">Sillon bases all sowing dates on the average date of the last frosts in your département. Nothing leaves your phone.</string>
+    <string name="onboarding_later">I’ll set this later</string>
+    <string name="onboarding_reminder_title">A reminder when the time comes?</string>
+    <string name="onboarding_reminder_text">On Saturday morning, Sillon can tell you which sowings and plantings open in the next two weeks. No message when there is nothing to do.</string>
+    <string name="onboarding_reminder_hint">You can change your mind in Settings.</string>
+    <string name="onboarding_reminder_yes">Yes, notify me</string>
+    <string name="onboarding_reminder_no">No thanks</string>
+    <string name="department_search_label">Département (number or name)</string>
+    <string name="department_last_frost">Last frosts around %1$s</string>
+    <string name="department_chosen">Selected</string>
+    <string name="department_dialog_title">My territory or département</string>
 </resources>

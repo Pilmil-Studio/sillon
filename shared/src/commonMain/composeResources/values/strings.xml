@@ -140,4 +140,25 @@
     <string name="legal_title">Pilmil Studio · Mentions légales</string>
     <string name="legal_country">France</string>
     <string name="legal_text">• Éditeur : Pilmil Studio (France).\n• Aucune permission Internet dans le manifeste Android.\n• Zéro traceur, zéro SDK publicitaire, zéro compte.\n• Calendrier, associations et diagnostic 100 % calculés sur votre téléphone.\n• Logiciel libre sous licence Mozilla Public License 2.0 (MPL-2.0).\n• Contact : pilmil.studio@proton.me · https://pilmil-studio.github.io\n• Un besoin d’outil hors-ligne sans pub ni suivi ? Écrivez-nous à pilmil.studio@proton.me.</string>
+    <string name="onboarding_env_title">Où cultivez-vous ?</string>
+    <string name="onboarding_env_text">Sillon adapte le calendrier et les conseils selon que vous cultivez en pleine terre, sur un balcon en pots ou en intérieur.</string>
+    <string name="onboarding_outdoor_title">Pleine terre / Jardin</string>
+    <string name="onboarding_outdoor_text">Carrés potagers ou planches, calendrier calé sur les dernières gelées et rotation des familles.</string>
+    <string name="onboarding_balcony_title">Balcon / Terrasse</string>
+    <string name="onboarding_balcony_text">Culture en pots et jardinières, calendrier calé sur les gelées avec suivi d’exposition et d’arrosage.</string>
+    <string name="onboarding_indoor_title">Intérieur (appartement)</string>
+    <string name="onboarding_indoor_text">Rebord de fenêtre ou lampe horticole : semis possibles toute l’année, sans dépendre des gelées.</string>
+    <string name="onboarding_place_title_balcony">Où se trouve votre balcon ?</string>
+    <string name="onboarding_place_title_garden">Où se trouve votre potager ?</string>
+    <string name="onboarding_place_text">Sillon cale tous les semis sur la date moyenne des dernières gelées de votre département. Rien ne quitte votre téléphone.</string>
+    <string name="onboarding_later">Je réglerai plus tard</string>
+    <string name="onboarding_reminder_title">Un rappel quand c’est le moment ?</string>
+    <string name="onboarding_reminder_text">Le samedi matin, Sillon peut vous dire quels semis et plantations s’ouvrent dans la quinzaine. Pas de message quand il n’y a rien à faire.</string>
+    <string name="onboarding_reminder_hint">Vous pourrez changer d’avis dans les Réglages.</string>
+    <string name="onboarding_reminder_yes">Oui, me prévenir</string>
+    <string name="onboarding_reminder_no">Non merci</string>
+    <string name="department_search_label">Département (numéro ou nom)</string>
+    <string name="department_last_frost">Dernières gelées vers le %1$s</string>
+    <string name="department_chosen">Choisi</string>
+    <string name="department_dialog_title">Mon territoire ou département</string>
 </resources>

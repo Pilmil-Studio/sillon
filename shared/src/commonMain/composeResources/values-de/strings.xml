@@ -140,4 +140,25 @@
     <string name="legal_title">Pilmil Studio · Impressum</string>
     <string name="legal_country">Frankreich</string>
     <string name="legal_text">• Herausgeber: Pilmil Studio (Frankreich).\n• Keine Internet-Berechtigung im Android-Manifest.\n• Keine Tracker, keine Werbe-SDKs, kein Konto.\n• Kalender, Pflanzennachbarschaften und Diagnose werden zu 100 % auf Ihrem Telefon berechnet.\n• Freie Software unter der Mozilla Public License 2.0 (MPL-2.0).\n• Kontakt: pilmil.studio@proton.me · https://pilmil-studio.github.io\n• Sie brauchen ein Offline-Werkzeug ohne Werbung und Tracking? Schreiben Sie uns an pilmil.studio@proton.me.</string>
+    <string name="onboarding_env_title">Wo bauen Sie an?</string>
+    <string name="onboarding_env_text">Sillon passt Kalender und Tipps an, je nachdem, ob Sie im Freiland, in Töpfen auf dem Balkon oder drinnen anbauen.</string>
+    <string name="onboarding_outdoor_title">Freiland / Garten</string>
+    <string name="onboarding_outdoor_text">Hochbeete oder Beete, Kalender nach den letzten Frösten und Fruchtfolge der Familien.</string>
+    <string name="onboarding_balcony_title">Balkon / Terrasse</string>
+    <string name="onboarding_balcony_text">Anbau in Töpfen und Kästen, Kalender nach den Frösten, mit Hinweisen zu Lage und Gießen.</string>
+    <string name="onboarding_indoor_title">Drinnen (Wohnung)</string>
+    <string name="onboarding_indoor_text">Fensterbank oder Pflanzenlampe: Aussaat das ganze Jahr möglich, unabhängig von Frösten.</string>
+    <string name="onboarding_place_title_balcony">Wo befindet sich Ihr Balkon?</string>
+    <string name="onboarding_place_title_garden">Wo befindet sich Ihr Gemüsegarten?</string>
+    <string name="onboarding_place_text">Sillon richtet alle Aussaaten nach dem mittleren Datum der letzten Fröste in Ihrem Département aus. Nichts verlässt Ihr Telefon.</string>
+    <string name="onboarding_later">Ich stelle es später ein</string>
+    <string name="onboarding_reminder_title">Eine Erinnerung zur rechten Zeit?</string>
+    <string name="onboarding_reminder_text">Samstagvormittag kann Sillon Ihnen sagen, welche Aussaaten und Pflanzungen in den nächsten zwei Wochen beginnen. Keine Nachricht, wenn nichts zu tun ist.</string>
+    <string name="onboarding_reminder_hint">Sie können es jederzeit in den Einstellungen ändern.</string>
+    <string name="onboarding_reminder_yes">Ja, benachrichtigen</string>
+    <string name="onboarding_reminder_no">Nein, danke</string>
+    <string name="department_search_label">Département (Nummer oder Name)</string>
+    <string name="department_last_frost">Letzte Fröste etwa am %1$s</string>
+    <string name="department_chosen">Gewählt</string>
+    <string name="department_dialog_title">Mein Gebiet oder Département</string>
 </resources>

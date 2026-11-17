@@ -140,4 +140,25 @@
     <string name="legal_title">Pilmil Studio · Note legali</string>
     <string name="legal_country">Francia</string>
     <string name="legal_text">• Editore: Pilmil Studio (Francia).\n• Nessun permesso Internet nel manifest Android.\n• Nessun tracker, nessun SDK pubblicitario, nessun account.\n• Calendario, consociazioni e diagnosi sono calcolati al 100 % sul suo telefono.\n• Software libero con licenza Mozilla Public License 2.0 (MPL-2.0).\n• Contatto: pilmil.studio@proton.me · https://pilmil-studio.github.io\n• Le serve uno strumento offline senza pubblicità né tracciamento? Ci scriva a pilmil.studio@proton.me.</string>
+    <string name="onboarding_env_title">Dove coltiva?</string>
+    <string name="onboarding_env_text">Sillon adatta il calendario e i consigli a seconda che coltiviate in piena terra, in vaso su un balcone o in casa.</string>
+    <string name="onboarding_outdoor_title">Piena terra / Giardino</string>
+    <string name="onboarding_outdoor_text">Aiuole o file, calendario basato sulle ultime gelate e rotazione delle famiglie.</string>
+    <string name="onboarding_balcony_title">Balcone / Terrazza</string>
+    <string name="onboarding_balcony_text">Coltivazione in vasi e fioriere, calendario basato sulle gelate con indicazioni su esposizione e annaffiatura.</string>
+    <string name="onboarding_indoor_title">In casa (appartamento)</string>
+    <string name="onboarding_indoor_text">Davanzale o lampada per piante: semine possibili tutto l’anno, senza dipendere dalle gelate.</string>
+    <string name="onboarding_place_title_balcony">Dove si trova il vostro balcone?</string>
+    <string name="onboarding_place_title_garden">Dove si trova il vostro orto?</string>
+    <string name="onboarding_place_text">Sillon calcola tutte le semine sulla data media delle ultime gelate del vostro dipartimento. Nulla lascia il vostro telefono.</string>
+    <string name="onboarding_later">Lo imposterò più tardi</string>
+    <string name="onboarding_reminder_title">Un promemoria quando è il momento?</string>
+    <string name="onboarding_reminder_text">Il sabato mattina Sillon può dirvi quali semine e piantagioni iniziano nelle prossime due settimane. Nessun messaggio se non c’è nulla da fare.</string>
+    <string name="onboarding_reminder_hint">Potrete cambiare idea nelle Impostazioni.</string>
+    <string name="onboarding_reminder_yes">Sì, avvisatemi</string>
+    <string name="onboarding_reminder_no">No, grazie</string>
+    <string name="department_search_label">Dipartimento (numero o nome)</string>
+    <string name="department_last_frost">Ultime gelate verso il %1$s</string>
+    <string name="department_chosen">Scelto</string>
+    <string name="department_dialog_title">Il mio territorio o dipartimento</string>
 </resources>

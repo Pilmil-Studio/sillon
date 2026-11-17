@@ -140,4 +140,25 @@
     <string name="legal_title">Pilmil Studio · Aviso legal</string>
     <string name="legal_country">Francia</string>
     <string name="legal_text">• Editor: Pilmil Studio (Francia).\n• Sin permiso de Internet en el manifiesto de Android.\n• Sin rastreadores, sin SDK publicitarios, sin cuenta.\n• Calendario, asociaciones de cultivos y diagnóstico se calculan al 100 % en su teléfono.\n• Software libre bajo licencia Mozilla Public License 2.0 (MPL-2.0).\n• Contacto: pilmil.studio@proton.me · https://pilmil-studio.github.io\n• ¿Necesita una herramienta sin conexión, sin publicidad ni seguimiento? Escríbanos a pilmil.studio@proton.me.</string>
+    <string name="onboarding_env_title">¿Dónde cultiva?</string>
+    <string name="onboarding_env_text">Sillon adapta el calendario y los consejos según cultive en tierra, en macetas en un balcón o en interior.</string>
+    <string name="onboarding_outdoor_title">Tierra / Jardín</string>
+    <string name="onboarding_outdoor_text">Bancales o eras, calendario basado en las últimas heladas y rotación de las familias.</string>
+    <string name="onboarding_balcony_title">Balcón / Terraza</string>
+    <string name="onboarding_balcony_text">Cultivo en macetas y jardineras, calendario basado en las heladas con seguimiento de la exposición y del riego.</string>
+    <string name="onboarding_indoor_title">Interior (piso)</string>
+    <string name="onboarding_indoor_text">Alféizar o lámpara de cultivo: siembras posibles todo el año, sin depender de las heladas.</string>
+    <string name="onboarding_place_title_balcony">¿Dónde está su balcón?</string>
+    <string name="onboarding_place_title_garden">¿Dónde está su huerto?</string>
+    <string name="onboarding_place_text">Sillon calcula todas las siembras según la fecha media de las últimas heladas de su departamento. Nada sale de su teléfono.</string>
+    <string name="onboarding_later">Lo ajustaré más tarde</string>
+    <string name="onboarding_reminder_title">¿Un recordatorio cuando llegue el momento?</string>
+    <string name="onboarding_reminder_text">El sábado por la mañana, Sillon puede avisarle de qué siembras y plantaciones empiezan en las próximas dos semanas. Sin mensaje si no hay nada que hacer.</string>
+    <string name="onboarding_reminder_hint">Podrá cambiar de opinión en los Ajustes.</string>
+    <string name="onboarding_reminder_yes">Sí, avisarme</string>
+    <string name="onboarding_reminder_no">No, gracias</string>
+    <string name="department_search_label">Departamento (número o nombre)</string>
+    <string name="department_last_frost">Últimas heladas hacia el %1$s</string>
+    <string name="department_chosen">Elegido</string>
+    <string name="department_dialog_title">Mi territorio o departamento</string>
 </resources>

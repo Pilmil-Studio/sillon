@@ -140,4 +140,25 @@
     <string name="legal_title">Pilmil Studio · Juridische informatie</string>
     <string name="legal_country">Frankrijk</string>
     <string name="legal_text">• Uitgever: Pilmil Studio (Frankrijk).\n• Geen internetrechten in het Android-manifest.\n• Geen trackers, geen advertentie-SDK’s, geen account.\n• Kalender, combinaties van gewassen en diagnose worden voor 100 % op uw telefoon berekend.\n• Vrije software onder de Mozilla Public License 2.0 (MPL-2.0).\n• Contact: pilmil.studio@proton.me · https://pilmil-studio.github.io\n• Een offline hulpmiddel zonder reclame of tracking nodig? Schrijf ons via pilmil.studio@proton.me.</string>
+    <string name="onboarding_env_title">Waar teelt u?</string>
+    <string name="onboarding_env_text">Sillon past de kalender en de tips aan, afhankelijk van of u in de volle grond, in potten op een balkon of binnen teelt.</string>
+    <string name="onboarding_outdoor_title">Volle grond / Tuin</string>
+    <string name="onboarding_outdoor_text">Moestuinbakken of borders, kalender op basis van de laatste vorst en vruchtwisseling van de families.</string>
+    <string name="onboarding_balcony_title">Balkon / Terras</string>
+    <string name="onboarding_balcony_text">Teelt in potten en bakken, kalender op basis van de vorst met aandacht voor ligging en water geven.</string>
+    <string name="onboarding_indoor_title">Binnen (appartement)</string>
+    <string name="onboarding_indoor_text">Vensterbank of kweeklamp: het hele jaar zaaien, ongeacht de vorst.</string>
+    <string name="onboarding_place_title_balcony">Waar bevindt uw balkon zich?</string>
+    <string name="onboarding_place_title_garden">Waar bevindt uw moestuin zich?</string>
+    <string name="onboarding_place_text">Sillon baseert alle zaaidata op de gemiddelde datum van de laatste vorst in uw departement. Er verlaat niets uw telefoon.</string>
+    <string name="onboarding_later">Ik stel het later in</string>
+    <string name="onboarding_reminder_title">Een herinnering als het zover is?</string>
+    <string name="onboarding_reminder_text">Op zaterdagochtend kan Sillon u laten weten welke zaai- en plantwerken de komende twee weken beginnen. Geen bericht als er niets te doen is.</string>
+    <string name="onboarding_reminder_hint">U kunt dit later nog wijzigen in de Instellingen.</string>
+    <string name="onboarding_reminder_yes">Ja, waarschuw mij</string>
+    <string name="onboarding_reminder_no">Nee, bedankt</string>
+    <string name="department_search_label">Departement (nummer of naam)</string>
+    <string name="department_last_frost">Laatste vorst rond %1$s</string>
+    <string name="department_chosen">Gekozen</string>
+    <string name="department_dialog_title">Mijn gebied of departement</string>
 </resources>
