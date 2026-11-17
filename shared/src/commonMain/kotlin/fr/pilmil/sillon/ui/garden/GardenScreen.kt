@@ -321,14 +321,18 @@ fun GardenScreen(
                     .padding(bottom = 32.dp),
             ) {
                 Text(
-                    text = "Emplacement Ligne ${row + 1}, Carré ${col + 1}",
+                    text = stringResource(Res.string.garden_slot_title, row + 1, col + 1),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = if (currentVeg != null) "Actuellement planté : ${currentVeg.name}" else "Case libre (30 × 30 cm)",
+                    text = if (currentVeg != null) {
+                        stringResource(Res.string.garden_slot_current, currentVeg.name)
+                    } else {
+                        stringResource(Res.string.garden_slot_empty)
+                    },
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -354,7 +358,7 @@ fun GardenScreen(
                 if (currentVeg != null) {
                     Spacer(modifier = Modifier.height(12.dp))
                     SillonOutlinedButton(
-                        text = "Vider cet emplacement",
+                        text = stringResource(Res.string.garden_slot_clear),
                         icon = Icons.Filled.Clear,
                         onClick = {
                             onUpdateSlot(activeParcel.id, row, col, null)
@@ -371,11 +375,12 @@ fun GardenScreen(
                         .sortedByDescending { it.year }
                 }
                 if (slotHistory.isNotEmpty()) {
+                    val historyText = slotHistory.take(3).joinToString(", ") {
+                        val label = vegetables.find { v -> v.id == it.vegetableId }?.name ?: it.vegetableId
+                        "$label (${it.year})"
+                    }
                     Text(
-                        text = "Précédemment ici : " + slotHistory.take(3).joinToString(", ") {
-                            val label = vegetables.find { v -> v.id == it.vegetableId }?.name ?: it.vegetableId
-                            "$label (${it.year})"
-                        },
+                        text = stringResource(Res.string.garden_slot_history, historyText),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -383,7 +388,7 @@ fun GardenScreen(
                 }
                 val rotationEngine = remember { RotationEngine() }
                 Text(
-                    text = "Planter une variété :",
+                    text = stringResource(Res.string.garden_slot_plant),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -429,20 +434,20 @@ fun GardenScreen(
                                         color = MaterialTheme.colorScheme.onBackground,
                                     )
                                     Text(
-                                        text = "${veg.family.frenchLabel} • ${veg.squareFootDensity}/carré",
+                                        text = "${veg.family.frenchLabel} • ${stringResource(Res.string.catalog_density, veg.squareFootDensity)}",
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
                                     if (veg.needsMoreSpace) {
                                         Text(
-                                            text = "Demande plus d'espace qu'un carré de 30 cm.",
+                                            text = stringResource(Res.string.garden_needs_space),
                                             style = MaterialTheme.typography.bodySmall,
                                             color = SillonPalette.AlertAmber,
                                         )
                                     }
                                     if (veg.indicative) {
                                         Text(
-                                            text = "Données agronomiques indicatives.",
+                                            text = stringResource(Res.string.garden_indicative),
                                             style = MaterialTheme.typography.bodySmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             fontStyle = FontStyle.Italic,

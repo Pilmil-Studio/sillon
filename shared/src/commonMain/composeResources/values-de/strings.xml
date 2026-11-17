@@ -249,4 +249,12 @@
         <item quantity="one">und %1$d weitere</item>
         <item quantity="other">und %1$d weitere</item>
     </plurals>
+    <string name="garden_slot_title">Platz: Reihe %1$d, Feld %2$d</string>
+    <string name="garden_slot_current">Derzeit gepflanzt: %1$s</string>
+    <string name="garden_slot_empty">Freies Feld (30 × 30 cm)</string>
+    <string name="garden_slot_clear">Diesen Platz leeren</string>
+    <string name="garden_slot_history">Zuvor hier: %1$s</string>
+    <string name="garden_slot_plant">Sorte pflanzen:</string>
+    <string name="garden_needs_space">Braucht mehr Platz als ein 30-cm-Feld.</string>
+    <string name="garden_indicative">Anbaudaten nur als Richtwerte.</string>
 </resources>

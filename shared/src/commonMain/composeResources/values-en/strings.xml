@@ -249,4 +249,12 @@
         <item quantity="one">and %1$d other</item>
         <item quantity="other">and %1$d others</item>
     </plurals>
+    <string name="garden_slot_title">Slot: row %1$d, square %2$d</string>
+    <string name="garden_slot_current">Currently planted: %1$s</string>
+    <string name="garden_slot_empty">Empty square (30 × 30 cm)</string>
+    <string name="garden_slot_clear">Empty this slot</string>
+    <string name="garden_slot_history">Previously here: %1$s</string>
+    <string name="garden_slot_plant">Plant a variety:</string>
+    <string name="garden_needs_space">Needs more room than a 30 cm square.</string>
+    <string name="garden_indicative">Indicative agronomic data.</string>
 </resources>

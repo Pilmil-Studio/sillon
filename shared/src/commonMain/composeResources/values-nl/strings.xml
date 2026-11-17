@@ -249,4 +249,12 @@
         <item quantity="one">en %1$d andere</item>
         <item quantity="other">en %1$d andere</item>
     </plurals>
+    <string name="garden_slot_title">Plek: rij %1$d, vak %2$d</string>
+    <string name="garden_slot_current">Nu geplant: %1$s</string>
+    <string name="garden_slot_empty">Vrij vak (30 × 30 cm)</string>
+    <string name="garden_slot_clear">Deze plek leegmaken</string>
+    <string name="garden_slot_history">Eerder hier: %1$s</string>
+    <string name="garden_slot_plant">Een soort planten:</string>
+    <string name="garden_needs_space">Heeft meer ruimte nodig dan een vak van 30 cm.</string>
+    <string name="garden_indicative">Indicatieve teeltgegevens.</string>
 </resources>

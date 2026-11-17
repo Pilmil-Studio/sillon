@@ -251,4 +251,12 @@
         <item quantity="many">et %1$d d’autres</item>
         <item quantity="other">et %1$d autres</item>
     </plurals>
+    <string name="garden_slot_title">Emplacement Ligne %1$d, Carré %2$d</string>
+    <string name="garden_slot_current">Actuellement planté : %1$s</string>
+    <string name="garden_slot_empty">Case libre (30 × 30 cm)</string>
+    <string name="garden_slot_clear">Vider cet emplacement</string>
+    <string name="garden_slot_history">Précédemment ici : %1$s</string>
+    <string name="garden_slot_plant">Planter une variété :</string>
+    <string name="garden_needs_space">Demande plus d’espace qu’un carré de 30 cm.</string>
+    <string name="garden_indicative">Données agronomiques indicatives.</string>
 </resources>
