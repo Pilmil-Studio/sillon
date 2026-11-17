@@ -15,4 +15,11 @@
     <string name="nav_catalog">Enzyklopädie</string>
     <string name="nav_doctor">Diagnose</string>
     <string name="nav_settings">Einstellungen</string>
+    <string name="frame_tip_position">Kamera auf ein Blatt richten</string>
+    <string name="frame_tip_blurry">Unscharfes Bild: Gerät ruhig halten</string>
+    <string name="frame_tip_dark">Zu dunkel: Blatt beleuchten</string>
+    <string name="frame_tip_glare">Blendung: Gegenlicht vermeiden</string>
+    <string name="frame_tip_closer">Näher an das Blatt herangehen</string>
+    <string name="frame_tip_center">Mittlere Qualität: Blatt zentrieren</string>
+    <string name="frame_tip_optimal">Bildausschnitt gut: bereit zur Analyse</string>
 </resources>

@@ -25,12 +25,16 @@ data class FrameQuality(
     val tip: String,
 )
 
+/** Conseils affichés dans le viseur ; le texte est fourni par l'appelant (ressources localisées). */
+enum class FrameTip { POSITION, BLURRY, DARK, GLARE, CLOSER, CENTER, OPTIMAL }
+
 /**
  * Analyseur de flux vidéo CameraX temps-réel (30 FPS).
  * Évalue la netteté (opérateur laplacien), l'exposition (luminance Y) et la couverture végétale (Excess Green YUV->RGB)
  * dans le tiers central de l'image (zone de visée).
  */
 class FrameQualityAnalyzer(
+    private val tipText: (FrameTip) -> String = ::defaultTipText,
     private val onQualityEvaluated: (FrameQuality) -> Unit,
 ) : ImageAnalysis.Analyzer {
 
@@ -141,7 +145,7 @@ class FrameQualityAnalyzer(
         }
 
         if (sampledPixels == 0) {
-            return FrameQuality(FrameQualityStatus.UNUSABLE, 0f, 0f, 0f, "Positionnez la caméra")
+            return FrameQuality(FrameQualityStatus.UNUSABLE, 0f, 0f, 0f, tipText(FrameTip.POSITION))
         }
 
         val avgBrightness = totalLuminance.toFloat() / sampledPixels
@@ -149,12 +153,12 @@ class FrameQualityAnalyzer(
         val plantCoverage = if (uBuffer != null) plantPixelCount.toFloat() / sampledPixels else 0.5f
 
         val (status, tip) = when {
-            avgSharpness < 7.5f -> FrameQualityStatus.UNUSABLE to "Image floue : stabilisez l'appareil"
-            avgBrightness < 45.0f -> FrameQualityStatus.UNUSABLE to "Trop sombre : éclairez la feuille"
-            avgBrightness > 225.0f -> FrameQualityStatus.UNUSABLE to "Éblouissement : évitez le contre-jour"
-            plantCoverage < 0.12f -> FrameQualityStatus.WARNING to "Rapprochez-vous de la feuille"
-            avgSharpness < 13.0f || plantCoverage < 0.25f -> FrameQualityStatus.WARNING to "Qualité moyenne : centrer la feuille"
-            else -> FrameQualityStatus.OPTIMAL to "Cadre optimal : analyse prête !"
+            avgSharpness < 7.5f -> FrameQualityStatus.UNUSABLE to tipText(FrameTip.BLURRY)
+            avgBrightness < 45.0f -> FrameQualityStatus.UNUSABLE to tipText(FrameTip.DARK)
+            avgBrightness > 225.0f -> FrameQualityStatus.UNUSABLE to tipText(FrameTip.GLARE)
+            plantCoverage < 0.12f -> FrameQualityStatus.WARNING to tipText(FrameTip.CLOSER)
+            avgSharpness < 13.0f || plantCoverage < 0.25f -> FrameQualityStatus.WARNING to tipText(FrameTip.CENTER)
+            else -> FrameQualityStatus.OPTIMAL to tipText(FrameTip.OPTIMAL)
         }
 
         return FrameQuality(
@@ -165,4 +169,14 @@ class FrameQualityAnalyzer(
             tip = tip,
         )
     }
+}
+
+private fun defaultTipText(tip: FrameTip): String = when (tip) {
+    FrameTip.POSITION -> "Positionnez la caméra"
+    FrameTip.BLURRY -> "Image floue : stabilisez l'appareil"
+    FrameTip.DARK -> "Trop sombre : éclairez la feuille"
+    FrameTip.GLARE -> "Éblouissement : évitez le contre-jour"
+    FrameTip.CLOSER -> "Rapprochez-vous de la feuille"
+    FrameTip.CENTER -> "Qualité moyenne : centrer la feuille"
+    FrameTip.OPTIMAL -> "Cadre optimal : analyse prête !"
 }

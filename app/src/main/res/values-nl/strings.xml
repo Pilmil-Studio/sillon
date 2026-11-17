@@ -15,4 +15,11 @@
     <string name="nav_catalog">Encyclopedie</string>
     <string name="nav_doctor">Diagnose</string>
     <string name="nav_settings">Instellingen</string>
+    <string name="frame_tip_position">Richt de camera op een blad</string>
+    <string name="frame_tip_blurry">Onscherp beeld: houd de telefoon stil</string>
+    <string name="frame_tip_dark">Te donker: verlicht het blad</string>
+    <string name="frame_tip_glare">Verblinding: vermijd tegenlicht</string>
+    <string name="frame_tip_closer">Ga dichter bij het blad staan</string>
+    <string name="frame_tip_center">Gemiddelde kwaliteit: centreer het blad</string>
+    <string name="frame_tip_optimal">Beeld goed: klaar voor analyse</string>
 </resources>

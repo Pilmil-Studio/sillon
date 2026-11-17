@@ -17,4 +17,11 @@
         <item quantity="other">%1$s et %2$d autres.</item>
     </plurals>
     <string name="reminder_big">À semer ou planter : %1$s</string>
+    <string name="frame_tip_position">Positionnez la caméra</string>
+    <string name="frame_tip_blurry">Image floue : stabilisez l’appareil</string>
+    <string name="frame_tip_dark">Trop sombre : éclairez la feuille</string>
+    <string name="frame_tip_glare">Éblouissement : évitez le contre-jour</string>
+    <string name="frame_tip_closer">Rapprochez-vous de la feuille</string>
+    <string name="frame_tip_center">Qualité moyenne : centrez la feuille</string>
+    <string name="frame_tip_optimal">Cadre optimal : analyse prête !</string>
 </resources>

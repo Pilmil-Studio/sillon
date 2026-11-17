@@ -16,4 +16,11 @@
     <string name="nav_catalog">Enciclopedia</string>
     <string name="nav_doctor">Diagnóstico</string>
     <string name="nav_settings">Ajustes</string>
+    <string name="frame_tip_position">Apunte la cámara a una hoja</string>
+    <string name="frame_tip_blurry">Imagen borrosa: mantenga el teléfono firme</string>
+    <string name="frame_tip_dark">Demasiado oscuro: ilumine la hoja</string>
+    <string name="frame_tip_glare">Deslumbramiento: evite el contraluz</string>
+    <string name="frame_tip_closer">Acérquese a la hoja</string>
+    <string name="frame_tip_center">Calidad media: centre la hoja</string>
+    <string name="frame_tip_optimal">Encuadre correcto: listo para analizar</string>
 </resources>

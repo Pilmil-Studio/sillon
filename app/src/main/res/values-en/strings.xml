@@ -15,4 +15,11 @@
     <string name="nav_catalog">Encyclopedia</string>
     <string name="nav_doctor">Diagnosis</string>
     <string name="nav_settings">Settings</string>
+    <string name="frame_tip_position">Point the camera at a leaf</string>
+    <string name="frame_tip_blurry">Blurry image: hold the phone steady</string>
+    <string name="frame_tip_dark">Too dark: light the leaf</string>
+    <string name="frame_tip_glare">Glare: avoid shooting against the light</string>
+    <string name="frame_tip_closer">Move closer to the leaf</string>
+    <string name="frame_tip_center">Average quality: center the leaf</string>
+    <string name="frame_tip_optimal">Framing is good: ready to analyze!</string>
 </resources>

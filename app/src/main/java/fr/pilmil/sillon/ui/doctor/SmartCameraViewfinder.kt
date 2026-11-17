@@ -53,10 +53,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import fr.pilmil.sillon.R
 import fr.pilmil.sillon.shared.resources.*
 import fr.pilmil.sillon.vision.FrameQuality
 import fr.pilmil.sillon.vision.FrameQualityAnalyzer
 import fr.pilmil.sillon.vision.FrameQualityStatus
+import fr.pilmil.sillon.vision.FrameTip
 import java.io.File
 import java.util.concurrent.Executors
 import org.jetbrains.compose.resources.stringResource
@@ -163,7 +165,9 @@ fun SmartCameraViewfinder(
 
                     analysis.setAnalyzer(
                         executor,
-                        FrameQualityAnalyzer { evaluated ->
+                        FrameQualityAnalyzer(
+                            tipText = { tip -> ctx.getString(frameTipRes(tip)) },
+                        ) { evaluated ->
                             ContextCompat.getMainExecutor(ctx).execute {
                                 quality = evaluated
                             }
@@ -314,4 +318,14 @@ fun SmartCameraViewfinder(
             )
         }
     }
+}
+
+private fun frameTipRes(tip: FrameTip): Int = when (tip) {
+    FrameTip.POSITION -> R.string.frame_tip_position
+    FrameTip.BLURRY -> R.string.frame_tip_blurry
+    FrameTip.DARK -> R.string.frame_tip_dark
+    FrameTip.GLARE -> R.string.frame_tip_glare
+    FrameTip.CLOSER -> R.string.frame_tip_closer
+    FrameTip.CENTER -> R.string.frame_tip_center
+    FrameTip.OPTIMAL -> R.string.frame_tip_optimal
 }

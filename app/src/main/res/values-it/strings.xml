@@ -16,4 +16,11 @@
     <string name="nav_catalog">Enciclopedia</string>
     <string name="nav_doctor">Diagnosi</string>
     <string name="nav_settings">Impostazioni</string>
+    <string name="frame_tip_position">Inquadri una foglia</string>
+    <string name="frame_tip_blurry">Immagine sfocata: tenga fermo il telefono</string>
+    <string name="frame_tip_dark">Troppo scuro: illumini la foglia</string>
+    <string name="frame_tip_glare">Abbagliamento: eviti il controluce</string>
+    <string name="frame_tip_closer">Si avvicini alla foglia</string>
+    <string name="frame_tip_center">Qualità media: centri la foglia</string>
+    <string name="frame_tip_optimal">Inquadratura corretta: pronto per l’analisi</string>
 </resources>
