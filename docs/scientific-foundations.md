@@ -50,7 +50,7 @@ Chez de nombreux insectes ravageurs spécialistes, la localisation de l'hôte v�
 #### L'interaction Alliacées (*Allium*) / Apiacées (*Daucus*, *Apium*)
 - **Ravageur 1 :** La mouche de la carotte (*Psila rosae*, Diptère Psilidae). Les femelles pondent au collet des ombellifères, attirées par les dérivés polyacétyléniques (falcarinol) et les phénylpropanoïdes des feuilles de carotte.
 - **Ravageur 2 :** La teigne du poireau (*Acrolepiopsis assectella*, Lépidoptère Glyphipterigidae). Les femelles localisent les Alliacées par leurs émissions de composés soufrés volatils (disulfure de dipropyle, thiosulfinates).
-- **Preuve agronomique :** L'alternance de rangs de poireaux/oignons et de carottes crée un masquage olfactif bidirectionnel documenté (Finch & Collier, 2000, *Horticultural Research International*). Les COV soufrés saturent les sensilles olfactives de *Psila rosae*, réduisant le taux d'oviposition de 40 à 70 % par rapport à une monoculture, à condition que le ratio d'intercalage soit suffisant (écartement entre rangs ≤ 30 cm pour maintenir la canopée mélangée).
+- **Preuve agronomique :** Un essai de terrain a observé moins de dégâts de mouche de la carotte sur des carottes cultivées avec des oignons, surtout avec de jeunes oignons (Uvah & Coaker, 1984, *Entomologia Experimentalis et Applicata*, 36(2), 159-167). Un essai finlandais de sept ans a trouvé un effet faible, avec une infestation très basse (Varis, 1991, *Agricultural and Food Science*, 63(5)). Les travaux de Finch et Collier attribuent ce type d'effet au feuillage vert des plantes associées, qui perturbe le repérage de l'hôte, et non à leur odeur : les plantes aromatiques n'y sont pas plus efficaces que les autres (Finch, Billiald & Collier, 2003, *Entomologia Experimentalis et Applicata*, 109, 183-195 ; Finch & Collier, 2012, *Entomologia Experimentalis et Applicata*, 142, 87-96). L'hypothèse d'un masquage olfactif n'est donc pas soutenue par ces essais. Aucun chiffre de baisse de ponte n'est retenu ici : le taux de 40 à 70 % indiqué dans une version précédente n'a pu être rattaché à aucune source ouverte (voir `docs/sources-compagnonnage.md`).
 
 #### L'effet répulsif et nématicide des Astéracées du genre *Tagetes*
 - Les racines d'œillets d'Inde (*Tagetes patula*) et de roses d'Inde (*Tagetes erecta*) exudent dans la rhizosphère un composé photochimique polythiényle : l'**$\alpha$-terthiényle** ($2,2':5',2''\text{-terthiényle}$).
@@ -160,7 +160,7 @@ J_gel - 8 sem.                          J_gel                         J_gel + 3 
    - Toutes les plantations extérieures sans protection thermique sont asservies à :
      $$\text{Date}_{\text{plantation pleine terre}} = J_{\text{gel}} + \Delta t_{\text{sécurité}}$$
      *(ex. $+1$ semaine pour les tomates en zone tempérée, $+2$ semaines pour les cucurbitacées frileuses).*
-3. **Précision territoriale locale :** Sillon intègre dans `FrenchFrostCatalog` les dates médianes validées pour les **101 départements métropolitains et d'outre-mer**, ajustables manuellement au jour près par l'utilisateur pour tenir compte des microclimats de versant, d'ubac ou d'îlots de chaleur urbains.
+3. **Précision territoriale locale :** Sillon intègre dans `FrenchFrostCatalog` les dates médianes validées pour les **104 entrées** (96 départements métropolitains, Corse comprise, et 8 territoires d'outre-mer), ajustables manuellement au jour près par l'utilisateur pour tenir compte des microclimats de versant, d'ubac ou d'îlots de chaleur urbains.
 
 ---
 
@@ -317,7 +317,7 @@ Les principes scientifiques décrits ci-dessus sont transcrits au sein d'une arc
                                     │
 ┌───────────────────────────────────▼────────────────────────────────────┐
 │                          FROST ENGINE                                  │
-│ - Référentiel phénologique des 101 départements français               │
+│ - Référentiel phénologique des 104 entrées françaises                  │
 │ - Somme thermique et translation dynamique par rapport à J_gel         │
 │ - Fenêtrage temporel tolérant (±7 jours) pour les actions culturales   │
 └───────────────────────────────────┬────────────────────────────────────┘
@@ -360,7 +360,10 @@ Les principes scientifiques décrits ci-dessus sont transcrits au sein d'une arc
 ## 7. Corpus Bibliographique et Références Académiques
 
 1. **INRAE (Institut National de Recherche pour l'Agriculture, l'Alimentation et l'Environnement) :**
-   - *Finch, S., & Collier, R. H. (2000).* « Host-plant selection by insects which tamper with host-plant odor: a review of the pest management potential of companion planting. » *Bulletin of Entomological Research*, 90(2), 91-108.
+   - *Uvah, I. I. I., & Coaker, T. H. (1984).* « Effect of mixed cropping on some insect pests of carrots and onions. » *Entomologia Experimentalis et Applicata*, 36(2), 159-167.
+   - *Finch, S., & Collier, R. H. (2000).* Théorie des atterrissages appropriés et inappropriés chez les insectes ravageurs des crucifères. *Entomologia Experimentalis et Applicata*, 96, 91-102 (titre exact à reporter depuis l'article).
+   - *Finch, S., Billiald, H., & Collier, R. H. (2003).* « Companion planting - do aromatic plants disrupt host-plant finding by the cabbage root fly and the onion fly more effectively than non-aromatic plants? » *Entomologia Experimentalis et Applicata*, 109(3), 183-195.
+   - *Finch, S., & Collier, R. H. (2012).* « The influence of host and non-host companion plants on the behaviour of pest insects in field crops. » *Entomologia Experimentalis et Applicata*, 142(2), 87-96.
    - *Thoyer, S. et al. (2018).* « Pratiques agroécologiques et gestion intégrée de la santé des cultures. » *Innovations Agronomiques*, 65, 45-62.
 2. **Rodale Institute (Kutztown, Pennsylvanie, USA) :**
    - *Lotter, D. W. (2003).* « Organic agriculture: A review of the scientific literature on companion planting and soil microbial networks. » *Journal of Sustainable Agriculture*, 21(4), 59-89.

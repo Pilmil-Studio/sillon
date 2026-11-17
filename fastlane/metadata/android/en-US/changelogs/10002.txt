@@ -1,0 +1,4 @@
+Photo diagnosis: new model, and the app now locates the leaf in the picture before analyzing it.
+Settings: legal notices and the Pilmil Studio logo.
+Dark theme and new vector icons.
+Website and repository links updated.
