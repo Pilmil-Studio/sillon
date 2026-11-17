@@ -13,3 +13,16 @@ Constat avant reprise :
 8. Aucune valeur de couleur, de rayon, d'espacement ou de taille de police n'est portée par une variable en dehors des 8 couleurs de `:root` : 5 rayons (20, 28, 32, 999 px, 14 px), 3 ombres, une dizaine de tailles de police en `rem` libres. Largeur de ligne : `.doc` 46 em et `.sub` 38 em, soit environ 80 à 90 caractères par ligne à 18 px.
 9. Pas de lien d'évitement, pas de règle `@media print`. `:focus-visible` défini globalement ; les boutons du simulateur n'ont pas de contour propre. Une seule règle `prefers-reduced-motion` (défilement doux).
 10. Pas de débordement horizontal de la page à 360 px (largeur de contenu 345 px + barre de 15 px dans la mesure par iframe, hors galerie qui défile dans son conteneur). En-tête : deux liens, sans débordement ; l'ajout futur d'un troisième lien (branche `audit-novembre`) passe à la ligne grâce à `flex-wrap`.
+
+## Après reprise
+
+1. Corrigé. Sur ordinateur, la galerie est une grille de 4 colonnes (8 captures, 2 rangées, aucun défilement ni barre). Sous 640 px elle reste un bandeau horizontal avec accroche au défilement (`mandatory`), images de `min(62vw,220px)`, sans cadre vide. `loading="lazy"` conservé.
+2. Corrigé. Les images ne sont plus étirées (`align-items:start`, `height:auto`). 210 x 453 devient 247 x 439 (ratio 0,5625) pour les `.webp`.
+3. Corrigé. Attributs mis aux dimensions réelles des fichiers : 540 x 960 pour les six `.webp`, 1080 x 2340 pour les deux PNG (hauteur ajoutée). Les ratios restent différents d'un format à l'autre, chaque image garde le sien : les hauteurs d'une rangée ne sont pas égales.
+4. Corrigé. Boutons d'horizon, boutons d'organe, onglets et curseur : 44 px de haut (mesuré). Vert du simulateur remplacé par `var(--accent-solid)`. Clics sur les trois onglets, les horizons et les organes vérifiés.
+5. Aucun contraste à corriger (valeurs du constat 6). Fond des cartes passé de dégradé à aplat : texte atténué sur carte 5,08 (clair) et 7,75 (sombre).
+6. Corrigé. Liens de l'en-tête 44 px de haut ; liens du pied de page : zone cliquable de 45 px, sans chevauchement.
+7. Corrigé en partie. Rayons, ombres (2), espacements et tailles de police passent par des variables ; les styles en ligne du simulateur (rayons de 10 à 14 px, tailles de 10 à 17 px) et des deux `style` hérités de la page (marges) restent en ligne. Longueur de ligne : `.sub` 60ch, `.doc` 40em.
+8. Corrigé. Lien d'évitement, `:focus-visible` sans changement de rayon, focus du simulateur à l'intérieur du cadre, règle `@media print`. Le seul mouvement (défilement doux) respecte `prefers-reduced-motion`. Le texte « Aller au contenu » est le seul texte ajouté.
+9. Vérifié. Défilement horizontal de la page à 360 px : `scrollWidth` 360 pour les deux pages. Le bouton principal n'a plus de dégradé (aplat).
+10. Non traité : les lignes de `docs/index.html` et `docs/confidentialite.html` modifiées par `origin/audit-novembre` (méta Open Graph, lien « Sources », phrase sous le bouton, section « fabrication ») et leurs voisines. Le test à 360 px avec le lien « Sources » ajouté n'a pas pu être fait (le fichier n'est pas fusionné).
