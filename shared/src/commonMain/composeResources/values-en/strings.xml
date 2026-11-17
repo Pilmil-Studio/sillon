@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_dashboard">Today</string>
+    <string name="nav_garden">Plots</string>
+    <string name="nav_catalog">Plants</string>
+    <string name="nav_doctor">Diagnosis</string>
+    <string name="nav_settings">Settings</string>
+    <string name="snack_recovered">The garden file was unreadable: a new garden was created.</string>
+    <string name="snack_load_refused">The garden could not be read: the change was cancelled and nothing was overwritten.</string>
+    <string name="snack_save_failed">The garden could not be saved: check your free space.</string>
+    <string name="snack_notifications_denied">Notifications denied: turn them on in your phone settings.</string>
+    <string name="horizon_today">Today</string>
+    <string name="horizon_today_hint">Tasks around the reference day</string>
+    <string name="horizon_next_days">Next few days</string>
+    <string name="horizon_next_week">The following week</string>
+    <string name="horizon_upcoming">Coming up</string>
+    <string name="horizon_hint_days">Horizon: +%1$d days</string>
+    <plurals name="parcels_ready">
+        <item quantity="one">%1$d plot ready to plant</item>
+        <item quantity="other">%1$d plots ready to plant</item>
+    </plurals>
+    <plurals name="parcels_count">
+        <item quantity="one">%1$d plot</item>
+        <item quantity="other">%1$d plots</item>
+    </plurals>
+    <plurals name="crops_in_place">
+        <item quantity="one">%1$d crop in place</item>
+        <item quantity="other">%1$d crops in place</item>
+    </plurals>
+    <string name="tip_on_plots">On your plots</string>
+    <string name="tip_landmark">Reference</string>
+    <string name="load_newer">This garden was saved by a newer version of Sillon. Update the app to open it. The file has not been changed.</string>
+    <string name="load_failed">The garden could not be read right now. Your file has not been touched: try again in a moment.</string>
+    <string name="retry">Try again</string>
+    <string name="dashboard_title">In the garden today</string>
+    <string name="dashboard_subtitle_tropical">Calculated for the start of your planting season.</string>
+    <string name="dashboard_subtitle_frost">Calculated for your last frost date.</string>
+    <string name="dashboard_tropical_note">Only tropical crops have a calendar here: temperate plants can still be planted in your plots, without calendar tasks.</string>
+    <string name="dashboard_forecasts">Forecast</string>
+    <string name="task_harvest_parcels">To harvest in your plots</string>
+    <string name="task_sow_indoors">Sowing under cover, in the warm</string>
+    <string name="task_sow_outdoors">Sowing in open ground</string>
+    <string name="task_transplant">Transplanting and planting</string>
+    <string name="task_harvest_season">Harvest season</string>
+    <plurals name="tasks_more">
+        <item quantity="one">and %1$d other</item>
+        <item quantity="other">and %1$d others</item>
+    </plurals>
+    <string name="frost_indoor">Indoor growing (no frost)</string>
+    <string name="season_start">Start of the planting season</string>
+    <string name="frost_landmark">Reference last frost</string>
+    <string name="frost_continuous">Calendar runs all year</string>
+    <string name="badge_in_days">In %1$d d</string>
+    <string name="badge_passed">Past</string>
+    <string name="badge_all_year">All year</string>
+    <string name="adjust_department">Adjust to my département</string>
+    <string name="rest_title">The garden is resting</string>
+    <string name="rest_next_work">No sowing or planting in this period. Next tasks around %1$s.</string>
+    <string name="rest_no_work">No sowing or planting in this period: mulching, compost and bed preparation.</string>
+    <string name="rest_prepare">Prepare the season in the catalogue</string>
+</resources>

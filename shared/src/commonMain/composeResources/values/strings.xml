@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_dashboard">Aujourd’hui</string>
+    <string name="nav_garden">Parcelles</string>
+    <string name="nav_catalog">Plantes</string>
+    <string name="nav_doctor">Diagnostic</string>
+    <string name="nav_settings">Réglages</string>
+    <string name="snack_recovered">Le fichier du potager était illisible : un potager neuf a été créé.</string>
+    <string name="snack_load_refused">Le potager n’a pas pu être lu : modification annulée, rien n’a été écrasé.</string>
+    <string name="snack_save_failed">Le potager n’a pas pu être enregistré : vérifiez l’espace libre.</string>
+    <string name="snack_notifications_denied">Notifications refusées : activez-les dans les réglages du téléphone.</string>
+    <string name="horizon_today">Aujourd’hui</string>
+    <string name="horizon_today_hint">Travaux autour du jour J</string>
+    <string name="horizon_next_days">Prochains jours</string>
+    <string name="horizon_next_week">Semaine suivante</string>
+    <string name="horizon_upcoming">À venir</string>
+    <string name="horizon_hint_days">Horizon à +%1$d jours</string>
+    <plurals name="parcels_ready">
+        <item quantity="one">%1$d parcelle prête à planter</item>
+        <item quantity="other">%1$d parcelles prêtes à planter</item>
+    </plurals>
+    <plurals name="parcels_count">
+        <item quantity="one">%1$d parcelle</item>
+        <item quantity="other">%1$d parcelles</item>
+    </plurals>
+    <plurals name="crops_in_place">
+        <item quantity="one">%1$d culture en place</item>
+        <item quantity="other">%1$d cultures en place</item>
+    </plurals>
+    <string name="tip_on_plots">Sur vos parcelles</string>
+    <string name="tip_landmark">Repère</string>
+    <string name="load_newer">Ce potager a été enregistré par une version plus récente de Sillon. Mettez l’appli à jour pour l’ouvrir. Le fichier n’a pas été modifié.</string>
+    <string name="load_failed">Le potager n’a pas pu être lu pour l’instant. Votre fichier n’a pas été touché : réessayez dans un instant.</string>
+    <string name="retry">Réessayer</string>
+    <string name="dashboard_title">Au potager aujourd’hui</string>
+    <string name="dashboard_subtitle_tropical">Calculé pour le début de votre saison de plantation.</string>
+    <string name="dashboard_subtitle_frost">Calculé pour votre date de dernières gelées.</string>
+    <string name="dashboard_tropical_note">Seules les cultures tropicales ont un calendrier ici : les plantes tempérées restent plantables dans vos parcelles, sans tâches de calendrier.</string>
+    <string name="dashboard_forecasts">Prévisions</string>
+    <string name="task_harvest_parcels">À récolter dans vos parcelles</string>
+    <string name="task_sow_indoors">Semis sous abri, au chaud</string>
+    <string name="task_sow_outdoors">Semis en pleine terre</string>
+    <string name="task_transplant">Repiquage et plantations</string>
+    <string name="task_harvest_season">Saison de récolte</string>
+    <plurals name="tasks_more">
+        <item quantity="one">et %1$d autre</item>
+        <item quantity="other">et %1$d autres</item>
+    </plurals>
+    <string name="frost_indoor">Culture en intérieur (hors gel)</string>
+    <string name="season_start">Début de la saison de plantation</string>
+    <string name="frost_landmark">Dernières gelées repères</string>
+    <string name="frost_continuous">Calendrier continu toute l’année</string>
+    <string name="badge_in_days">Dans %1$d j</string>
+    <string name="badge_passed">Passées</string>
+    <string name="badge_all_year">Toute l’année</string>
+    <string name="adjust_department">Ajuster à mon département</string>
+    <string name="rest_title">Le potager se repose</string>
+    <string name="rest_next_work">Aucun semis ni plantation sur cette période. Prochains travaux vers le %1$s.</string>
+    <string name="rest_no_work">Aucun semis ni plantation sur cette période : paillage, compost et préparation des planches.</string>
+    <string name="rest_prepare">Préparer la saison dans le catalogue</string>
+</resources>

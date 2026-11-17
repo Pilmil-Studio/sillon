@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_dashboard">Vandaag</string>
+    <string name="nav_garden">Percelen</string>
+    <string name="nav_catalog">Planten</string>
+    <string name="nav_doctor">Diagnose</string>
+    <string name="nav_settings">Instellingen</string>
+    <string name="snack_recovered">Het tuinbestand was onleesbaar: er is een nieuwe tuin aangemaakt.</string>
+    <string name="snack_load_refused">De tuin kon niet worden gelezen: de wijziging is geannuleerd en er is niets overschreven.</string>
+    <string name="snack_save_failed">De tuin kon niet worden opgeslagen: controleer de vrije ruimte.</string>
+    <string name="snack_notifications_denied">Meldingen geweigerd: zet ze aan in de instellingen van de telefoon.</string>
+    <string name="horizon_today">Vandaag</string>
+    <string name="horizon_today_hint">Werk rond de referentiedag</string>
+    <string name="horizon_next_days">Komende dagen</string>
+    <string name="horizon_next_week">Week daarna</string>
+    <string name="horizon_upcoming">Binnenkort</string>
+    <string name="horizon_hint_days">Horizon: +%1$d dagen</string>
+    <plurals name="parcels_ready">
+        <item quantity="one">%1$d perceel klaar om te beplanten</item>
+        <item quantity="other">%1$d percelen klaar om te beplanten</item>
+    </plurals>
+    <plurals name="parcels_count">
+        <item quantity="one">%1$d perceel</item>
+        <item quantity="other">%1$d percelen</item>
+    </plurals>
+    <plurals name="crops_in_place">
+        <item quantity="one">%1$d gewas op zijn plek</item>
+        <item quantity="other">%1$d gewassen op hun plek</item>
+    </plurals>
+    <string name="tip_on_plots">Op uw percelen</string>
+    <string name="tip_landmark">Richtpunt</string>
+    <string name="load_newer">Deze tuin is opgeslagen met een nieuwere versie van Sillon. Werk de app bij om hem te openen. Het bestand is niet gewijzigd.</string>
+    <string name="load_failed">De tuin kon nu niet worden gelezen. Uw bestand is niet aangeraakt: probeer het zo opnieuw.</string>
+    <string name="retry">Opnieuw proberen</string>
+    <string name="dashboard_title">Vandaag in de tuin</string>
+    <string name="dashboard_subtitle_tropical">Berekend voor het begin van uw plantseizoen.</string>
+    <string name="dashboard_subtitle_frost">Berekend voor uw datum van de laatste vorst.</string>
+    <string name="dashboard_tropical_note">Hier hebben alleen tropische gewassen een kalender: gematigde planten kunt u wel in uw percelen zetten, maar zonder kalendertaken.</string>
+    <string name="dashboard_forecasts">Vooruitblik</string>
+    <string name="task_harvest_parcels">Te oogsten in uw percelen</string>
+    <string name="task_sow_indoors">Zaaien onder dak, in de warmte</string>
+    <string name="task_sow_outdoors">Zaaien in volle grond</string>
+    <string name="task_transplant">Verspenen en planten</string>
+    <string name="task_harvest_season">Oogstseizoen</string>
+    <plurals name="tasks_more">
+        <item quantity="one">en %1$d andere</item>
+        <item quantity="other">en %1$d andere</item>
+    </plurals>
+    <string name="frost_indoor">Teelt binnenshuis (vorstvrij)</string>
+    <string name="season_start">Begin van het plantseizoen</string>
+    <string name="frost_landmark">Richtdatum laatste vorst</string>
+    <string name="frost_continuous">Doorlopende kalender het hele jaar</string>
+    <string name="badge_in_days">Over %1$d d</string>
+    <string name="badge_passed">Voorbij</string>
+    <string name="badge_all_year">Het hele jaar</string>
+    <string name="adjust_department">Afstemmen op mijn departement</string>
+    <string name="rest_title">De tuin rust</string>
+    <string name="rest_next_work">Geen zaai- of plantwerk in deze periode. Volgend werk rond %1$s.</string>
+    <string name="rest_no_work">Geen zaai- of plantwerk in deze periode: mulchen, compost en het voorbereiden van de bedden.</string>
+    <string name="rest_prepare">Het seizoen voorbereiden in de catalogus</string>
+</resources>

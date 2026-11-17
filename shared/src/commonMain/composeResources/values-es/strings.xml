@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_dashboard">Hoy</string>
+    <string name="nav_garden">Parcelas</string>
+    <string name="nav_catalog">Plantas</string>
+    <string name="nav_doctor">Diagnóstico</string>
+    <string name="nav_settings">Ajustes</string>
+    <string name="snack_recovered">El archivo del huerto era ilegible: se ha creado un huerto nuevo.</string>
+    <string name="snack_load_refused">No se pudo leer el huerto: se canceló el cambio y no se sobrescribió nada.</string>
+    <string name="snack_save_failed">No se pudo guardar el huerto: compruebe el espacio libre.</string>
+    <string name="snack_notifications_denied">Notificaciones denegadas: actívelas en los ajustes del teléfono.</string>
+    <string name="horizon_today">Hoy</string>
+    <string name="horizon_today_hint">Tareas en torno al día de referencia</string>
+    <string name="horizon_next_days">Próximos días</string>
+    <string name="horizon_next_week">Semana siguiente</string>
+    <string name="horizon_upcoming">Próximamente</string>
+    <string name="horizon_hint_days">Horizonte: +%1$d días</string>
+    <plurals name="parcels_ready">
+        <item quantity="one">%1$d parcela lista para plantar</item>
+        <item quantity="other">%1$d parcelas listas para plantar</item>
+    </plurals>
+    <plurals name="parcels_count">
+        <item quantity="one">%1$d parcela</item>
+        <item quantity="other">%1$d parcelas</item>
+    </plurals>
+    <plurals name="crops_in_place">
+        <item quantity="one">%1$d cultivo en su sitio</item>
+        <item quantity="other">%1$d cultivos en su sitio</item>
+    </plurals>
+    <string name="tip_on_plots">En sus parcelas</string>
+    <string name="tip_landmark">Referencia</string>
+    <string name="load_newer">Este huerto fue guardado por una versión más reciente de Sillon. Actualice la aplicación para abrirlo. El archivo no se ha modificado.</string>
+    <string name="load_failed">No se pudo leer el huerto por ahora. Su archivo no se ha tocado: vuelva a intentarlo en un momento.</string>
+    <string name="retry">Reintentar</string>
+    <string name="dashboard_title">Hoy en el huerto</string>
+    <string name="dashboard_subtitle_tropical">Calculado para el inicio de su temporada de plantación.</string>
+    <string name="dashboard_subtitle_frost">Calculado para su fecha de últimas heladas.</string>
+    <string name="dashboard_tropical_note">Aquí solo los cultivos tropicales tienen calendario: las plantas de clima templado se pueden plantar en sus parcelas, sin tareas de calendario.</string>
+    <string name="dashboard_forecasts">Previsiones</string>
+    <string name="task_harvest_parcels">Para cosechar en sus parcelas</string>
+    <string name="task_sow_indoors">Siembra bajo cubierta, en calor</string>
+    <string name="task_sow_outdoors">Siembra en tierra</string>
+    <string name="task_transplant">Trasplante y plantaciones</string>
+    <string name="task_harvest_season">Temporada de cosecha</string>
+    <plurals name="tasks_more">
+        <item quantity="one">y %1$d más</item>
+        <item quantity="other">y %1$d más</item>
+    </plurals>
+    <string name="frost_indoor">Cultivo en interior (sin heladas)</string>
+    <string name="season_start">Inicio de la temporada de plantación</string>
+    <string name="frost_landmark">Últimas heladas de referencia</string>
+    <string name="frost_continuous">Calendario continuo todo el año</string>
+    <string name="badge_in_days">En %1$d d</string>
+    <string name="badge_passed">Pasadas</string>
+    <string name="badge_all_year">Todo el año</string>
+    <string name="adjust_department">Ajustar a mi departamento</string>
+    <string name="rest_title">El huerto descansa</string>
+    <string name="rest_next_work">Sin siembras ni plantaciones en este período. Próximas tareas hacia el %1$s.</string>
+    <string name="rest_no_work">Sin siembras ni plantaciones en este período: acolchado, compost y preparación de los bancales.</string>
+    <string name="rest_prepare">Preparar la temporada en el catálogo</string>
+</resources>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_dashboard">Oggi</string>
+    <string name="nav_garden">Aiuole</string>
+    <string name="nav_catalog">Piante</string>
+    <string name="nav_doctor">Diagnosi</string>
+    <string name="nav_settings">Impostazioni</string>
+    <string name="snack_recovered">Il file dell’orto era illeggibile: è stato creato un orto nuovo.</string>
+    <string name="snack_load_refused">Non è stato possibile leggere l’orto: modifica annullata, nulla è stato sovrascritto.</string>
+    <string name="snack_save_failed">Non è stato possibile salvare l’orto: controlli lo spazio libero.</string>
+    <string name="snack_notifications_denied">Notifiche negate: le attivi nelle impostazioni del telefono.</string>
+    <string name="horizon_today">Oggi</string>
+    <string name="horizon_today_hint">Lavori intorno al giorno di riferimento</string>
+    <string name="horizon_next_days">Prossimi giorni</string>
+    <string name="horizon_next_week">Settimana successiva</string>
+    <string name="horizon_upcoming">In arrivo</string>
+    <string name="horizon_hint_days">Orizzonte: +%1$d giorni</string>
+    <plurals name="parcels_ready">
+        <item quantity="one">%1$d aiuola pronta da piantare</item>
+        <item quantity="other">%1$d aiuole pronte da piantare</item>
+    </plurals>
+    <plurals name="parcels_count">
+        <item quantity="one">%1$d aiuola</item>
+        <item quantity="other">%1$d aiuole</item>
+    </plurals>
+    <plurals name="crops_in_place">
+        <item quantity="one">%1$d coltura in posto</item>
+        <item quantity="other">%1$d colture in posto</item>
+    </plurals>
+    <string name="tip_on_plots">Nelle sue aiuole</string>
+    <string name="tip_landmark">Riferimento</string>
+    <string name="load_newer">Questo orto è stato salvato da una versione più recente di Sillon. Aggiorni l’app per aprirlo. Il file non è stato modificato.</string>
+    <string name="load_failed">Per ora non è stato possibile leggere l’orto. Il suo file non è stato toccato: riprovi tra un attimo.</string>
+    <string name="retry">Riprova</string>
+    <string name="dashboard_title">Oggi nell’orto</string>
+    <string name="dashboard_subtitle_tropical">Calcolato per l’inizio della sua stagione di piantagione.</string>
+    <string name="dashboard_subtitle_frost">Calcolato per la sua data delle ultime gelate.</string>
+    <string name="dashboard_tropical_note">Qui hanno un calendario solo le colture tropicali: le piante temperate si possono comunque piantare nelle aiuole, senza lavori di calendario.</string>
+    <string name="dashboard_forecasts">Previsioni</string>
+    <string name="task_harvest_parcels">Da raccogliere nelle sue aiuole</string>
+    <string name="task_sow_indoors">Semina al riparo, al caldo</string>
+    <string name="task_sow_outdoors">Semina in piena terra</string>
+    <string name="task_transplant">Trapianto e piantagioni</string>
+    <string name="task_harvest_season">Stagione del raccolto</string>
+    <plurals name="tasks_more">
+        <item quantity="one">e %1$d in più</item>
+        <item quantity="other">e %1$d in più</item>
+    </plurals>
+    <string name="frost_indoor">Coltivazione al chiuso (senza gelo)</string>
+    <string name="season_start">Inizio della stagione di piantagione</string>
+    <string name="frost_landmark">Ultime gelate di riferimento</string>
+    <string name="frost_continuous">Calendario continuo tutto l’anno</string>
+    <string name="badge_in_days">Tra %1$d g</string>
+    <string name="badge_passed">Passate</string>
+    <string name="badge_all_year">Tutto l’anno</string>
+    <string name="adjust_department">Adatta al mio dipartimento</string>
+    <string name="rest_title">L’orto riposa</string>
+    <string name="rest_next_work">Nessuna semina o piantagione in questo periodo. Prossimi lavori verso il %1$s.</string>
+    <string name="rest_no_work">Nessuna semina o piantagione in questo periodo: pacciamatura, compost e preparazione delle aiuole.</string>
+    <string name="rest_prepare">Preparare la stagione nel catalogo</string>
+</resources>

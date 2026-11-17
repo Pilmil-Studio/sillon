@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_dashboard">Heute</string>
+    <string name="nav_garden">Beete</string>
+    <string name="nav_catalog">Pflanzen</string>
+    <string name="nav_doctor">Diagnose</string>
+    <string name="nav_settings">Einstellungen</string>
+    <string name="snack_recovered">Die Gartendatei war nicht lesbar: Es wurde ein neuer Garten angelegt.</string>
+    <string name="snack_load_refused">Der Garten konnte nicht gelesen werden: Die Änderung wurde abgebrochen, nichts wurde überschrieben.</string>
+    <string name="snack_save_failed">Der Garten konnte nicht gespeichert werden: Prüfen Sie den freien Speicherplatz.</string>
+    <string name="snack_notifications_denied">Benachrichtigungen abgelehnt: Aktivieren Sie sie in den Telefoneinstellungen.</string>
+    <string name="horizon_today">Heute</string>
+    <string name="horizon_today_hint">Arbeiten rund um den Stichtag</string>
+    <string name="horizon_next_days">Nächste Tage</string>
+    <string name="horizon_next_week">Folgende Woche</string>
+    <string name="horizon_upcoming">Demnächst</string>
+    <string name="horizon_hint_days">Zeitraum: +%1$d Tage</string>
+    <plurals name="parcels_ready">
+        <item quantity="one">%1$d Beet bereit zum Pflanzen</item>
+        <item quantity="other">%1$d Beete bereit zum Pflanzen</item>
+    </plurals>
+    <plurals name="parcels_count">
+        <item quantity="one">%1$d Beet</item>
+        <item quantity="other">%1$d Beete</item>
+    </plurals>
+    <plurals name="crops_in_place">
+        <item quantity="one">%1$d Kultur angelegt</item>
+        <item quantity="other">%1$d Kulturen angelegt</item>
+    </plurals>
+    <string name="tip_on_plots">In Ihren Beeten</string>
+    <string name="tip_landmark">Hinweis</string>
+    <string name="load_newer">Dieser Garten wurde mit einer neueren Version von Sillon gespeichert. Aktualisieren Sie die App, um ihn zu öffnen. Die Datei wurde nicht verändert.</string>
+    <string name="load_failed">Der Garten konnte im Moment nicht gelesen werden. Ihre Datei wurde nicht angetastet: Versuchen Sie es gleich noch einmal.</string>
+    <string name="retry">Erneut versuchen</string>
+    <string name="dashboard_title">Heute im Garten</string>
+    <string name="dashboard_subtitle_tropical">Berechnet für den Beginn Ihrer Pflanzsaison.</string>
+    <string name="dashboard_subtitle_frost">Berechnet für Ihr Datum der letzten Fröste.</string>
+    <string name="dashboard_tropical_note">Nur tropische Kulturen haben hier einen Kalender: Pflanzen der gemäßigten Zone können Sie weiterhin in Ihren Beeten anlegen, aber ohne Kalenderaufgaben.</string>
+    <string name="dashboard_forecasts">Vorschau</string>
+    <string name="task_harvest_parcels">In Ihren Beeten zu ernten</string>
+    <string name="task_sow_indoors">Aussaat geschützt, im Warmen</string>
+    <string name="task_sow_outdoors">Aussaat ins Freiland</string>
+    <string name="task_transplant">Pikieren und Pflanzen</string>
+    <string name="task_harvest_season">Erntezeit</string>
+    <plurals name="tasks_more">
+        <item quantity="one">und %1$d weitere</item>
+        <item quantity="other">und %1$d weitere</item>
+    </plurals>
+    <string name="frost_indoor">Anbau drinnen (frostfrei)</string>
+    <string name="season_start">Beginn der Pflanzsaison</string>
+    <string name="frost_landmark">Richtwert letzte Fröste</string>
+    <string name="frost_continuous">Kalender durchgehend das ganze Jahr</string>
+    <string name="badge_in_days">In %1$d T.</string>
+    <string name="badge_passed">Vorbei</string>
+    <string name="badge_all_year">Ganzjährig</string>
+    <string name="adjust_department">An mein Département anpassen</string>
+    <string name="rest_title">Der Garten ruht</string>
+    <string name="rest_next_work">In diesem Zeitraum keine Aussaat und keine Pflanzung. Nächste Arbeiten um den %1$s.</string>
+    <string name="rest_no_work">In diesem Zeitraum keine Aussaat und keine Pflanzung: Mulchen, Kompost und Beete vorbereiten.</string>
+    <string name="rest_prepare">Die Saison im Katalog vorbereiten</string>
+</resources>
