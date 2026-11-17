@@ -13,7 +13,16 @@ Sillon est un compagnon de potager qui fonctionne sans réseau. Il vous dit quoi
 
 Gratuit, sans compte, sans publicité, et il ne demande même pas l'autorisation d'accéder à Internet. L'interface est pour l'instant en français uniquement.
 
-**Pour les curieux (partie technique).** Les fenêtres de culture sont calculées par rapport à la date médiane de dernière gelée ($J_{\text{gel}}$) plutôt que par mois fixes, la détection des voisinages utilise les relations d'allélopathie documentées, la rotation suit un cycle de 4 ans et la reconnaissance de feuille s'appuie sur des modèles embarqués. Le détail est plus bas.
+**Pour les curieux (partie technique).** Les fenêtres de culture sont calculées par rapport à la date médiane de dernière gelée ($J_{\text{gel}}$) plutôt que par mois fixes, la détection des voisinages s'appuie sur des relations de compagnonnage dont le niveau de preuve est affiché (étayé par des essais, plausible, ou simple tradition), la rotation suit un cycle de 4 ans et la reconnaissance de feuille s'appuie sur des modèles embarqués. Le détail est plus bas.
+
+## En quoi Sillon est différente
+
+- **Hors ligne.** Le calendrier, le plan, le compagnonnage, la rotation, l'encyclopédie et le diagnostic fonctionnent sans connexion. Le manifeste Android ne déclare que les permissions caméra et notifications, et aucune permission Internet.
+- **Sans compte.** Aucune inscription ni identifiant. Le potager est enregistré dans un fichier sur le téléphone.
+- **Calendrier calé sur la dernière gelée.** Les dates de semis et de plantation se calculent à partir de la date médiane de dernière gelée de votre département, et non à partir de mois fixes. Ce sont des médianes : une année donnée peut s'en écarter. Les limites sont détaillées dans [`docs/limites-des-donnees.md`](docs/limites-des-donnees.md).
+- **Diagnostic photo sur l'appareil.** La photo d'une feuille est analysée sur le téléphone, puis supprimée. Si le modèle n'est pas assez sûr, il le dit. Le résultat reste une aide, pas un diagnostic certain.
+
+La sauvegarde dans le compte Google est une option, désactivée par défaut. Elle est décrite dans « Les Engagements Éthiques et Techniques » plus bas.
 
 ---
 

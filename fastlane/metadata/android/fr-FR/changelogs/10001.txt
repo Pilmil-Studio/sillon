@@ -1,0 +1,1 @@
+Mise à jour technique : correction de la chaîne de publication automatique. Aucun changement visible dans l'application.

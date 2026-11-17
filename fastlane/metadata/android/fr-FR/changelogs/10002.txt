@@ -1,0 +1,4 @@
+Diagnostic photo : nouveau modèle, et l'appli repère la feuille sur la photo avant de l'analyser.
+Réglages : mentions légales et logo de Pilmil Studio.
+Thème sombre et nouvelles icônes vectorielles.
+Liens du site et du dépôt mis à jour.

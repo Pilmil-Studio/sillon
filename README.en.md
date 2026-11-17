@@ -13,7 +13,16 @@ Sillon is a vegetable-garden companion that works without a network. It tells yo
 
 Free, no account, no ads, and it does not even ask for permission to use the internet. The interface is currently available in French only.
 
-**For the curious (technical part).** Growing windows are computed from the median last-frost date ($J_{\text{frost}}$) instead of fixed months, neighbour checks use documented allelopathy relations, rotation follows a 4-year cycle, and leaf recognition relies on bundled on-device models. Details below.
+**For the curious (technical part).** Growing windows are computed from the median last-frost date ($J_{\text{frost}}$) instead of fixed months, neighbour checks rely on companion-planting relations whose level of evidence is shown (backed by trials, plausible, or plain tradition), rotation follows a 4-year cycle, and leaf recognition relies on bundled on-device models. Details below.
+
+## What sets Sillon apart
+
+- **Offline.** The calendar, the plan, companion planting, rotation, the encyclopedia and the diagnosis work without a connection. The Android manifest only declares camera and notification permissions, and no Internet permission.
+- **No account.** No sign-up or login. The garden is saved in a file on the phone.
+- **Calendar set to the last frost.** Sowing and planting dates are calculated from the median last-frost date of your department, not from fixed months. These are medians: a given year may differ. Limits are detailed in [`docs/limites-des-donnees.md`](docs/limites-des-donnees.md).
+- **On-device photo diagnosis.** The photo of a leaf is analyzed on the phone, then deleted. If the model is not sure enough, it says so. The result remains an aid, not a certain diagnosis.
+
+Google account backup is an option, disabled by default. It is described in "Ethical & Technical Commitments (Pilmil Studio)" below.
 
 ---
 

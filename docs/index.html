@@ -8,10 +8,18 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Sillon, compagnon de potager">
 <meta property="og:description" content="Sillon est un compagnon de potager : tâches de la quinzaine, plan des parcelles, fiches de plantes et diagnostic des maladies. Gratuit, libre, sans compte, sans réseau.">
+<meta property="og:url" content="https://pilmil-studio.github.io/sillon/">
+<meta property="og:image" content="https://pilmil-studio.github.io/sillon/marketing/out/fr/social.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232F6B4F'/%3E%3Cpath d='M18 46c0-16 10-26 28-28 0 18-10 28-26 28z' fill='%23F7F5EF'/%3E%3C/svg%3E">
 <style>
 :root { --bg:#F7F5EF; --fg:#1B2A22; --muted:#55645B; --line:#DAD8CC; --accent:#2F6B4F; --accent-solid:#2F6B4F; --warm:#C8742A; --on-accent:#fff;
-  --panel: color-mix(in srgb,#000 3%,transparent); --serif:'Iowan Old Style','Palatino Linotype',Georgia,serif; --sans:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif; color-scheme:light; }
+  --panel: color-mix(in srgb,#000 3%,transparent); --serif:'Iowan Old Style','Palatino Linotype',Georgia,serif; --sans:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif; color-scheme:light;
+  --card: color-mix(in srgb,var(--accent-solid) 9%,var(--bg)); --border:1px solid var(--line);
+  --step--1:clamp(.875rem,.85rem + .12vw,.9375rem); --step-0:clamp(1.0625rem,1.03rem + .15vw,1.125rem); --step-1:clamp(1.125rem,1.07rem + .25vw,1.25rem);
+  --step-2:clamp(1.25rem,1.15rem + .5vw,1.5rem); --step-3:clamp(1.6rem,1.3rem + 1.4vw,2.3rem); --step-4:clamp(2.3rem,1.6rem + 3.5vw,4rem);
+  --space-1:.5rem; --space-2:.75rem; --space-3:1rem; --space-4:1.5rem; --space-5:2.5rem; --space-6:4rem;
+  --radius-s:8px; --radius-m:20px; --radius-l:28px; --radius-pill:999px;
+  --shadow-s:0 1px 2px rgb(0 0 0 / .08),0 4px 14px rgb(0 0 0 / .08); --shadow-m:0 30px 70px -20px rgb(0 0 0 / .45); }
 @media (prefers-color-scheme: dark) { :root { --bg:#111815; --fg:#EEF2EC; --muted:#A5B3A9; --line:#2B3831; --accent:#7FC29C; --accent-solid:#2F6B4F; --warm:#E39A55; --panel:color-mix(in srgb,#fff 5%,transparent); color-scheme:dark; } }
 * { box-sizing:border-box; }
 html { scroll-behavior:smooth; }
@@ -20,51 +28,61 @@ body { margin:0; background-color:var(--bg);
     radial-gradient(44rem 32rem at -8% 24%, color-mix(in srgb,var(--warm) 16%,transparent), transparent 62%),
     radial-gradient(46rem 34rem at 100% 64%, color-mix(in srgb,var(--accent-solid) 14%,transparent), transparent 62%),
     radial-gradient(44rem 30rem at 0% 96%, color-mix(in srgb,var(--warm) 12%,transparent), transparent 62%);
-  background-repeat:no-repeat; color:var(--fg); font-family:var(--sans); font-size:18px; line-height:1.6; }
+  background-repeat:no-repeat; color:var(--fg); font-family:var(--sans); font-size:var(--step-0); line-height:1.6; }
 a { color:inherit; }
-:focus-visible { outline:3px solid var(--accent); outline-offset:3px; border-radius:6px; }
-.wrap { max-width:1060px; margin:0 auto; padding-inline:20px; }
-.top { display:flex; align-items:center; justify-content:space-between; gap:16px; padding-block:18px; flex-wrap:wrap; }
-.brand { font-family:var(--serif); font-weight:700; font-size:1.5rem; text-decoration:none; }
-.nav { display:flex; gap:18px; flex-wrap:wrap; font-size:.95rem; color:var(--muted); }
-.nav a { text-decoration:none; } .nav a:hover { color:var(--fg); text-decoration:underline; }
-.hero { display:grid; gap:32px; padding-block:28px 44px; align-items:center; }
-.kicker { font-size:.8rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:0 0 14px; }
-h1,h2,h3 { font-family:var(--serif); }
-h1 { font-size:clamp(2.3rem,7vw,4rem); line-height:1.04; letter-spacing:-.02em; margin:0; text-wrap:balance; }
-.lead { color:var(--muted); font-size:1.15rem; max-width:34em; margin:20px 0 0; }
-.cta { display:flex; gap:12px; flex-wrap:wrap; margin-top:28px; }
-.btn { display:inline-flex; padding:13px 22px; border-radius:999px; font-weight:700; text-decoration:none; border:1.5px solid var(--line); }
-.btn.primary { background:linear-gradient(120deg,var(--accent-solid),color-mix(in srgb,var(--accent-solid) 70%,#0c2a1c)); border-color:transparent; color:var(--on-accent); }
+:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+.wrap { max-width:1060px; margin:0 auto; padding-inline:var(--space-3); }
+.top { display:flex; align-items:center; justify-content:space-between; gap:var(--space-3); padding-block:var(--space-2); flex-wrap:wrap; }
+.brand { font-family:var(--serif); font-weight:700; font-size:var(--step-2); text-decoration:none; }
+.nav { display:flex; gap:var(--space-3) var(--space-4); flex-wrap:wrap; font-size:var(--step--1); color:var(--muted); }
+.nav a { display:inline-flex; align-items:center; min-height:44px; text-decoration:none; } .nav a:hover { color:var(--fg); text-decoration:underline; }
+.hero { display:grid; gap:var(--space-5); padding-block:var(--space-4) var(--space-5); align-items:center; }
+.kicker { font-size:var(--step--1); font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:0 0 var(--space-2); }
+h1,h2,h3 { font-family:var(--serif); text-wrap:balance; }
+h1 { font-size:var(--step-4); line-height:1.04; letter-spacing:-.02em; margin:0; }
+.lead { color:var(--muted); font-size:var(--step-1); max-width:36em; margin:var(--space-4) 0 0; }
+.cta { display:flex; gap:var(--space-2); flex-wrap:wrap; margin-top:var(--space-4); }
+.btn { display:inline-flex; align-items:center; min-height:3rem; padding:0 var(--space-4); border-radius:var(--radius-pill); font-weight:700; text-decoration:none; border:1px solid var(--muted); }
+.btn.primary { background:var(--accent-solid); border-color:var(--accent-solid); color:var(--on-accent); }
 .btn:hover { border-color:var(--fg); } .btn.primary:hover { filter:brightness(1.1); }
-.shot { justify-self:center; } .shot img { display:block; width:min(300px,70vw); height:auto; border-radius:28px; box-shadow:0 30px 70px -20px rgba(0,0,0,.45); }
+.shot { justify-self:center; } .shot img { display:block; width:min(300px,70vw); height:auto; border-radius:var(--radius-l); box-shadow:var(--shadow-m); }
 @media (min-width:860px) { .hero { grid-template-columns:1.15fr .85fr; } .shot { justify-self:end; } }
-section { padding-block:34px; }
-h2 { font-size:clamp(1.6rem,4vw,2.3rem); line-height:1.1; margin:0 0 8px; text-wrap:balance; }
-.sub { color:var(--muted); margin:0 0 24px; max-width:38em; }
-.cards { display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); }
-.card { padding:22px; border-radius:20px; border:1px solid var(--line); background:linear-gradient(150deg,color-mix(in srgb,var(--accent-solid) 12%,var(--bg)),var(--panel)); min-width:0; }
-.card h3 { margin:0 0 8px; font-size:1.2rem; } .card p { margin:0; color:var(--muted); font-size:.98rem; line-height:1.5; }
-.gallery { display:flex; gap:16px; overflow-x:auto; padding:4px 20px 18px; margin-inline:-20px; scroll-snap-type:x proximity; }
-.gallery img { flex:0 0 auto; width:210px; height:auto; border-radius:20px; scroll-snap-align:start; border:1px solid var(--line); display:block; }
-.rules { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); border-top:1px solid var(--line); list-style:none; padding:0; margin:0; }
-.rules li { padding:16px 16px 16px 0; border-bottom:1px solid var(--line); min-width:0; }
-.rules strong { display:block; font-size:1.08rem; } .rules span { color:var(--muted); font-size:.95rem; }
-.doc { max-width:46em; padding-block:24px 40px; } .doc h1 { font-size:clamp(2rem,5vw,2.8rem); margin-bottom:8px; }
-.doc h2 { font-size:1.4rem; margin:34px 0 8px; } .doc p,.doc li { color:var(--muted); } .doc strong { color:var(--fg); } .doc li { margin-bottom:6px; }
-.foot { border-top:1px solid var(--line); padding-block:30px 46px; color:var(--muted); font-size:.95rem; display:grid; gap:10px; } .foot p { margin:0; } .foot a { color:var(--fg); }
+section { padding-block:var(--space-4); }
+h2 { font-size:var(--step-3); line-height:1.1; margin:0 0 var(--space-1); }
+.sub { color:var(--muted); margin:0 0 var(--space-4); max-width:60ch; }
+.cards { display:grid; gap:var(--space-3); grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); }
+.card { padding:var(--space-4); border-radius:var(--radius-m); border:var(--border); background:var(--card); min-width:0; }
+.card h3 { margin:0 0 var(--space-1); font-size:var(--step-1); } .card p { margin:0; color:var(--muted); font-size:var(--step-0); line-height:1.5; }
+.gallery { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:var(--space-3); align-items:start; margin-top:var(--space-4); }
+.gallery img { width:100%; height:auto; border-radius:var(--radius-m); border:var(--border); display:block; }
+@media (max-width:639px) {
+  .gallery { display:flex; overflow-x:auto; padding:4px var(--space-3) var(--space-3); margin-inline:calc(-1 * var(--space-3)); scroll-snap-type:x mandatory; scroll-padding-inline:var(--space-3); scrollbar-width:thin; }
+  .gallery img { flex:none; width:min(62vw,220px); scroll-snap-align:start; }
+}
+.rules { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); border-top:var(--border); list-style:none; padding:0; margin:0; }
+.rules li { padding:var(--space-3) var(--space-3) var(--space-3) 0; border-bottom:var(--border); min-width:0; }
+.rules strong { display:block; font-size:var(--step-1); } .rules span { color:var(--muted); font-size:var(--step--1); }
+.doc { max-width:40em; padding-block:var(--space-4) var(--space-5); } .doc h1 { font-size:var(--step-3); margin-bottom:var(--space-1); }
+.doc h2 { font-size:var(--step-2); margin:var(--space-5) 0 var(--space-1); } .doc p,.doc li { color:var(--muted); } .doc strong { color:var(--fg); } .doc li { margin-bottom:6px; }
+.foot { border-top:var(--border); padding-block:var(--space-4) var(--space-5); color:var(--muted); font-size:var(--step--1); display:grid; gap:var(--space-2); } .foot p { margin:0; line-height:2.6; } .foot a { color:var(--fg); display:inline-block; line-height:1.2; padding-block:14px; margin-block:-14px; }
+.skip { position:absolute; left:var(--space-3); top:-4rem; z-index:10; display:inline-flex; align-items:center; min-height:44px; padding:0 var(--space-3); border-radius:var(--radius-s); background:var(--accent-solid); color:var(--on-accent); font-weight:700; text-decoration:none; }
+.skip:focus { top:var(--space-1); }
+#simulateur button:focus-visible, #simulateur input:focus-visible { outline-offset:-3px; }
 @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+@media print { body { background:#fff; color:#000; } .nav, .skip, .cta, #simulateur { display:none; } a, .sub, .lead, .card p, .rules span, .doc p, .doc li, .foot { color:#000; } .card { background:#fff; } }
 </style>
 </head>
 <body>
+<a class="skip" href="#contenu">Aller au contenu</a>
 <header class="wrap top">
   <a class="brand" href="./">Sillon</a>
   <nav class="nav" aria-label="Navigation">
+    <a href="sources.html">Sources</a>
     <a href="confidentialite.html">Confidentialité</a>
     <a href="https://github.com/Pilmil-Studio/sillon">Code source</a>
   </nav>
 </header>
-<main>
+<main id="contenu">
 <div class="wrap hero">
   <div>
     <p class="kicker">Compagnon de potager</p>
@@ -74,7 +92,7 @@ h2 { font-size:clamp(1.6rem,4vw,2.3rem); line-height:1.1; margin:0 0 8px; text-w
       <a class="btn primary" href="https://github.com/Pilmil-Studio/sillon/releases">Télécharger l'APK</a>
       <a class="btn" href="https://github.com/Pilmil-Studio/sillon">Voir le code</a>
     </div>
-    <p class="sub" style="margin-top:12px;margin-bottom:0;font-size:.92rem">Version iPhone en développement · Google Play et App Store en phase de test.</p>
+    <p class="sub" style="margin-top:12px;margin-bottom:0;font-size:.92rem">Version iPhone en développement · APK sur GitHub ; Google Play en phase de test.</p>
   </div>
   <div class="shot"><img src="captures/s1.webp" alt="Travaux de la quinzaine" width="540" height="960"></div>
 </div>
@@ -91,14 +109,14 @@ h2 { font-size:clamp(1.6rem,4vw,2.3rem); line-height:1.1; margin:0 0 8px; text-w
 <section class="wrap" id="images">
   <h2>L'application en images</h2>
   <div class="gallery" role="list">
-    <img role="listitem" src="captures/s1.webp" alt="Travaux de la quinzaine" width="210" height="373" loading="lazy">
-    <img role="listitem" src="captures/s2.webp" alt="Plan du potager" width="210" height="373" loading="lazy">
-    <img role="listitem" src="captures/parcelles_perspective.png" alt="Plan du potager en perspective" width="210" loading="lazy">
-    <img role="listitem" src="captures/s3.webp" alt="Encyclopédie des plantes" width="210" height="373" loading="lazy">
-    <img role="listitem" src="captures/s4.webp" alt="Fiche d'une plante" width="210" height="373" loading="lazy">
-    <img role="listitem" src="captures/s5.webp" alt="Docteur du potager" width="210" height="373" loading="lazy">
-    <img role="listitem" src="captures/diagnostic.png" alt="Diagnostic photo hors-ligne" width="210" loading="lazy">
-    <img role="listitem" src="captures/s6.webp" alt="Réglages" width="210" height="373" loading="lazy">
+    <img role="listitem" src="captures/s1.webp" alt="Travaux de la quinzaine" width="540" height="960" loading="lazy">
+    <img role="listitem" src="captures/s2.webp" alt="Plan du potager" width="540" height="960" loading="lazy">
+    <img role="listitem" src="captures/parcelles_perspective.png" alt="Plan du potager en perspective" width="1080" height="2340" loading="lazy">
+    <img role="listitem" src="captures/s3.webp" alt="Encyclopédie des plantes" width="540" height="960" loading="lazy">
+    <img role="listitem" src="captures/s4.webp" alt="Fiche d'une plante" width="540" height="960" loading="lazy">
+    <img role="listitem" src="captures/s5.webp" alt="Docteur du potager" width="540" height="960" loading="lazy">
+    <img role="listitem" src="captures/diagnostic.png" alt="Diagnostic photo hors-ligne" width="1080" height="2340" loading="lazy">
+    <img role="listitem" src="captures/s6.webp" alt="Réglages" width="540" height="960" loading="lazy">
   </div>
   <p class="sub">Captures réalisées avec des données d'exemple.</p>
 </section>
@@ -106,15 +124,15 @@ h2 { font-size:clamp(1.6rem,4vw,2.3rem); line-height:1.1; margin:0 0 8px; text-w
   <h2>Essayer l'application en direct</h2>
   <p class="sub">Naviguez dans cet aperçu interactif pour vous projeter dans l'usage quotidien de Sillon.</p>
   <div style="display:flex;justify-content:center">
-    <div style="width:min(340px,100%);border:8px solid #1e1d1a;border-radius:32px;background:#faf8f4;color:#1c1b18;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,.22);font-size:14px">
-      <div style="background:#2c6e49;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;font-weight:700">
+    <div style="width:min(340px,100%);border:8px solid #1e1d1a;border-radius:32px;background:#faf8f4;color:#1c1b18;overflow:hidden;box-shadow:var(--shadow-m);font-size:14px">
+      <div style="background:var(--accent-solid);color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;font-weight:700">
         <span>Sillon</span><span style="font-size:11px;opacity:.85">Hors-ligne · Ille-et-Vilaine (35)</span>
       </div>
       <div id="si-screen" style="padding:14px;min-height:360px;display:grid;gap:10px;align-content:start;background:linear-gradient(180deg,rgba(44,110,73,.09),#faf8f4 45%)"></div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #e4dfd4;background:#fff">
-        <button type="button" class="si-tab" data-tab="home" style="padding:10px 4px;border:0;background:none;font:inherit;font-weight:700;color:#2c6e49;cursor:pointer">Aujourd'hui</button>
-        <button type="button" class="si-tab" data-tab="garden" style="padding:10px 4px;border:0;background:none;font:inherit;font-weight:600;color:#666;cursor:pointer">Potager</button>
-        <button type="button" class="si-tab" data-tab="doctor" style="padding:10px 4px;border:0;background:none;font:inherit;font-weight:600;color:#666;cursor:pointer">Docteur</button>
+        <button type="button" class="si-tab" data-tab="home" style="min-height:44px;padding:0 4px;border:0;background:none;font:inherit;font-weight:700;color:var(--accent-solid);cursor:pointer">Aujourd'hui</button>
+        <button type="button" class="si-tab" data-tab="garden" style="min-height:44px;padding:0 4px;border:0;background:none;font:inherit;font-weight:600;color:#666;cursor:pointer">Potager</button>
+        <button type="button" class="si-tab" data-tab="doctor" style="min-height:44px;padding:0 4px;border:0;background:none;font:inherit;font-weight:600;color:#666;cursor:pointer">Docteur</button>
       </div>
     </div>
   </div>
@@ -133,7 +151,7 @@ h2 { font-size:clamp(1.6rem,4vw,2.3rem); line-height:1.1; margin:0 0 8px; text-w
     const scr = document.getElementById("si-screen");
     document.querySelectorAll(".si-tab").forEach(b => {
       const act = b.dataset.tab === tab;
-      b.style.color = act ? "#2c6e49" : "#6b675e";
+      b.style.color = act ? "var(--accent-solid)" : "#6b675e";
       b.style.fontWeight = act ? "700" : "500";
     });
     if (tab === "home") {
@@ -145,7 +163,7 @@ h2 { font-size:clamp(1.6rem,4vw,2.3rem); line-height:1.1; margin:0 0 8px; text-w
           <div style="font-size:12px;color:#5a574f">2 parcelles · 6 cultures en place</div>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
-          ${horizons.map((x,i) => `<button type="button" data-h="${i}" style="padding:5px 10px;border-radius:999px;border:1px solid ${i===horizon?'#2c6e49':'#d8d2c5'};background:${i===horizon?'#2c6e49':'#fff'};color:${i===horizon?'#fff':'#1c1b18'};font-size:12px;cursor:pointer">${x.label}</button>`).join("")}
+          ${horizons.map((x,i) => `<button type="button" data-h="${i}" style="min-height:44px;padding:0 14px;border-radius:999px;border:1px solid ${i===horizon?'var(--accent-solid)':'#d8d2c5'};background:${i===horizon?'var(--accent-solid)':'#fff'};color:${i===horizon?'#fff':'#1c1b18'};font-size:12px;cursor:pointer">${x.label}</button>`).join("")}
         </div>
         ${h.tasks.map(t => `<div style="background:#fff;border:1px solid #e4dfd4;border-radius:14px;padding:10px;font-size:13px">${t}</div>`).join("")}
       `;
@@ -157,14 +175,14 @@ h2 { font-size:clamp(1.6rem,4vw,2.3rem); line-height:1.1; margin:0 0 8px; text-w
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
           ${crops.map(c => `<div style="background:#ebe5d8;border:1px solid #d5ccb9;border-radius:12px;padding:10px 4px;text-align:center">
             <div style="height:34px;display:flex;align-items:flex-end;justify-content:center">
-              <div style="width:14px;height:${hPx}px;border-radius:7px 7px 2px 2px;background:#2c6e49"></div>
+              <div style="width:14px;height:${hPx}px;border-radius:7px 7px 2px 2px;background:var(--accent-solid)"></div>
             </div>
             <div style="font-weight:700;font-size:12px;margin-top:4px">${c}</div>
             <div style="font-size:10px;color:#5a574f">${stage}</div>
           </div>`).join("")}
         </div>
         <label style="font-size:12px;color:#5a574f">Voir pousser : <strong>+${growthDay} jours</strong>
-          <input id="si-grow" type="range" min="5" max="80" value="${growthDay}" style="width:100%">
+          <input id="si-grow" type="range" min="5" max="80" value="${growthDay}" style="width:100%;min-height:44px">
         </label>
       `;
     } else {
@@ -175,8 +193,8 @@ h2 { font-size:clamp(1.6rem,4vw,2.3rem); line-height:1.1; margin:0 0 8px; text-w
         <div style="font-weight:800;font-size:17px">Docteur du potager</div>
         <div style="font-size:12px;color:#5a574f">Organe touché :</div>
         <div style="display:flex;gap:8px">
-          <button type="button" data-org="feuille" style="flex:1;padding:8px;border-radius:10px;border:1px solid ${organ==='feuille'?'#2c6e49':'#d8d2c5'};background:${organ==='feuille'?'#2c6e49':'#fff'};color:${organ==='feuille'?'#fff':'#1c1b18'};cursor:pointer">Feuille</button>
-          <button type="button" data-org="tige" style="flex:1;padding:8px;border-radius:10px;border:1px solid ${organ==='tige'?'#2c6e49':'#d8d2c5'};background:${organ==='tige'?'#2c6e49':'#fff'};color:${organ==='tige'?'#fff':'#1c1b18'};cursor:pointer">Tige / collet</button>
+          <button type="button" data-org="feuille" style="flex:1;min-height:44px;padding:0 8px;border-radius:10px;border:1px solid ${organ==='feuille'?'var(--accent-solid)':'#d8d2c5'};background:${organ==='feuille'?'var(--accent-solid)':'#fff'};color:${organ==='feuille'?'#fff':'#1c1b18'};cursor:pointer">Feuille</button>
+          <button type="button" data-org="tige" style="flex:1;min-height:44px;padding:0 8px;border-radius:10px;border:1px solid ${organ==='tige'?'var(--accent-solid)':'#d8d2c5'};background:${organ==='tige'?'var(--accent-solid)':'#fff'};color:${organ==='tige'?'#fff':'#1c1b18'};cursor:pointer">Tige / collet</button>
         </div>
         <div style="background:#fff;border:1px solid #e4dfd4;border-radius:14px;padding:12px;font-size:13px;line-height:1.45">${diag}</div>
       `;
@@ -206,6 +224,15 @@ h2 { font-size:clamp(1.6rem,4vw,2.3rem); line-height:1.1; margin:0 0 8px; text-w
     <h3>Proposer un besoin d'application hors-ligne</h3>
     <p>Un outil du quotidien vous manque sans pub, sans compte et sans connexion ? Écrivez à <a href="mailto:pilmil.studio@proton.me?subject=Id%C3%A9e%20d%27application%20hors-ligne">pilmil.studio@proton.me</a> en précisant la situation concrète, les applis existantes qui posent problème et, si possible, des sources de référence.</p>
   </div>
+</section>
+<section class="wrap" id="fabrication">
+  <h2>Fabrication et diagnostic par photo</h2>
+  <p class="sub">Le code de Sillon est écrit avec l'aide d'un assistant d'intelligence artificielle, puis relu et maintenu par les membres de Pilmil Studio, association loi 1901.</p>
+  <div class="card">
+    <h3>Un petit modèle embarqué, pour le diagnostic par photo</h3>
+    <p>Contrairement au reste de l'application, le diagnostic par photo utilise un petit modèle d'apprentissage automatique, intégré à l'application. Il tourne sur le téléphone, hors ligne : la photo n'est envoyée nulle part, l'appli n'ayant pas accès à Internet. Son résultat est une aide indicative. Si le modèle n'est pas assez sûr de lui, l'appli le signale et ne tranche pas.</p>
+  </div>
+  <p class="sub" style="margin-top:20px">D'où viennent les dates de gelée, le compagnonnage et les photos d'entraînement, et ce qui reste incertain : <a href="sources.html">sources et limites des données</a>.</p>
 </section>
 </main>
 <footer class="wrap foot">

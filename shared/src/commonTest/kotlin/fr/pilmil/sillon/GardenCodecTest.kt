@@ -2,6 +2,8 @@ package fr.pilmil.sillon
 
 import fr.pilmil.sillon.data.GardenCodec
 import fr.pilmil.sillon.data.GardenValidationException
+import fr.pilmil.sillon.model.BotanicalFamily
+import fr.pilmil.sillon.model.CropHistoryEntry
 import fr.pilmil.sillon.model.FrostDate
 import fr.pilmil.sillon.model.Garden
 import fr.pilmil.sillon.model.Parcel
@@ -10,6 +12,8 @@ import fr.pilmil.sillon.model.ParcelType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class GardenCodecTest {
 
@@ -136,5 +140,52 @@ class GardenCodecTest {
                 now = now,
             )
         }
+    }
+
+    @Test
+    fun oldOeilletDIndeIdIsMappedToTageteOnRead() {
+        val garden = baseGarden(
+            parcels = listOf(
+                Parcel(
+                    "p1", "Carré", ParcelType.RAISED_BED_SQUARES, 2, 2,
+                    listOf(ParcelSlot(0, 0, "tagete", plantedDate = 1_700_000_000_000L), ParcelSlot(0, 1, "tomate")),
+                ),
+            ),
+        ).copy(history = listOf(CropHistoryEntry("p1", 0, 0, 2025, BotanicalFamily.ASTERACEAE, "tagete")))
+        // Fichier enregistré avant la fusion : l'ancien identifiant figure dans les cases et dans l'historique.
+        val legacyJson = GardenCodec.encode(garden).replace("\"tagete\"", "\"oeillet_d_inde\"")
+        assertTrue(legacyJson.contains("oeillet_d_inde"))
+
+        val decoded = GardenCodec.decode(legacyJson)
+        assertEquals("tagete", decoded.parcels.single().slots[0].vegetableId)
+        assertEquals(1_700_000_000_000L, decoded.parcels.single().slots[0].plantedDate)
+        assertEquals("tomate", decoded.parcels.single().slots[1].vegetableId)
+        assertEquals("tagete", decoded.history.single().vegetableId)
+
+        // Import (JSON ou .pilmil, une fois déchiffré) : la validation du catalogue accepte le fichier.
+        val imported = GardenCodec.decodeAndValidate(legacyJson, now = now)
+        assertEquals("tagete", imported.parcels.single().slots[0].vegetableId)
+    }
+
+    @Test
+    fun currentFileIsUnchangedByLegacyMapping() {
+        val garden = baseGarden(
+            parcels = listOf(
+                Parcel("p1", "Carré", ParcelType.RAISED_BED_SQUARES, 2, 2, listOf(ParcelSlot(0, 0, "tagete"))),
+            ),
+        )
+        assertEquals(garden, GardenCodec.decode(GardenCodec.encode(garden)))
+    }
+
+    @Test
+    fun unknownVegetableIdIsStillRefusedOnImport() {
+        val garden = baseGarden(
+            parcels = listOf(
+                Parcel("p1", "Carré", ParcelType.RAISED_BED_SQUARES, 2, 2, listOf(ParcelSlot(0, 0, "tagete"))),
+            ),
+        )
+        val json = GardenCodec.encode(garden).replace("\"tagete\"", "\"plante_inconnue\"")
+        assertFailsWith<GardenValidationException> { GardenCodec.decodeAndValidate(json, now = now) }
+        assertFalse(GardenCodec.decode(json).parcels.single().slots.single().vegetableId == "tagete")
     }
 }

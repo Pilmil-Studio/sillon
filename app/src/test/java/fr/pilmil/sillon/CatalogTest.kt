@@ -4,6 +4,8 @@ import fr.pilmil.sillon.data.DiseaseCatalog
 import fr.pilmil.sillon.data.FrenchFrostCatalog
 import fr.pilmil.sillon.data.VegetableCatalog
 import fr.pilmil.sillon.model.BotanicalFamily
+import fr.pilmil.sillon.model.CompanionRelation
+import fr.pilmil.sillon.model.EvidenceLevel
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -62,6 +64,83 @@ class CatalogTest {
                 assertNotNull("Le type de risque ne doit pas être nul", companion.riskType)
                 assertFalse("La justification ne doit pas être vide", companion.rationale.isBlank())
             }
+        }
+    }
+
+    private fun allRelations(): List<Pair<String, CompanionRelation>> =
+        VegetableCatalog.ALL_VEGETABLES.flatMap { v -> (v.goodCompanions + v.badCompanions).map { v.id to it } }
+
+    @Test
+    fun everyRelationHasAnEvidenceLevelAndEveryEtayeRelationHasASource() {
+        for ((owner, relation) in allRelations()) {
+            assertNotNull("Relation $owner vers ${relation.targetPlantId} : niveau de preuve manquant", relation.evidence)
+            if (relation.evidence == EvidenceLevel.ETAYE) {
+                assertFalse(
+                    "Relation étayée $owner vers ${relation.targetPlantId} : la source est obligatoire",
+                    relation.source.isNullOrBlank(),
+                )
+            }
+        }
+    }
+
+    @Test
+    fun relationTotalsPerEvidenceLevelMatchTheSourcesDocument() {
+        // docs/sources-compagnonnage.md : 255 relations au départ (37 étayées, 84 plausibles, 113 traditions, 21 contredites),
+        // 30 retirées, puis 2 doublons supprimés par la fusion tagete / oeillet_d_inde (2 étayées).
+        val byLevel = allRelations().groupingBy { it.second.evidence }.eachCount()
+        assertEquals(35, byLevel[EvidenceLevel.ETAYE])
+        assertEquals(84, byLevel[EvidenceLevel.PLAUSIBLE])
+        assertEquals(104, byLevel[EvidenceLevel.TRADITION])
+        assertEquals(223, allRelations().size)
+        assertEquals(141, VegetableCatalog.ALL_VEGETABLES.sumOf { it.goodCompanions.size })
+        assertEquals(82, VegetableCatalog.ALL_VEGETABLES.sumOf { it.badCompanions.size })
+    }
+
+    @Test
+    fun relationsRemovedAfterReviewAreGone() {
+        fun has(from: String, to: String) =
+            VegetableCatalog.getById(from)!!.let { v -> (v.goodCompanions + v.badCompanions).any { it.targetPlantId == to } }
+        assertFalse(has("capucine", "chou_pomme"))
+        assertFalse(has("fenouil", "poireau"))
+        assertFalse(has("aneth", "carotte"))
+        assertFalse(has("carotte", "aneth"))
+        for (cucurbit in listOf("courgette", "concombre", "melon", "pasteque")) {
+            assertFalse(has("pomme_de_terre", cucurbit))
+            assertFalse(has(cucurbit, "pomme_de_terre"))
+        }
+        // Les aromatiques « répulsives » contre les ravageurs des choux et de la carotte n'ont pas été confirmées par les essais.
+        assertFalse(has("chou_pomme", "menthe"))
+        assertFalse(has("romarin", "carotte"))
+    }
+
+    @Test
+    fun tageteAndOeilletDIndeAreOnePlant() {
+        assertNotNull(VegetableCatalog.getById("tagete"))
+        assertFalse(VegetableCatalog.ALL_VEGETABLES.any { it.id == "oeillet_d_inde" })
+        assertEquals("tagete", VegetableCatalog.canonicalId("oeillet_d_inde"))
+        assertEquals("tagete", VegetableCatalog.getById("oeillet_d_inde")?.id)
+        assertEquals("tomate", VegetableCatalog.canonicalId("tomate"))
+        // Plus aucune relation ne vise l'ancien identifiant, et tagete n'apparaît qu'une fois dans la liste de la tomate.
+        assertFalse(allRelations().any { it.second.targetPlantId == "oeillet_d_inde" })
+        assertEquals(1, VegetableCatalog.getById("tomate")!!.goodCompanions.count { it.targetPlantId == "tagete" })
+    }
+
+    @Test
+    fun traditionAndPlausibleRelationsAreNotWordedAsFacts() {
+        val tradition = CompanionRelation(
+            "carotte", "Bloque les nodosités", fr.pilmil.sillon.model.CompanionRiskType.ALLELOPATHY, EvidenceLevel.TRADITION,
+        )
+        val note = tradition.noteFor("Carotte")
+        assertTrue(note, note.contains("tradition", ignoreCase = true))
+        assertTrue(note, note.endsWith(EvidenceLevel.TRADITION.frenchLabel))
+        val etaye = CompanionRelation(
+            "tomate", "Moins d'aleurodes", fr.pilmil.sillon.model.CompanionBenefitType.PEST_REPELLENT, EvidenceLevel.ETAYE, "Auteur 2016",
+        )
+        assertTrue(etaye.noteFor("Tomate").endsWith("Étayé par essais (Auteur 2016)"))
+        for (v in VegetableCatalog.ALL_VEGETABLES) {
+            assertFalse("Un texte « éprouvé » ou « puissant » sans essai : ${v.id}", (v.goodCompanions + v.badCompanions).any {
+                it.rationale.contains("éprouvé") || it.rationale.contains("puissant")
+            })
         }
     }
 

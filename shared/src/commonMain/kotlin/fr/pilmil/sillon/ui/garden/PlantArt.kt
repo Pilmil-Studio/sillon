@@ -1148,7 +1148,6 @@ private fun DrawScope.drawSubject(p: Sub, veg: Vegetable) {
         "fenouil" -> feathery(p, Color(0xFF8FBC6A), 5, 1.0f, flower = true, bulb = true)
 
         "tagete" -> bloomPlant(p, Color(0xFF3E7A3A), 0.2f, 0.07f, Bloom(12, Color(0xFFF29A1F), Color(0xFFD9701C), Color(0xFFF7C23A), 0.1f))
-        "oeillet_d_inde" -> bloomPlant(p, Color(0xFF3C7A3C), 0.2f, 0.07f, Bloom(12, Color(0xFFF0B320), Color(0xFFD97A1C), Color(0xFFB83A18), 0.1f))
         "souci" -> bloomPlant(p, Color(0xFF8EBA4F), 0.22f, 0.08f, Bloom(16, Color(0xFFF4A21B), Color(0xFFB86B22), null, 0.1f, 0.46f, 0.12f))
         "capucine" -> nasturtium(p)
         "bourrache" -> bloomPlant(p, Color(0xFF8BA586), 0.26f, 0.12f, Bloom(5, Color(0xFF4D86E0), Color(0xFF2B2160), null, 0.075f, 0.5f, 0.17f))
