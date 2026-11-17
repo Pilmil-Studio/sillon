@@ -1,5 +1,17 @@
 package fr.pilmil.sillon.ui.garden
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -44,6 +56,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import fr.pilmil.sillon.ui.components.SillonOutlinedButton
+import fr.pilmil.sillon.ui.rememberReduceMotion
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -101,12 +114,16 @@ fun GardenScreen(
     today: LocalDate = remember { todayLocalDate() },
     initialSelectedCell: Pair<Int, Int>? = null,
     initialPerspective: Boolean = true,
+    departmentCode: String? = null,
+    skyClock: SkyClock? = null,
 ) {
     var selectedParcelIndex by remember { mutableStateOf(0) }
     var selectedSlotCoord by remember { mutableStateOf<Pair<Int, Int>?>(null) }
     var highlightedCell by remember { mutableStateOf(initialSelectedCell) }
     var perspectiveView by remember { mutableStateOf(initialPerspective) }
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
+    val reduceMotion = rememberReduceMotion()
+    val skyPlace = remember(departmentCode) { SkyPlace.forDepartment(departmentCode) }
     var showAddParcelDialog by remember { mutableStateOf(false) }
 
     val activeParcel = garden.parcels.getOrNull(selectedParcelIndex) ?: garden.parcels.firstOrNull()
@@ -222,33 +239,43 @@ fun GardenScreen(
             }
 
             item {
-                if (perspectiveView) {
-                    GardenScene(
-                        parcels = garden.parcels,
-                        selectedIndex = garden.parcels.indexOf(activeParcel),
-                        vegetables = vegetables,
-                        today = today,
-                        selectedCell = highlightedCell,
-                        onSelectParcel = {
-                            selectedParcelIndex = it
-                            highlightedCell = null
-                        },
-                        onCellClick = { r, c ->
-                            highlightedCell = Pair(r, c)
-                            selectedSlotCoord = Pair(r, c)
-                        },
-                        isDark = isDark,
-                        modifier = Modifier.clip(RoundedCornerShape(20.dp)),
-                    )
-                } else {
-                    ParcelGridView(
-                        parcel = activeParcel,
-                        vegetables = vegetables,
-                        onSlotClick = { r, c ->
-                            highlightedCell = Pair(r, c)
-                            selectedSlotCoord = Pair(r, c)
-                        },
-                    )
+                // Changement de vue : glissement court et fondu, dans le sens du déplacement (vue à plat à droite de la
+                // perspective, carré suivant à droite du précédent). Sans animation si le système le demande.
+                AnimatedContent(
+                    targetState = GardenViewKey(perspectiveView, if (perspectiveView) -1 else selectedParcelIndex),
+                    transitionSpec = { gardenViewTransition(reduceMotion) },
+                    label = "vue du potager",
+                ) { view ->
+                    if (view.perspective) {
+                        GardenScene(
+                            parcels = garden.parcels,
+                            selectedIndex = garden.parcels.indexOf(activeParcel),
+                            vegetables = vegetables,
+                            today = today,
+                            selectedCell = highlightedCell,
+                            onSelectParcel = {
+                                selectedParcelIndex = it
+                                highlightedCell = null
+                            },
+                            onCellClick = { r, c ->
+                                highlightedCell = Pair(r, c)
+                                selectedSlotCoord = Pair(r, c)
+                            },
+                            isDark = isDark,
+                            modifier = Modifier.clip(RoundedCornerShape(20.dp)),
+                            skyPlace = skyPlace,
+                            skyClock = skyClock,
+                        )
+                    } else {
+                        ParcelGridView(
+                            parcel = garden.parcels.getOrNull(view.parcelIndex) ?: activeParcel,
+                            vegetables = vegetables,
+                            onSlotClick = { r, c ->
+                                highlightedCell = Pair(r, c)
+                                selectedSlotCoord = Pair(r, c)
+                            },
+                        )
+                    }
                 }
             }
 
@@ -954,4 +981,25 @@ private fun NeighborhoodCard(parcel: Parcel, vegetables: List<Vegetable>) {
             }
         }
     }
+}
+
+/** Vue affichée : la perspective (parcelIndex fixe à -1, la scène anime elle-même le changement de carré) ou la vue à plat d'un carré. */
+private data class GardenViewKey(val perspective: Boolean, val parcelIndex: Int)
+
+private const val VIEW_SWITCH_MS = 260
+
+/** Glissement court (un dixième de la largeur) avec fondu ; instantané si [reduceMotion]. */
+private fun AnimatedContentTransitionScope<GardenViewKey>.gardenViewTransition(reduceMotion: Boolean): ContentTransform {
+    if (reduceMotion) return (EnterTransition.None togetherWith ExitTransition.None).using(null)
+    val forward = if (initialState.perspective != targetState.perspective) {
+        !targetState.perspective // perspective -> à plat : vers la droite
+    } else {
+        targetState.parcelIndex >= initialState.parcelIndex
+    }
+    val sign = if (forward) 1 else -1
+    return (
+        fadeIn(tween(VIEW_SWITCH_MS)) + slideInHorizontally(tween(VIEW_SWITCH_MS)) { sign * it / 10 }
+        ) togetherWith (
+        fadeOut(tween(VIEW_SWITCH_MS)) + slideOutHorizontally(tween(VIEW_SWITCH_MS)) { -sign * it / 10 }
+        ) using SizeTransform(clip = true)
 }

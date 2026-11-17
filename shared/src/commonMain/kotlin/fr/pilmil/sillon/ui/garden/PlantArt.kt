@@ -30,22 +30,22 @@ import kotlin.math.sqrt
  * captures sont stables d'un lancement à l'autre.
  */
 
-/** Teinte de nuit et brume d'éloignement appliquées à toutes les couleurs d'une plante. */
+/** Teinte de nuit ([night] de 0 à 1) et brume d'éloignement appliquées à toutes les couleurs d'une plante. */
 internal class PlantTone(
-    val night: Boolean,
+    val night: Float,
     private val fog: Color = Color.Transparent,
     private val fogAmount: Float = 0f,
 ) {
     fun c(color: Color): Color {
         var r = color
-        if (night) r = lerp(r, NightCast, 0.34f)
+        if (night > 0f) r = lerp(r, NightCast, 0.34f * night)
         if (fogAmount > 0f) r = lerp(r, fog, fogAmount)
         return r
     }
 
     companion object {
-        val Day = PlantTone(false)
-        val Night = PlantTone(true)
+        val Day = PlantTone(0f)
+        val Night = PlantTone(1f)
     }
 }
 
