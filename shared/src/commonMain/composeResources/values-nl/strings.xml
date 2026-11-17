@@ -161,4 +161,28 @@
     <string name="department_last_frost">Laatste vorst rond %1$s</string>
     <string name="department_chosen">Gekozen</string>
     <string name="department_dialog_title">Mijn gebied of departement</string>
+    <string name="catalog_title">Levende encyclopedie</string>
+    <plurals name="catalog_subtitle">
+        <item quantity="one">%1$d volledige plantenfiche, verwantschappen en afstanden.</item>
+        <item quantity="other">%1$d volledige plantenfiches, verwantschappen en afstanden.</item>
+    </plurals>
+    <string name="catalog_search_hint">Een plant zoeken (bv. Tomate, Poireau)…</string>
+    <string name="catalog_clear">Wissen</string>
+    <string name="catalog_filter_all">Alle</string>
+    <string name="catalog_filter_indoor">Binnen / Balkon</string>
+    <string name="family_solanaceae">Nachtschadefamilie</string>
+    <string name="family_fabaceae">Vlinderbloemigen (peulvruchten)</string>
+    <string name="family_brassicaceae">Kruisbloemigen (kool)</string>
+    <string name="family_apiaceae">Schermbloemigen (wortel)</string>
+    <string name="family_cucurbitaceae">Komkommerfamilie</string>
+    <string name="family_alliaceae">Uienfamilie</string>
+    <string name="family_asteraceae">Composieten (sla)</string>
+    <string name="family_lamiaceae">Lipbloemigen (kruiden)</string>
+    <string name="catalog_density">%1$s per vak</string>
+    <string name="catalog_germination">Kieming ≥ %1$s °C</string>
+    <string name="catalog_indoor_pot">Binnen / Pot</string>
+    <string name="catalog_advice_title">Teelttip:</string>
+    <string name="catalog_heirloom_title">Oude / zaadvaste rassen:</string>
+    <string name="catalog_good_neighbors">Goede buren:</string>
+    <string name="catalog_keep_away">Uit elkaar houden:</string>
 </resources>

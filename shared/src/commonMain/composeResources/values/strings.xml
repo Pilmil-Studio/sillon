@@ -161,4 +161,29 @@
     <string name="department_last_frost">Dernières gelées vers le %1$s</string>
     <string name="department_chosen">Choisi</string>
     <string name="department_dialog_title">Mon territoire ou département</string>
+    <string name="catalog_title">Encyclopédie vivante</string>
+    <plurals name="catalog_subtitle">
+        <item quantity="one">%1$d fiche botanique complète, affinités &amp; distances.</item>
+        <item quantity="many">%1$d de fiches botaniques complètes, affinités &amp; distances.</item>
+        <item quantity="other">%1$d fiches botaniques complètes, affinités &amp; distances.</item>
+    </plurals>
+    <string name="catalog_search_hint">Chercher une variété (ex : Tomate, Poireau)…</string>
+    <string name="catalog_clear">Effacer</string>
+    <string name="catalog_filter_all">Toutes</string>
+    <string name="catalog_filter_indoor">Intérieur / Balcon</string>
+    <string name="family_solanaceae">Solanacées</string>
+    <string name="family_fabaceae">Fabacées (Légumineuses)</string>
+    <string name="family_brassicaceae">Brassicacées (Choux)</string>
+    <string name="family_apiaceae">Apiacées (Carotte)</string>
+    <string name="family_cucurbitaceae">Cucurbitacées</string>
+    <string name="family_alliaceae">Alliacées</string>
+    <string name="family_asteraceae">Astéracées (Salades)</string>
+    <string name="family_lamiaceae">Lamiacées (Aromatiques)</string>
+    <string name="catalog_density">%1$s/carré</string>
+    <string name="catalog_germination">Germ. ≥ %1$s °C</string>
+    <string name="catalog_indoor_pot">Intérieur / Pot</string>
+    <string name="catalog_advice_title">Conseil de culture :</string>
+    <string name="catalog_heirloom_title">Variétés anciennes / reproductibles :</string>
+    <string name="catalog_good_neighbors">Bons voisins :</string>
+    <string name="catalog_keep_away">À éloigner :</string>
 </resources>

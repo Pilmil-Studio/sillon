@@ -57,10 +57,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.pilmil.sillon.model.BotanicalFamily
 import fr.pilmil.sillon.model.Vegetable
+import fr.pilmil.sillon.shared.resources.*
 import fr.pilmil.sillon.ui.components.SillonBadge
 import fr.pilmil.sillon.ui.components.SillonCard
 import fr.pilmil.sillon.ui.components.VegetableIcon
 import fr.pilmil.sillon.ui.theme.SillonTheme
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -96,14 +99,14 @@ fun CatalogScreen(
         item {
             Column {
                 Text(
-                    text = "Encyclopédie vivante",
+                    text = stringResource(Res.string.catalog_title),
                     style = MaterialTheme.typography.displaySmall,
                     color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.Bold,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "${vegetables.size} fiches botaniques complètes, affinités & distances.",
+                    text = pluralStringResource(Res.plurals.catalog_subtitle, vegetables.size, vegetables.size),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -120,7 +123,7 @@ fun CatalogScreen(
                     .padding(vertical = 4.dp),
                 placeholder = {
                     Text(
-                        text = "Chercher une variété (ex: Tomate, Poireau)...",
+                        text = stringResource(Res.string.catalog_search_hint),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                     )
@@ -137,7 +140,7 @@ fun CatalogScreen(
                         IconButton(onClick = { searchQuery = "" }) {
                             Icon(
                                 imageVector = Icons.Filled.Close,
-                                contentDescription = "Effacer",
+                                contentDescription = stringResource(Res.string.catalog_clear),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
@@ -157,15 +160,15 @@ fun CatalogScreen(
         // Filtres par famille botanique
         item {
             val families = listOf(
-                null to "Toutes",
-                BotanicalFamily.SOLANACEAE to "Solanacées",
-                BotanicalFamily.FABACEAE to "Fabacées (Légumineuses)",
-                BotanicalFamily.BRASSICACEAE to "Brassicacées (Choux)",
-                BotanicalFamily.APIACEAE to "Apiacées (Carotte)",
-                BotanicalFamily.CUCURBITACEAE to "Cucurbitacées",
-                BotanicalFamily.ALLIACEAE to "Alliacées",
-                BotanicalFamily.ASTERACEAE to "Astéracées (Salades)",
-                BotanicalFamily.LAMIACEAE to "Lamiacées (Aromatiques)",
+                null to stringResource(Res.string.catalog_filter_all),
+                BotanicalFamily.SOLANACEAE to stringResource(Res.string.family_solanaceae),
+                BotanicalFamily.FABACEAE to stringResource(Res.string.family_fabaceae),
+                BotanicalFamily.BRASSICACEAE to stringResource(Res.string.family_brassicaceae),
+                BotanicalFamily.APIACEAE to stringResource(Res.string.family_apiaceae),
+                BotanicalFamily.CUCURBITACEAE to stringResource(Res.string.family_cucurbitaceae),
+                BotanicalFamily.ALLIACEAE to stringResource(Res.string.family_alliaceae),
+                BotanicalFamily.ASTERACEAE to stringResource(Res.string.family_asteraceae),
+                BotanicalFamily.LAMIACEAE to stringResource(Res.string.family_lamiaceae),
             )
 
             LazyRow(
@@ -183,7 +186,7 @@ fun CatalogScreen(
                         ),
                     ) {
                         Text(
-                            text = "Intérieur / Balcon",
+                            text = stringResource(Res.string.catalog_filter_indoor),
                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
                             style = MaterialTheme.typography.labelSmall,
                             color = if (onlyIndoorSuitable) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface,
@@ -273,7 +276,7 @@ private fun VegetableCard(
                     )
                 }
                 SillonBadge(
-                    text = "${vegetable.squareFootDensity}/carré",
+                    text = stringResource(Res.string.catalog_density, vegetable.squareFootDensity),
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     textColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
@@ -292,7 +295,7 @@ private fun VegetableCard(
                     textColor = MaterialTheme.colorScheme.onSurface,
                 )
                 SillonBadge(
-                    text = "Germ. ≥ ${vegetable.tempGerminationMin}°C",
+                    text = stringResource(Res.string.catalog_germination, vegetable.tempGerminationMin),
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     textColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     icon = Icons.Filled.Thermostat,
@@ -305,7 +308,7 @@ private fun VegetableCard(
                 )
                 if (vegetable.indoorSuitable) {
                     SillonBadge(
-                        text = "Intérieur / Pot",
+                        text = stringResource(Res.string.catalog_indoor_pot),
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         textColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
@@ -317,7 +320,7 @@ private fun VegetableCard(
                 Column(modifier = Modifier.padding(top = 14.dp)) {
                     // Conseil agronomique
                     Text(
-                        text = "Conseil de culture :",
+                        text = stringResource(Res.string.catalog_advice_title),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontWeight = FontWeight.Bold,
@@ -333,7 +336,7 @@ private fun VegetableCard(
                     if (vegetable.heirloomVarieties.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = "Variétés anciennes / reproductibles :",
+                            text = stringResource(Res.string.catalog_heirloom_title),
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onPrimaryContainer,
                             fontWeight = FontWeight.Bold,
@@ -351,7 +354,7 @@ private fun VegetableCard(
                     // Compagnons favorables
                     if (vegetable.goodCompanions.isNotEmpty()) {
                         Text(
-                            text = "Bons voisins :",
+                            text = stringResource(Res.string.catalog_good_neighbors),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onPrimaryContainer,
                             fontWeight = FontWeight.Bold,
@@ -375,7 +378,7 @@ private fun VegetableCard(
                     // Compagnons antagonistes
                     if (vegetable.badCompanions.isNotEmpty()) {
                         Text(
-                            text = "À éloigner :",
+                            text = stringResource(Res.string.catalog_keep_away),
                             style = MaterialTheme.typography.labelSmall,
                             color = SillonTheme.colors.alert,
                             fontWeight = FontWeight.Bold,

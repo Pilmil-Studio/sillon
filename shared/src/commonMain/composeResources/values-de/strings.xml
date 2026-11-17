@@ -161,4 +161,28 @@
     <string name="department_last_frost">Letzte Fröste etwa am %1$s</string>
     <string name="department_chosen">Gewählt</string>
     <string name="department_dialog_title">Mein Gebiet oder Département</string>
+    <string name="catalog_title">Lebendige Enzyklopädie</string>
+    <plurals name="catalog_subtitle">
+        <item quantity="one">%1$d vollständiges Pflanzenporträt, Nachbarschaften &amp; Abstände.</item>
+        <item quantity="other">%1$d vollständige Pflanzenporträts, Nachbarschaften &amp; Abstände.</item>
+    </plurals>
+    <string name="catalog_search_hint">Pflanze suchen (z. B. Tomate, Poireau) …</string>
+    <string name="catalog_clear">Löschen</string>
+    <string name="catalog_filter_all">Alle</string>
+    <string name="catalog_filter_indoor">Drinnen / Balkon</string>
+    <string name="family_solanaceae">Nachtschattengewächse</string>
+    <string name="family_fabaceae">Hülsenfrüchtler (Fabaceae)</string>
+    <string name="family_brassicaceae">Kreuzblütler (Kohl)</string>
+    <string name="family_apiaceae">Doldenblütler (Karotte)</string>
+    <string name="family_cucurbitaceae">Kürbisgewächse</string>
+    <string name="family_alliaceae">Lauchgewächse</string>
+    <string name="family_asteraceae">Korbblütler (Salate)</string>
+    <string name="family_lamiaceae">Lippenblütler (Kräuter)</string>
+    <string name="catalog_density">%1$s pro Feld</string>
+    <string name="catalog_germination">Keimung ≥ %1$s °C</string>
+    <string name="catalog_indoor_pot">Drinnen / Topf</string>
+    <string name="catalog_advice_title">Anbautipp:</string>
+    <string name="catalog_heirloom_title">Alte / samenfeste Sorten:</string>
+    <string name="catalog_good_neighbors">Gute Nachbarn:</string>
+    <string name="catalog_keep_away">Fernhalten:</string>
 </resources>

@@ -161,4 +161,28 @@
     <string name="department_last_frost">Last frosts around %1$s</string>
     <string name="department_chosen">Selected</string>
     <string name="department_dialog_title">My territory or département</string>
+    <string name="catalog_title">Living encyclopedia</string>
+    <plurals name="catalog_subtitle">
+        <item quantity="one">%1$d complete botanical sheet, affinities &amp; distances.</item>
+        <item quantity="other">%1$d complete botanical sheets, affinities &amp; distances.</item>
+    </plurals>
+    <string name="catalog_search_hint">Search a plant (e.g. Tomate, Poireau)…</string>
+    <string name="catalog_clear">Clear</string>
+    <string name="catalog_filter_all">All</string>
+    <string name="catalog_filter_indoor">Indoors / Balcony</string>
+    <string name="family_solanaceae">Nightshades</string>
+    <string name="family_fabaceae">Legumes (Fabaceae)</string>
+    <string name="family_brassicaceae">Cabbage family (Brassicaceae)</string>
+    <string name="family_apiaceae">Carrot family (Apiaceae)</string>
+    <string name="family_cucurbitaceae">Gourd family (Cucurbitaceae)</string>
+    <string name="family_alliaceae">Onion family (Alliaceae)</string>
+    <string name="family_asteraceae">Daisy family (lettuces)</string>
+    <string name="family_lamiaceae">Mint family (herbs)</string>
+    <string name="catalog_density">%1$s per square</string>
+    <string name="catalog_germination">Germ. ≥ %1$s °C</string>
+    <string name="catalog_indoor_pot">Indoors / Pot</string>
+    <string name="catalog_advice_title">Growing advice:</string>
+    <string name="catalog_heirloom_title">Heirloom / open-pollinated varieties:</string>
+    <string name="catalog_good_neighbors">Good neighbours:</string>
+    <string name="catalog_keep_away">Keep apart:</string>
 </resources>
