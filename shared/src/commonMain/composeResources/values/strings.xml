@@ -58,4 +58,86 @@
     <string name="rest_next_work">Aucun semis ni plantation sur cette période. Prochains travaux vers le %1$s.</string>
     <string name="rest_no_work">Aucun semis ni plantation sur cette période : paillage, compost et préparation des planches.</string>
     <string name="rest_prepare">Préparer la saison dans le catalogue</string>
+    <string name="settings_title">Réglages &amp; Données</string>
+    <string name="settings_subtitle">Paramétrage microclimatique et souveraineté de vos données.</string>
+    <string name="env_title">Environnement de culture</string>
+    <string name="env_outdoor">Pleine terre</string>
+    <string name="env_balcony">Balcon / terrasse</string>
+    <string name="env_indoor">Intérieur</string>
+    <string name="orientation_label">Orientation</string>
+    <string name="orientation_n">N</string>
+    <string name="orientation_ne">NE</string>
+    <string name="orientation_e">E</string>
+    <string name="orientation_se">SE</string>
+    <string name="orientation_s">S</string>
+    <string name="orientation_sw">SO</string>
+    <string name="orientation_w">O</string>
+    <string name="orientation_nw">NO</string>
+    <string name="wind_label">Exposition au vent</string>
+    <string name="wind_low">Faible</string>
+    <string name="wind_medium">Modérée</string>
+    <string name="wind_high">Forte</string>
+    <string name="covered_balcony">Balcon couvert</string>
+    <string name="covered_hint">La pluie n’atteint pas les pots.</string>
+    <string name="light_source_label">Source de lumière</string>
+    <string name="light_window">Fenêtre</string>
+    <string name="light_grow">Lampe horticole</string>
+    <string name="light_hours_label">Durée d’éclairage (h/jour)</string>
+    <string name="light_sensor">Capteur de lumière : %1$s</string>
+    <string name="light_sensor_note">Estimation indicative à l’emplacement du téléphone (dépend de l’heure et de la météo ; mesurez à plusieurs moments de la journée).</string>
+    <string name="frost_ref_title">Date repère des dernières gelées</string>
+    <string name="frost_ref_tropical_text">En outre-mer, il n’y a pas de gelée : le calendrier part du début de la saison de plantation de votre territoire. Cette date est une estimation, qui varie de 1 à 2 mois selon les sources et les microclimats : ajustez-la au jour près. Tous les travaux et rappels de semis sont calculés par rapport à ce jour.</string>
+    <string name="frost_ref_temperate_text">En France métropolitaine, la date médiane se situe entre mi-mars (zone méditerranéenne) et mi-mai (Saints de Glace en plaine / montagne). Tous les travaux et rappels de semis sont calculés par rapport à ce jour J.</string>
+    <string name="day_of_month">Jour du mois</string>
+    <string name="month_label">Mois (%1$s)</string>
+    <string-array name="month_names">
+        <item>Janvier</item>
+        <item>Février</item>
+        <item>Mars</item>
+        <item>Avril</item>
+        <item>Mai</item>
+        <item>Juin</item>
+        <item>Juillet</item>
+        <item>Août</item>
+        <item>Septembre</item>
+        <item>Octobre</item>
+        <item>Novembre</item>
+        <item>Décembre</item>
+    </string-array>
+    <string name="place_label">Lieu : %1$s</string>
+    <string name="pick_department">Choisir mon département ou territoire</string>
+    <string name="altitude_label">Altitude (%1$d m)</string>
+    <string name="altitude_note_tropical">Au-delà de 500 m (ex. Hauts de La Réunion), l’air plus frais favorise le chouchou, les salades et les choux.</string>
+    <string name="altitude_note_temperate">Au-dessus de 200 m, la date de dernière gelée est décalée d’environ 3,5 jours par tranche de 100 m.</string>
+    <string name="mulched">Sol paillé</string>
+    <string name="weather_label">Météo locale récente</string>
+    <string name="weather_normal">Temps normal</string>
+    <string name="weather_dry_hot">Sec et chaud</string>
+    <string name="weather_rainy">Pluvieux / humide</string>
+    <string name="reminders_title">Rappels de semis</string>
+    <string name="reminders_text">Le samedi matin, quand des semis ou plantations s’ouvrent dans la quinzaine.</string>
+    <string name="viewfinder_title">Assistant de cadrage photo</string>
+    <string name="viewfinder_text">Viseur avec indicateur dynamique de netteté et d’exposition (vert/jaune/rouge) : prenez la photo quand le cadre passe au vert.</string>
+    <string name="viewfinder_off">Si désactivé, Sillon utilise l’appareil photo standard de votre téléphone sans demander de permission.</string>
+    <string name="backup_title">Sauvegarde &amp; Changement de téléphone</string>
+    <string name="backup_text">Sillon ne requiert aucun compte et n’a aucun serveur distant. Pour sauvegarder ou migrer vos parcelles vers un nouveau smartphone, exportez votre fichier de sauvegarde en un tap.</string>
+    <string name="backup_json">Sauvegarder mon potager (JSON)</string>
+    <string name="restore_json">Restaurer une sauvegarde (JSON)</string>
+    <string name="export_csv">Exporter pour tableur (CSV / LibreOffice)</string>
+    <string name="vault_export">Coffre chiffré (.pilmil)</string>
+    <string name="vault_import">Restaurer un coffre (.pilmil)</string>
+    <string name="dialog_export_title">Chiffrer la sauvegarde (.pilmil)</string>
+    <string name="dialog_import_title">Déchiffrer la sauvegarde (.pilmil)</string>
+    <string name="dialog_export_text">Choisissez une phrase secrète pour chiffrer votre coffre .pilmil (AES-256-GCM).</string>
+    <string name="dialog_import_text">Saisissez la phrase secrète utilisée lors de l’export.</string>
+    <string name="passphrase">Phrase secrète</string>
+    <string name="action_export">Exporter</string>
+    <string name="action_import">Importer</string>
+    <string name="action_cancel">Annuler</string>
+    <string name="cloud_title">Copie dans mon compte Google</string>
+    <string name="cloud_possible">Désactivée par défaut. Si vous l’activez, c’est Android qui copie votre potager dans votre compte Google, chiffré avec le code de verrouillage de votre téléphone : ni Google ni Sillon ne peuvent le lire. Pour le retrouver sur un autre téléphone, il faudra saisir le code de l’ancien. Désactiver ce réglage n’efface pas une copie déjà envoyée : supprimez-la depuis la sauvegarde de votre compte Google. L’export JSON ci-dessus reste le moyen le plus sûr de changer de téléphone.</string>
+    <string name="cloud_unavailable">Indisponible : définissez d’abord un code, un schéma ou un mot de passe de verrouillage d’écran. Sans lui, Android ne chiffre pas la copie et Sillon ne l’envoie pas.</string>
+    <string name="legal_title">Pilmil Studio · Mentions légales</string>
+    <string name="legal_country">France</string>
+    <string name="legal_text">• Éditeur : Pilmil Studio (France).\n• Aucune permission Internet dans le manifeste Android.\n• Zéro traceur, zéro SDK publicitaire, zéro compte.\n• Calendrier, associations et diagnostic 100 % calculés sur votre téléphone.\n• Logiciel libre sous licence Mozilla Public License 2.0 (MPL-2.0).\n• Contact : pilmil.studio@proton.me · https://pilmil-studio.github.io\n• Un besoin d’outil hors-ligne sans pub ni suivi ? Écrivez-nous à pilmil.studio@proton.me.</string>
 </resources>

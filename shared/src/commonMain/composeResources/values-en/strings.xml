@@ -58,4 +58,86 @@
     <string name="rest_next_work">No sowing or planting in this period. Next tasks around %1$s.</string>
     <string name="rest_no_work">No sowing or planting in this period: mulching, compost and bed preparation.</string>
     <string name="rest_prepare">Prepare the season in the catalogue</string>
+    <string name="settings_title">Settings &amp; Data</string>
+    <string name="settings_subtitle">Microclimate settings and control over your data.</string>
+    <string name="env_title">Growing environment</string>
+    <string name="env_outdoor">Open ground</string>
+    <string name="env_balcony">Balcony / terrace</string>
+    <string name="env_indoor">Indoors</string>
+    <string name="orientation_label">Orientation</string>
+    <string name="orientation_n">N</string>
+    <string name="orientation_ne">NE</string>
+    <string name="orientation_e">E</string>
+    <string name="orientation_se">SE</string>
+    <string name="orientation_s">S</string>
+    <string name="orientation_sw">SW</string>
+    <string name="orientation_w">W</string>
+    <string name="orientation_nw">NW</string>
+    <string name="wind_label">Wind exposure</string>
+    <string name="wind_low">Low</string>
+    <string name="wind_medium">Moderate</string>
+    <string name="wind_high">High</string>
+    <string name="covered_balcony">Covered balcony</string>
+    <string name="covered_hint">Rain does not reach the pots.</string>
+    <string name="light_source_label">Light source</string>
+    <string name="light_window">Window</string>
+    <string name="light_grow">Grow light</string>
+    <string name="light_hours_label">Lighting duration (h/day)</string>
+    <string name="light_sensor">Light sensor: %1$s</string>
+    <string name="light_sensor_note">Indicative estimate at the phone’s location (depends on the time and the weather; measure at several times of the day).</string>
+    <string name="frost_ref_title">Reference date of the last frost</string>
+    <string name="frost_ref_tropical_text">In the French overseas territories there is no frost: the calendar starts from the beginning of the planting season in your territory. This date is an estimate that varies by 1 to 2 months depending on the source and the microclimate: adjust it to the day. All tasks and sowing reminders are calculated from this day.</string>
+    <string name="frost_ref_temperate_text">In mainland France, the median date falls between mid-March (Mediterranean zone) and mid-May (Ice Saints in lowland / mountain areas). All tasks and sowing reminders are calculated from this reference day.</string>
+    <string name="day_of_month">Day of the month</string>
+    <string name="month_label">Month (%1$s)</string>
+    <string-array name="month_names">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+    <string name="place_label">Place: %1$s</string>
+    <string name="pick_department">Choose my département or territory</string>
+    <string name="altitude_label">Altitude (%1$d m)</string>
+    <string name="altitude_note_tropical">Above 500 m (e.g. the highlands of La Réunion), the cooler air suits chayote, lettuces and cabbages.</string>
+    <string name="altitude_note_temperate">Above 200 m, the last frost date shifts by about 3.5 days for every 100 m.</string>
+    <string name="mulched">Mulched soil</string>
+    <string name="weather_label">Recent local weather</string>
+    <string name="weather_normal">Normal weather</string>
+    <string name="weather_dry_hot">Dry and hot</string>
+    <string name="weather_rainy">Rainy / wet</string>
+    <string name="reminders_title">Sowing reminders</string>
+    <string name="reminders_text">On Saturday mornings, when sowings or plantings open within the next two weeks.</string>
+    <string name="viewfinder_title">Photo framing assistant</string>
+    <string name="viewfinder_text">Viewfinder with a live sharpness and exposure indicator (green/yellow/red): take the photo when the frame turns green.</string>
+    <string name="viewfinder_off">If turned off, Sillon uses your phone’s standard camera without asking for permission.</string>
+    <string name="backup_title">Backup &amp; switching phones</string>
+    <string name="backup_text">Sillon needs no account and has no remote server. To back up or move your plots to a new smartphone, export your backup file in one tap.</string>
+    <string name="backup_json">Save my garden (JSON)</string>
+    <string name="restore_json">Restore a backup (JSON)</string>
+    <string name="export_csv">Export for spreadsheet (CSV / LibreOffice)</string>
+    <string name="vault_export">Encrypted vault (.pilmil)</string>
+    <string name="vault_import">Restore a vault (.pilmil)</string>
+    <string name="dialog_export_title">Encrypt the backup (.pilmil)</string>
+    <string name="dialog_import_title">Decrypt the backup (.pilmil)</string>
+    <string name="dialog_export_text">Choose a passphrase to encrypt your .pilmil vault (AES-256-GCM).</string>
+    <string name="dialog_import_text">Enter the passphrase used when exporting.</string>
+    <string name="passphrase">Passphrase</string>
+    <string name="action_export">Export</string>
+    <string name="action_import">Import</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="cloud_title">Copy to my Google account</string>
+    <string name="cloud_possible">Off by default. If you turn it on, Android copies your garden to your Google account, encrypted with your phone’s lock code: neither Google nor Sillon can read it. To get it back on another phone, you will need to enter the old phone’s code. Turning this setting off does not delete a copy already sent: delete it from your Google account’s backup. The JSON export above remains the safest way to switch phones.</string>
+    <string name="cloud_unavailable">Unavailable: first set a lock code, pattern or password for your screen. Without it, Android does not encrypt the copy and Sillon does not send it.</string>
+    <string name="legal_title">Pilmil Studio · Legal notice</string>
+    <string name="legal_country">France</string>
+    <string name="legal_text">• Publisher: Pilmil Studio (France).\n• No Internet permission in the Android manifest.\n• No trackers, no advertising SDKs, no account.\n• Calendar, companion planting and diagnosis are 100% computed on your phone.\n• Free software under the Mozilla Public License 2.0 (MPL-2.0).\n• Contact: pilmil.studio@proton.me · https://pilmil-studio.github.io\n• Need an offline tool with no ads or tracking? Write to us at pilmil.studio@proton.me.</string>
 </resources>

@@ -58,4 +58,86 @@
     <string name="rest_next_work">In diesem Zeitraum keine Aussaat und keine Pflanzung. Nächste Arbeiten um den %1$s.</string>
     <string name="rest_no_work">In diesem Zeitraum keine Aussaat und keine Pflanzung: Mulchen, Kompost und Beete vorbereiten.</string>
     <string name="rest_prepare">Die Saison im Katalog vorbereiten</string>
+    <string name="settings_title">Einstellungen &amp; Daten</string>
+    <string name="settings_subtitle">Mikroklima-Einstellungen und Hoheit über Ihre Daten.</string>
+    <string name="env_title">Anbauumgebung</string>
+    <string name="env_outdoor">Freiland</string>
+    <string name="env_balcony">Balkon / Terrasse</string>
+    <string name="env_indoor">Drinnen</string>
+    <string name="orientation_label">Ausrichtung</string>
+    <string name="orientation_n">N</string>
+    <string name="orientation_ne">NO</string>
+    <string name="orientation_e">O</string>
+    <string name="orientation_se">SO</string>
+    <string name="orientation_s">S</string>
+    <string name="orientation_sw">SW</string>
+    <string name="orientation_w">W</string>
+    <string name="orientation_nw">NW</string>
+    <string name="wind_label">Windexposition</string>
+    <string name="wind_low">Gering</string>
+    <string name="wind_medium">Mäßig</string>
+    <string name="wind_high">Stark</string>
+    <string name="covered_balcony">Überdachter Balkon</string>
+    <string name="covered_hint">Der Regen erreicht die Töpfe nicht.</string>
+    <string name="light_source_label">Lichtquelle</string>
+    <string name="light_window">Fenster</string>
+    <string name="light_grow">Pflanzenlampe</string>
+    <string name="light_hours_label">Beleuchtungsdauer (Std./Tag)</string>
+    <string name="light_sensor">Lichtsensor: %1$s</string>
+    <string name="light_sensor_note">Richtwert am Standort des Telefons (hängt von Tageszeit und Wetter ab; messen Sie zu mehreren Tageszeiten).</string>
+    <string name="frost_ref_title">Richtdatum der letzten Fröste</string>
+    <string name="frost_ref_tropical_text">In den französischen Überseegebieten gibt es keinen Frost: Der Kalender beginnt mit dem Start der Pflanzsaison in Ihrem Gebiet. Dieses Datum ist eine Schätzung, die je nach Quelle und Mikroklima um 1 bis 2 Monate schwankt: Passen Sie es tagesgenau an. Alle Arbeiten und Aussaaterinnerungen werden von diesem Tag aus berechnet.</string>
+    <string name="frost_ref_temperate_text">Im französischen Mutterland liegt das mittlere Datum zwischen Mitte März (Mittelmeerraum) und Mitte Mai (Eisheilige in Ebene und Gebirge). Alle Arbeiten und Aussaaterinnerungen werden von diesem Stichtag aus berechnet.</string>
+    <string name="day_of_month">Tag des Monats</string>
+    <string name="month_label">Monat (%1$s)</string>
+    <string-array name="month_names">
+        <item>Januar</item>
+        <item>Februar</item>
+        <item>März</item>
+        <item>April</item>
+        <item>Mai</item>
+        <item>Juni</item>
+        <item>Juli</item>
+        <item>August</item>
+        <item>September</item>
+        <item>Oktober</item>
+        <item>November</item>
+        <item>Dezember</item>
+    </string-array>
+    <string name="place_label">Ort: %1$s</string>
+    <string name="pick_department">Mein Département oder Gebiet wählen</string>
+    <string name="altitude_label">Höhe (%1$d m)</string>
+    <string name="altitude_note_tropical">Ab 500 m (z. B. im Hochland von La Réunion) begünstigt die kühlere Luft Chayote, Salate und Kohl.</string>
+    <string name="altitude_note_temperate">Oberhalb von 200 m verschiebt sich das Datum der letzten Fröste um etwa 3,5 Tage je 100 m.</string>
+    <string name="mulched">Gemulchter Boden</string>
+    <string name="weather_label">Aktuelles Wetter vor Ort</string>
+    <string name="weather_normal">Normales Wetter</string>
+    <string name="weather_dry_hot">Trocken und heiß</string>
+    <string name="weather_rainy">Regnerisch / feucht</string>
+    <string name="reminders_title">Aussaaterinnerungen</string>
+    <string name="reminders_text">Samstagvormittag, wenn in den nächsten zwei Wochen Aussaaten oder Pflanzungen beginnen.</string>
+    <string name="viewfinder_title">Foto-Bildausschnitt-Assistent</string>
+    <string name="viewfinder_text">Sucher mit laufender Anzeige von Schärfe und Belichtung (grün/gelb/rot): Lösen Sie aus, wenn der Rahmen grün wird.</string>
+    <string name="viewfinder_off">Wenn ausgeschaltet, verwendet Sillon die Standardkamera Ihres Telefons, ohne eine Berechtigung anzufordern.</string>
+    <string name="backup_title">Sicherung &amp; Telefonwechsel</string>
+    <string name="backup_text">Sillon braucht kein Konto und hat keinen Server. Um Ihre Beete zu sichern oder auf ein neues Smartphone zu übertragen, exportieren Sie Ihre Sicherungsdatei mit einem Tipp.</string>
+    <string name="backup_json">Meinen Garten sichern (JSON)</string>
+    <string name="restore_json">Sicherung wiederherstellen (JSON)</string>
+    <string name="export_csv">Für Tabellenkalkulation exportieren (CSV / LibreOffice)</string>
+    <string name="vault_export">Verschlüsselter Tresor (.pilmil)</string>
+    <string name="vault_import">Tresor wiederherstellen (.pilmil)</string>
+    <string name="dialog_export_title">Sicherung verschlüsseln (.pilmil)</string>
+    <string name="dialog_import_title">Sicherung entschlüsseln (.pilmil)</string>
+    <string name="dialog_export_text">Wählen Sie eine Passphrase, um Ihren .pilmil-Tresor zu verschlüsseln (AES-256-GCM).</string>
+    <string name="dialog_import_text">Geben Sie die beim Export verwendete Passphrase ein.</string>
+    <string name="passphrase">Passphrase</string>
+    <string name="action_export">Exportieren</string>
+    <string name="action_import">Importieren</string>
+    <string name="action_cancel">Abbrechen</string>
+    <string name="cloud_title">Kopie in meinem Google-Konto</string>
+    <string name="cloud_possible">Standardmäßig aus. Wenn Sie sie einschalten, kopiert Android Ihren Garten in Ihr Google-Konto, verschlüsselt mit dem Sperrcode Ihres Telefons: Weder Google noch Sillon können ihn lesen. Um ihn auf einem anderen Telefon wiederzufinden, müssen Sie den Code des alten Telefons eingeben. Das Ausschalten dieser Einstellung löscht keine bereits gesendete Kopie: Löschen Sie sie in der Sicherung Ihres Google-Kontos. Der JSON-Export oben bleibt der sicherste Weg, das Telefon zu wechseln.</string>
+    <string name="cloud_unavailable">Nicht verfügbar: Richten Sie zuerst eine Bildschirmsperre mit Code, Muster oder Passwort ein. Ohne sie verschlüsselt Android die Kopie nicht und Sillon sendet sie nicht.</string>
+    <string name="legal_title">Pilmil Studio · Impressum</string>
+    <string name="legal_country">Frankreich</string>
+    <string name="legal_text">• Herausgeber: Pilmil Studio (Frankreich).\n• Keine Internet-Berechtigung im Android-Manifest.\n• Keine Tracker, keine Werbe-SDKs, kein Konto.\n• Kalender, Pflanzennachbarschaften und Diagnose werden zu 100 % auf Ihrem Telefon berechnet.\n• Freie Software unter der Mozilla Public License 2.0 (MPL-2.0).\n• Kontakt: pilmil.studio@proton.me · https://pilmil-studio.github.io\n• Sie brauchen ein Offline-Werkzeug ohne Werbung und Tracking? Schreiben Sie uns an pilmil.studio@proton.me.</string>
 </resources>
