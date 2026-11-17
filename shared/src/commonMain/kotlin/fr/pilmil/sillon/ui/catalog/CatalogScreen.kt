@@ -55,9 +55,13 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fr.pilmil.sillon.data.VegetableCatalog
 import fr.pilmil.sillon.model.BotanicalFamily
 import fr.pilmil.sillon.model.Vegetable
+import fr.pilmil.sillon.model.incomingBad
+import fr.pilmil.sillon.model.incomingGood
 import fr.pilmil.sillon.shared.resources.*
+import fr.pilmil.sillon.ui.note
 import fr.pilmil.sillon.ui.components.SillonBadge
 import fr.pilmil.sillon.ui.components.SillonCard
 import fr.pilmil.sillon.ui.components.VegetableIcon
@@ -351,8 +355,23 @@ private fun VegetableCard(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
+                    // Relations lues dans les deux sens : celles de cette fiche, puis celles que d'autres fiches déclarent vers elle.
+                    val goodFromOthers = remember(vegetable.id) { vegetable.incomingGood(VegetableCatalog.ALL_VEGETABLES) }
+                    val badFromOthers = remember(vegetable.id) { vegetable.incomingBad(VegetableCatalog.ALL_VEGETABLES) }
+
+                    if (vegetable.goodCompanions.isNotEmpty() || goodFromOthers.isNotEmpty() ||
+                        vegetable.badCompanions.isNotEmpty() || badFromOthers.isNotEmpty()
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.evidence_explanation),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+
                     // Compagnons favorables
-                    if (vegetable.goodCompanions.isNotEmpty()) {
+                    if (vegetable.goodCompanions.isNotEmpty() || goodFromOthers.isNotEmpty()) {
                         Text(
                             text = stringResource(Res.string.catalog_good_neighbors),
                             style = MaterialTheme.typography.labelSmall,
@@ -366,7 +385,14 @@ private fun VegetableCard(
                         ) {
                             vegetable.goodCompanions.forEach { companion ->
                                 SillonBadge(
-                                    text = "${companion.targetPlantId.replace('_', ' ').replaceFirstChar { it.uppercase() }} : ${companion.rationale}",
+                                    text = companion.note(companionName(companion.targetPlantId)),
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                    textColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                )
+                            }
+                            goodFromOthers.forEach { (other, companion) ->
+                                SillonBadge(
+                                    text = companion.note(other.name, fromTheirSheet = true),
                                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                                     textColor = MaterialTheme.colorScheme.onPrimaryContainer,
                                 )
@@ -376,7 +402,7 @@ private fun VegetableCard(
                     }
 
                     // Compagnons antagonistes
-                    if (vegetable.badCompanions.isNotEmpty()) {
+                    if (vegetable.badCompanions.isNotEmpty() || badFromOthers.isNotEmpty()) {
                         Text(
                             text = stringResource(Res.string.catalog_keep_away),
                             style = MaterialTheme.typography.labelSmall,
@@ -390,7 +416,15 @@ private fun VegetableCard(
                         ) {
                             vegetable.badCompanions.forEach { bad ->
                                 SillonBadge(
-                                    text = "${bad.targetPlantId.replace('_', ' ').replaceFirstChar { it.uppercase() }} : ${bad.rationale}",
+                                    text = bad.note(companionName(bad.targetPlantId)),
+                                    containerColor = SillonTheme.colors.alertContainer,
+                                    textColor = SillonTheme.colors.onAlertContainer,
+                                    icon = Icons.Filled.Warning,
+                                )
+                            }
+                            badFromOthers.forEach { (other, bad) ->
+                                SillonBadge(
+                                    text = bad.note(other.name, fromTheirSheet = true),
                                     containerColor = SillonTheme.colors.alertContainer,
                                     textColor = SillonTheme.colors.onAlertContainer,
                                     icon = Icons.Filled.Warning,
@@ -403,3 +437,7 @@ private fun VegetableCard(
         }
     }
 }
+
+/** Nom affiché d'une plante cible, ou son identifiant lisible si elle n'est pas au catalogue. */
+private fun companionName(id: String): String =
+    VegetableCatalog.getById(id)?.name ?: id.replace('_', ' ').replaceFirstChar { it.uppercase() }

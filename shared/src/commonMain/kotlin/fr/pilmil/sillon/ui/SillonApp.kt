@@ -319,6 +319,7 @@ fun SillonApp(
                 SillonScreen.GARDEN -> GardenScreen(
                     garden = garden,
                     vegetables = vegetables,
+                    departmentCode = departmentCode,
                     onUpdateSlot = { pId, r, c, vId ->
                         update { store.updateSlot(pId, r, c, vId) }
                     },

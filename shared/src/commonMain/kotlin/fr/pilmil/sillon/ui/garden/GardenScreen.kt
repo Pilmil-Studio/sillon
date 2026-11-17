@@ -1,5 +1,17 @@
 package fr.pilmil.sillon.ui.garden
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -44,6 +56,8 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import fr.pilmil.sillon.ui.components.SillonOutlinedButton
+import fr.pilmil.sillon.ui.evidenceLabelRes
+import fr.pilmil.sillon.ui.rememberReduceMotion
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -72,6 +86,8 @@ import fr.pilmil.sillon.model.Parcel
 import fr.pilmil.sillon.model.ParcelSlot
 import fr.pilmil.sillon.model.ParcelType
 import fr.pilmil.sillon.model.Vegetable
+import fr.pilmil.sillon.model.badRelationsWith
+import fr.pilmil.sillon.model.goodRelationsWith
 import fr.pilmil.sillon.shared.resources.*
 import fr.pilmil.sillon.ui.components.SillonBadge
 import fr.pilmil.sillon.ui.components.SillonButton
@@ -101,12 +117,16 @@ fun GardenScreen(
     today: LocalDate = remember { todayLocalDate() },
     initialSelectedCell: Pair<Int, Int>? = null,
     initialPerspective: Boolean = true,
+    departmentCode: String? = null,
+    skyClock: SkyClock? = null,
 ) {
     var selectedParcelIndex by remember { mutableStateOf(0) }
     var selectedSlotCoord by remember { mutableStateOf<Pair<Int, Int>?>(null) }
     var highlightedCell by remember { mutableStateOf(initialSelectedCell) }
     var perspectiveView by remember { mutableStateOf(initialPerspective) }
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
+    val reduceMotion = rememberReduceMotion()
+    val skyPlace = remember(departmentCode) { SkyPlace.forDepartment(departmentCode) }
     var showAddParcelDialog by remember { mutableStateOf(false) }
 
     val activeParcel = garden.parcels.getOrNull(selectedParcelIndex) ?: garden.parcels.firstOrNull()
@@ -222,33 +242,43 @@ fun GardenScreen(
             }
 
             item {
-                if (perspectiveView) {
-                    GardenScene(
-                        parcels = garden.parcels,
-                        selectedIndex = garden.parcels.indexOf(activeParcel),
-                        vegetables = vegetables,
-                        today = today,
-                        selectedCell = highlightedCell,
-                        onSelectParcel = {
-                            selectedParcelIndex = it
-                            highlightedCell = null
-                        },
-                        onCellClick = { r, c ->
-                            highlightedCell = Pair(r, c)
-                            selectedSlotCoord = Pair(r, c)
-                        },
-                        isDark = isDark,
-                        modifier = Modifier.clip(RoundedCornerShape(20.dp)),
-                    )
-                } else {
-                    ParcelGridView(
-                        parcel = activeParcel,
-                        vegetables = vegetables,
-                        onSlotClick = { r, c ->
-                            highlightedCell = Pair(r, c)
-                            selectedSlotCoord = Pair(r, c)
-                        },
-                    )
+                // Changement de vue : glissement court et fondu, dans le sens du déplacement (vue à plat à droite de la
+                // perspective, carré suivant à droite du précédent). Sans animation si le système le demande.
+                AnimatedContent(
+                    targetState = GardenViewKey(perspectiveView, if (perspectiveView) -1 else selectedParcelIndex),
+                    transitionSpec = { gardenViewTransition(reduceMotion) },
+                    label = "vue du potager",
+                ) { view ->
+                    if (view.perspective) {
+                        GardenScene(
+                            parcels = garden.parcels,
+                            selectedIndex = garden.parcels.indexOf(activeParcel),
+                            vegetables = vegetables,
+                            today = today,
+                            selectedCell = highlightedCell,
+                            onSelectParcel = {
+                                selectedParcelIndex = it
+                                highlightedCell = null
+                            },
+                            onCellClick = { r, c ->
+                                highlightedCell = Pair(r, c)
+                                selectedSlotCoord = Pair(r, c)
+                            },
+                            isDark = isDark,
+                            modifier = Modifier.clip(RoundedCornerShape(20.dp)),
+                            skyPlace = skyPlace,
+                            skyClock = skyClock,
+                        )
+                    } else {
+                        ParcelGridView(
+                            parcel = garden.parcels.getOrNull(view.parcelIndex) ?: activeParcel,
+                            vegetables = vegetables,
+                            onSlotClick = { r, c ->
+                                highlightedCell = Pair(r, c)
+                                selectedSlotCoord = Pair(r, c)
+                            },
+                        )
+                    }
                 }
             }
 
@@ -700,25 +730,22 @@ private fun ParcelGridView(
                         val slot = parcel.getSlot(r, c)
                         val veg = vegetables.find { it.id == slot?.vegetableId }
 
-                        // Calcul simple des synergies / alertes avec voisins directs
-                        val neighborVegs = listOfNotNull(
-                            parcel.getSlot(r - 1, c)?.vegetableId?.let { id -> vegetables.find { it.id == id } },
-                            parcel.getSlot(r + 1, c)?.vegetableId?.let { id -> vegetables.find { it.id == id } },
-                            parcel.getSlot(r, c - 1)?.vegetableId?.let { id -> vegetables.find { it.id == id } },
-                            parcel.getSlot(r, c + 1)?.vegetableId?.let { id -> vegetables.find { it.id == id } },
-                        )
+                        // Synergies et alertes avec les voisins directs, lues dans les deux sens
+                        val neighborVegs = orthogonalNeighbors(parcel, vegetables, r, c)
                         val hasGoodCompanion = veg != null && neighborVegs.any { neighbor ->
-                            veg.goodCompanions.any { it.targetPlantId == neighbor.id }
+                            veg.goodRelationsWith(neighbor).isNotEmpty()
                         }
                         val hasBadCompanion = veg != null && neighborVegs.any { neighbor ->
-                            veg.badCompanions.any { it.targetPlantId == neighbor.id }
+                            veg.badRelationsWith(neighbor).isNotEmpty()
                         }
+                        val neighborNote = if (veg != null) neighborSpokenNoteRes(veg, neighborVegs)?.let { stringResource(it) } else null
 
                         SlotCell(
                             vegetable = veg,
                             growth = slotGrowth(slot, veg, today),
                             hasGoodCompanion = hasGoodCompanion,
                             hasBadCompanion = hasBadCompanion,
+                            neighborNote = neighborNote,
                             modifier = Modifier
                                 .weight(1f)
                                 .aspectRatio(1f),
@@ -737,6 +764,7 @@ private fun SlotCell(
     growth: Growth?,
     hasGoodCompanion: Boolean,
     hasBadCompanion: Boolean,
+    neighborNote: String?,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
@@ -745,7 +773,7 @@ private fun SlotCell(
         vegetable == null -> stringResource(Res.string.garden_slot_free)
         growth != null -> "${vegetable.name}. ${growth.summary()}"
         else -> vegetable.name
-    }
+    }.let { base -> if (neighborNote != null) "$base. $neighborNote" else base }
     Surface(
         modifier = modifier
             .clickable(onClickLabel = stringResource(Res.string.garden_slot_open), onClick = onClick)
@@ -928,15 +956,7 @@ private fun NeighborhoodCard(parcel: Parcel, vegetables: List<Vegetable>) {
             }
             for (link in links.take(6)) {
                 val second = link.second.name.replaceFirstChar { it.lowercase() }
-                val sentence = stringResource(
-                    when {
-                        link.positive && link.protects -> Res.string.garden_link_protect
-                        link.positive -> Res.string.garden_link_help
-                        else -> Res.string.garden_link_clash
-                    },
-                    link.first.name,
-                    second,
-                )
+                val sentence = stringResource(link.sentenceRes(), link.first.name, second)
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         modifier = Modifier
@@ -945,11 +965,19 @@ private fun NeighborhoodCard(parcel: Parcel, vegetables: List<Vegetable>) {
                             .background(if (link.positive) SillonPalette.Sage else SillonPalette.AlertAmber),
                     )
                     Spacer(modifier = Modifier.width(10.dp))
-                    Text(
-                        text = sentence,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
+                    Column {
+                        Text(
+                            text = sentence,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                        // Le niveau de preuve est écrit : la couleur de la pastille ne porte pas seule le sens.
+                        Text(
+                            text = stringResource(evidenceLabelRes(link.evidence)),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                 }
             }
             if (links.size > 6) {
@@ -959,6 +987,34 @@ private fun NeighborhoodCard(parcel: Parcel, vegetables: List<Vegetable>) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
+            if (links.isNotEmpty()) {
+                Text(
+                    text = stringResource(Res.string.evidence_explanation),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
     }
+}
+
+/** Vue affichée : la perspective (parcelIndex fixe à -1, la scène anime elle-même le changement de carré) ou la vue à plat d'un carré. */
+private data class GardenViewKey(val perspective: Boolean, val parcelIndex: Int)
+
+private const val VIEW_SWITCH_MS = 260
+
+/** Glissement court (un dixième de la largeur) avec fondu ; instantané si [reduceMotion]. */
+private fun AnimatedContentTransitionScope<GardenViewKey>.gardenViewTransition(reduceMotion: Boolean): ContentTransform {
+    if (reduceMotion) return (EnterTransition.None togetherWith ExitTransition.None).using(null)
+    val forward = if (initialState.perspective != targetState.perspective) {
+        !targetState.perspective // perspective -> à plat : vers la droite
+    } else {
+        targetState.parcelIndex >= initialState.parcelIndex
+    }
+    val sign = if (forward) 1 else -1
+    return (
+        fadeIn(tween(VIEW_SWITCH_MS)) + slideInHorizontally(tween(VIEW_SWITCH_MS)) { sign * it / 10 }
+        ) togetherWith (
+        fadeOut(tween(VIEW_SWITCH_MS)) + slideOutHorizontally(tween(VIEW_SWITCH_MS)) { -sign * it / 10 }
+        ) using SizeTransform(clip = true)
 }

@@ -1,13 +1,19 @@
 package fr.pilmil.sillon.ui.garden
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -35,6 +41,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.text.font.FontFamily
 import fr.pilmil.sillon.model.Parcel
 import fr.pilmil.sillon.model.Vegetable
+import fr.pilmil.sillon.ui.rememberReduceMotion
 import fr.pilmil.sillon.ui.theme.SillonPalette
 import kotlinx.datetime.LocalDate
 import kotlin.math.PI
@@ -62,26 +69,133 @@ private val GlowCream = Color(0xFFFFF1B8)
 private val GlowGreen = Color(0xFF8FE07A)
 private val GlowAmber = Color(0xFFFFB347)
 
-private class Look(val dark: Boolean) {
+/**
+ * Teintes de la scène. [night] (0 jour, 1 nuit) vient de l'heure ; le thème sombre du système ne change pas le ciel,
+ * il ne fait que garder un plancher d'assombrissement du décor. Même en pleine nuit le décor n'est assombri qu'à
+ * 70 % de l'ancienne teinte de nuit, pour que les caisses et les plantes restent lisibles.
+ */
+private class Look(val sky: SkyState, isDark: Boolean) {
     private val wash = Color(0xFF14223A)
+    private val warmGlow = Color(0xFFFFB27A)
+
+    val night = max(sky.night, if (isDark) DARK_THEME_FLOOR else 0f)
+
+    /** Part de la teinte de nuit réellement appliquée au décor. */
+    private val k = night * MAX_NIGHT_SHARE
+
+    /** Reflet chaud de l'aube et du crépuscule, discret. */
+    private fun warm(c: Color) = if (sky.warmth > 0f) lerp(c, warmGlow, WARM_SHARE * sky.warmth) else c
+
+    private fun tone(dayColor: Color, nightColor: Color) = warm(lerp(dayColor, nightColor, k))
 
     /** Assombrit et refroidit une teinte du jour pour la nuit (jamais noir : on tire vers un bleu nuit). */
-    fun g(c: Color, amount: Float = 0.5f) = if (dark) lerp(c, wash, amount) else c
+    fun g(c: Color, amount: Float = 0.5f) = warm(lerp(c, wash, amount * k))
 
-    val fogColor = if (dark) Color(0xFF2A4452) else Color(0xFFEAE6CF)
+    /** Teinte pour le décor : même fondu que [g], pour une couleur déjà choisie. */
+    fun cool(c: Color, amount: Float) = lerp(c, wash, amount * k)
+
+    /** Plus la nuit avance, plus [nightValue] l'emporte sur [dayValue] (pour des opacités). */
+    fun mix(dayValue: Float, nightValue: Float) = dayValue + (nightValue - dayValue) * k
+
+    val fogColor = tone(Color(0xFFEAE6CF), Color(0xFF2A4452))
     fun fog(c: Color, t: Float) = if (t > 0f) lerp(c, fogColor, t) else c
 
-    val skyTop = if (dark) Color(0xFF0E1B33) else Color(0xFF9FD0E0)
-    val skyMid = if (dark) Color(0xFF173149) else Color(0xFFCBE6E0)
-    val skyHorizon = if (dark) Color(0xFF29493F) else Color(0xFFF4E8CB)
-    val hillFar = if (dark) Color(0xFF1E3A44) else Color(0xFFA6CBA8)
-    val hillNear = if (dark) Color(0xFF1B3639) else Color(0xFF8CBB8A)
-    val lawnFar = if (dark) Color(0xFF28463F) else Color(0xFFC6DC9F)
-    val lawnMid = if (dark) Color(0xFF244438) else Color(0xFFA2CB6F)
-    val lawnNear = if (dark) Color(0xFF1D3A2B) else Color(0xFF5FA03A)
-    val grass = if (dark) Color(0xFF2F5A3C) else Color(0xFF3F8A32)
-    val pathLight = if (dark) Color(0xFF565861) else Color(0xFFE9D9B6)
-    val pathEdge = if (dark) Color(0xFF3B3E48) else Color(0xFFC9B085)
+    private val colors = skyColorsFor(sky)
+    val skyTop = colors.top
+    val skyMid = colors.mid
+    val skyHorizon = colors.horizon
+    fun skyAt(t: Float) = colors.at(t)
+
+    val hillFar = tone(Color(0xFFA6CBA8), Color(0xFF1E3A44))
+    val hillNear = tone(Color(0xFF8CBB8A), Color(0xFF1B3639))
+    val lawnFar = tone(Color(0xFFC6DC9F), Color(0xFF28463F))
+    val lawnMid = tone(Color(0xFFA2CB6F), Color(0xFF244438))
+    val lawnNear = tone(Color(0xFF5FA03A), Color(0xFF1D3A2B))
+    val grass = tone(Color(0xFF3F8A32), Color(0xFF2F5A3C))
+    val pathLight = tone(Color(0xFFE9D9B6), Color(0xFF565861))
+    val pathEdge = tone(Color(0xFFC9B085), Color(0xFF3B3E48))
+    val bushDeep = tone(Color(0xFF3F7A45), Color(0xFF0F2A20))
+
+    /** Plantes : part de la teinte de nuit (0 à 1) à appliquer. */
+    val plantNight get() = k
+}
+
+private const val DARK_THEME_FLOOR = 0.3f
+private const val MAX_NIGHT_SHARE = 0.7f
+private const val WARM_SHARE = 0.12f
+
+/** Emplacement d'une parcelle dans la scène : centre x, début z (m) et échelle. */
+internal data class Slot(val cx: Float, val z0: Float, val s: Float)
+
+/** La sélectionnée prend le premier plan, centrée ; les autres se rangent à l'arrière-plan. */
+internal val FrontSlot = Slot(0f, 0f, 1f)
+private val BackSlots = listOf(Slot(-0.72f, 1.5f, 0.46f), Slot(0.72f, 1.5f, 0.46f), Slot(0f, 1.8f, 0.34f))
+
+/** Point d'où une parcelle surgit (ou où elle s'efface) quand elle entre ou sort de la scène : au loin, minuscule. */
+private fun farSlot(cx: Float) = Slot(cx, 2.4f, 0.2f)
+
+internal fun slotsFor(parcels: List<Parcel>, selectedIndex: Int): Map<String, Slot> {
+    val slots = LinkedHashMap<String, Slot>()
+    parcels.indices.filter { it != selectedIndex }.take(BackSlots.size).forEachIndexed { n, index ->
+        slots[parcels[index].id] = BackSlots[n]
+    }
+    parcels.getOrNull(selectedIndex)?.let { slots[it.id] = FrontSlot }
+    return slots
+}
+
+private fun lerpSlot(a: Slot, b: Slot, t: Float) =
+    Slot(a.cx + (b.cx - a.cx) * t, a.z0 + (b.z0 - a.z0) * t, a.s + (b.s - a.s) * t)
+
+/** Emplacements à l'avancement [t] (0 = [from], 1 = [to]) ; au-delà de 1 (rebond), seuls les déplacements dépassent. */
+internal fun lerpSlots(from: Map<String, Slot>, to: Map<String, Slot>, t: Float): Map<String, Slot> {
+    if (t == 1f || from == to) return to
+    val result = LinkedHashMap<String, Slot>()
+    for (id in from.keys + to.keys) {
+        val start = from[id]
+        val end = to[id]
+        result[id] = when {
+            start != null && end != null -> lerpSlot(start, end, t)
+            end != null -> lerpSlot(farSlot(end.cx), end, t.coerceIn(0f, 1f))
+            start != null -> lerpSlot(start, farSlot(start.cx), t.coerceIn(0f, 1f))
+            else -> continue
+        }
+    }
+    return result
+}
+
+private const val MOVE_MS = 320
+
+/** Arrivée douce avec un très léger dépassement (environ 4 % du trajet) : le « rebond » des caisses. */
+private val MoveEasing = CubicBezierEasing(0.25f, 0.7f, 0.4f, 1.2f)
+
+/**
+ * Déplacement des caisses quand on change de carré : de l'ancienne disposition à la nouvelle en [MOVE_MS] ms.
+ * Un nouveau changement en cours de route repart de la position affichée. Sans animation (réglage système pour réduire
+ * les mouvements), la nouvelle disposition s'affiche tout de suite.
+ */
+private class SceneMotion(initial: Map<String, Slot>) {
+    private val progress = Animatable(1f)
+    private var from by mutableStateOf(initial)
+    private var to by mutableStateOf(initial)
+
+    /** Vrai quand les caisses ont fini de bouger : le panneau et les anneaux n'apparaissent qu'alors. */
+    val settled: Boolean get() = progress.value >= 1f
+
+    fun current(): Map<String, Slot> = lerpSlots(from, to, progress.value)
+
+    suspend fun moveTo(next: Map<String, Slot>, animate: Boolean) {
+        if (next == to) return
+        if (!animate) {
+            from = next
+            to = next
+            progress.snapTo(1f)
+            return
+        }
+        from = current()
+        to = next
+        progress.snapTo(0f)
+        progress.animateTo(1f, tween(durationMillis = MOVE_MS, easing = MoveEasing))
+    }
 }
 
 private class Placement(
@@ -93,12 +207,15 @@ private class Placement(
 ) {
     val frameH = FRAME_H * scale
     val soilY = (FRAME_H - SOIL_SINK) * scale
+
+    /** Dessin complet (plantes détaillées, monticules) dès que la caisse est assez grande, y compris en cours de déplacement. */
+    val detailed: Boolean get() = scale >= 0.75f
+
+    /** Brume d'éloignement : celle de l'arrière-plan, qui se dissipe en venant au premier plan. */
+    val fogAmount: Float get() = 0.2f * (1f - ((scale - 0.46f) / 0.54f).coerceIn(0f, 1f))
 }
 
 private class SceneLayout(val proj: GardenProjection, val placements: List<Placement>, val horizonY: Float)
-
-/** Parcelles de l'arrière-plan : (centre x, début z, échelle) ; la sélectionnée prend le premier plan, centrée. */
-private val BackSlots = listOf(Triple(-0.72f, 1.5f, 0.46f), Triple(0.72f, 1.5f, 0.46f), Triple(0f, 1.8f, 0.34f))
 
 private fun footprintFor(parcel: Parcel, centerX: Float, z0: Float, scale: Float): ParcelFootprint {
     val cell = scale * 1.1f / max(1, max(parcel.rows, parcel.cols))
@@ -107,21 +224,23 @@ private fun footprintFor(parcel: Parcel, centerX: Float, z0: Float, scale: Float
     return ParcelFootprint(centerX - width / 2f, z0, parcel.rows, parcel.cols, cell, wall)
 }
 
-private fun buildLayout(width: Float, height: Float, parcels: List<Parcel>, selectedIndex: Int): SceneLayout {
+private fun buildLayout(width: Float, height: Float, parcels: List<Parcel>, selectedId: String?, slots: Map<String, Slot>): SceneLayout {
     val proj = GardenProjection.forScene(width, height, nearEdgeY = height * NEAR_EDGE)
     val placements = ArrayList<Placement>()
-    parcels.indices.filter { it != selectedIndex }.take(BackSlots.size).forEachIndexed { n, index ->
-        val (cx, z0, s) = BackSlots[n]
-        placements += Placement(index, parcels[index], footprintFor(parcels[index], cx, z0, s), s, false)
-    }
-    parcels.getOrNull(selectedIndex)?.let {
-        placements += Placement(selectedIndex, it, footprintFor(it, 0f, 0f, 1f), 1f, true)
+    parcels.forEachIndexed { index, parcel ->
+        val slot = slots[parcel.id] ?: return@forEachIndexed
+        placements += Placement(index, parcel, footprintFor(parcel, slot.cx, slot.z0, slot.s), slot.s, parcel.id == selectedId)
     }
     // De la plus lointaine à la plus proche pour le recouvrement.
     placements.sortByDescending { it.fp.z0 }
     return SceneLayout(proj, placements, proj.project(0f, 0f, FAR_GROUND).y)
 }
 
+/**
+ * Scène du potager. Le ciel suit l'heure du téléphone et le lieu du département choisi ([skyPlace]) ; passer un
+ * [skyClock] fixe l'heure (captures d'écran reproductibles, tests visuels). Les caisses glissent d'une place à l'autre
+ * quand on change de carré, sauf si le système demande de réduire les animations.
+ */
 @Composable
 fun GardenScene(
     parcels: List<Parcel>,
@@ -133,14 +252,19 @@ fun GardenScene(
     onCellClick: (row: Int, col: Int) -> Unit,
     isDark: Boolean,
     modifier: Modifier = Modifier,
+    skyPlace: SkyPlace = SkyPlace.Metropole,
+    skyClock: SkyClock? = null,
 ) {
     val measurer = rememberTextMeasurer()
     val displayFontFamily = MaterialTheme.typography.displaySmall.fontFamily
     val byId = remember(vegetables) { vegetables.associateBy { it.id } }
-    val look = remember(isDark) { Look(isDark) }
+    val clock = rememberSkyClock(skyClock)
+    val sky = remember(clock, skyPlace) { skyPhaseAt(clock.minuteOfDay, clock.date, skyPlace, clock.utcOffsetMinutes) }
+    val look = remember(sky, isDark) { Look(sky, isDark) }
     val currentCellClick by rememberUpdatedState(onCellClick)
     val currentSelectParcel by rememberUpdatedState(onSelectParcel)
     val selected = parcels.getOrNull(selectedIndex)
+    val selectedId = selected?.id
     val description = if (selected == null) {
         "Aucune parcelle à afficher."
     } else {
@@ -149,14 +273,21 @@ fun GardenScene(
     }
     val neighborhood = remember(selected, vegetables) { selected?.let { neighborhoodOf(it, vegetables) } ?: emptyMap() }
 
+    val targetSlots = remember(parcels, selectedIndex) { slotsFor(parcels, selectedIndex) }
+    val reduceMotion = rememberReduceMotion()
+    val motion = remember { SceneMotion(targetSlots) }
+    LaunchedEffect(targetSlots, reduceMotion) { motion.moveTo(targetSlots, animate = !reduceMotion) }
+
+    // Le contentDescription ne décrit que le potager : le ciel est un décor, ignoré des lecteurs d'écran.
     Canvas(
         modifier = modifier
             .fillMaxWidth()
             .aspectRatio(1f / SCENE_RATIO)
             .semantics { contentDescription = description }
-            .pointerInput(parcels, selectedIndex) {
+            .pointerInput(parcels, targetSlots, selectedId) {
                 detectTapGestures { pos ->
-                    val layout = buildLayout(size.width.toFloat(), size.height.toFloat(), parcels, selectedIndex)
+                    // On teste les taps sur la disposition d'arrivée, même si les caisses bougent encore.
+                    val layout = buildLayout(size.width.toFloat(), size.height.toFloat(), parcels, selectedId, targetSlots)
                     layout.placements.firstOrNull { it.selected }?.let { pl ->
                         val hit = layout.proj.unprojectToPlane(pos, pl.soilY)
                         val cell = hit?.let { pl.fp.cellAt(it.first, it.second) }
@@ -176,11 +307,12 @@ fun GardenScene(
                 }
             },
     ) {
-        val layout = buildLayout(size.width, size.height, parcels, selectedIndex)
+        val layout = buildLayout(size.width, size.height, parcels, selectedId, motion.current())
+        val settled = motion.settled
         drawBackdrop(layout, look)
         drawGround(layout, look)
         for (pl in layout.placements) {
-            drawParcel(layout.proj, look, pl, byId, today, neighborhood, selectedCell, measurer, displayFontFamily)
+            drawParcel(layout.proj, look, pl, byId, today, neighborhood, selectedCell, measurer, displayFontFamily, settled)
         }
     }
 }
@@ -204,6 +336,48 @@ private fun hash01(a: Int, b: Int): Float {
     return ((h xor (h ushr 16)) and 0xFFFF) / 65535f
 }
 
+/** Soleil sur son arc de jour, lune et étoiles la nuit, nuages le jour. Décor seul : aucune information n'en dépend. */
+private fun DrawScope.drawCelestial(w: Float, hz: Float, look: Look) {
+    val sky = look.sky
+    val arcHeight = hz * 0.62f
+    // Soleil : de la gauche (lever) à la droite (coucher), en arc ; il passe derrière les collines aux extrémités.
+    sky.sunArc?.let { t ->
+        val lift = sin(PI * t).toFloat()
+        val sun = Offset(w * (0.12f + 0.76f * t), hz - arcHeight * lift + w * 0.01f)
+        val color = sunColor(lift)
+        val glowR = w * (0.1f + 0.05f * (1f - lift))
+        drawCircle(Brush.radialGradient(listOf(color.copy(alpha = 0.45f), color.copy(alpha = 0f)), sun, glowR), glowR, sun)
+        drawCircle(color, w * 0.034f, sun)
+    }
+    // Étoiles et lune : seulement quand le ciel est assez sombre ; elles se fondent dans le crépuscule et l'aube.
+    val starAlpha = sky.starAlpha
+    if (starAlpha > 0f) {
+        for (i in 0 until 26) {
+            val x = hash01(i, 1) * w
+            val y = hash01(i, 2) * hz * 0.8f
+            drawCircle(Color.White.copy(alpha = (0.25f + 0.45f * hash01(i, 3)) * starAlpha), 1.2f + 1.8f * hash01(i, 4), Offset(x, y))
+        }
+        val t = sky.nightArc
+        val moon = Offset(w * (0.12f + 0.76f * t), hz - arcHeight * 0.9f * sin(PI * t).toFloat() + w * 0.01f)
+        val glow = w * 0.09f
+        drawCircle(Brush.radialGradient(listOf(Color(0x40F4F0D8).copy(alpha = 0.25f * starAlpha), Color(0x00F4F0D8)), moon, glow), glow, moon)
+        drawCircle(Color(0xFFF2EED8).copy(alpha = starAlpha), w * 0.026f, moon)
+        // Croissant : un disque de la couleur du ciel à cet endroit mord le disque clair.
+        val bite = look.skyAt((moon.y / hz).coerceIn(0f, 1f)).copy(alpha = starAlpha)
+        drawCircle(bite, w * 0.022f, Offset(moon.x + w * 0.012f, moon.y - w * 0.006f))
+    }
+    val cloudAlpha = 0.55f * sky.daylight
+    if (cloudAlpha > 0f) {
+        for ((i, cx) in listOf(0.2f, 0.62f, 0.9f).withIndex()) {
+            val c = Offset(w * cx, hz * (0.28f + 0.15f * (i % 2)))
+            val cw = w * (0.09f + 0.02f * i)
+            for ((dx, dy, s) in listOf(Triple(-0.6f, 0.1f, 0.7f), Triple(0f, -0.1f, 1f), Triple(0.65f, 0.1f, 0.75f))) {
+                drawOval(Color.White.copy(alpha = cloudAlpha), Offset(c.x + dx * cw - cw * s * 0.6f, c.y + dy * cw * 0.5f - cw * s * 0.22f), Size(cw * s * 1.2f, cw * s * 0.44f))
+            }
+        }
+    }
+}
+
 private fun DrawScope.drawBackdrop(layout: SceneLayout, look: Look) {
     val w = size.width
     val hz = layout.horizonY
@@ -211,25 +385,7 @@ private fun DrawScope.drawBackdrop(layout: SceneLayout, look: Look) {
         Brush.verticalGradient(listOf(look.skyTop, look.skyMid, look.skyHorizon), startY = 0f, endY = hz + 8f),
         size = Size(w, hz + 8f),
     )
-    if (look.dark) {
-        for (i in 0 until 26) {
-            val x = hash01(i, 1) * w
-            val y = hash01(i, 2) * hz * 0.8f
-            drawCircle(Color.White.copy(alpha = 0.25f + 0.45f * hash01(i, 3)), 1.2f + 1.8f * hash01(i, 4), Offset(x, y))
-        }
-        val moon = Offset(w * 0.82f, hz * 0.34f)
-        drawCircle(Brush.radialGradient(listOf(Color(0x40F4F0D8), Color(0x00F4F0D8)), moon, w * 0.09f), w * 0.09f, moon)
-        drawCircle(Color(0xFFF2EED8), w * 0.026f, moon)
-        drawCircle(Color(0xFF14223A), w * 0.022f, Offset(moon.x + w * 0.012f, moon.y - w * 0.006f))
-    } else {
-        for ((i, cx) in listOf(0.2f, 0.62f, 0.9f).withIndex()) {
-            val c = Offset(w * cx, hz * (0.28f + 0.15f * (i % 2)))
-            val cw = w * (0.09f + 0.02f * i)
-            for ((dx, dy, s) in listOf(Triple(-0.6f, 0.1f, 0.7f), Triple(0f, -0.1f, 1f), Triple(0.65f, 0.1f, 0.75f))) {
-                drawOval(Color.White.copy(alpha = 0.55f), Offset(c.x + dx * cw - cw * s * 0.6f, c.y + dy * cw * 0.5f - cw * s * 0.22f), Size(cw * s * 1.2f, cw * s * 0.44f))
-            }
-        }
-    }
+    drawCelestial(w, hz, look)
     // Deux bandes de collines, la lointaine plus proche de la brume (perspective atmosphérique).
     fun hill(baseY: Float, amp: Float, freq: Float, phase: Float, color: Color) {
         val path = Path().apply {
@@ -247,7 +403,7 @@ private fun DrawScope.drawBackdrop(layout: SceneLayout, look: Look) {
     }
     hill(hz - w * 0.055f, w * 0.04f, 0.9f, 0.6f, look.hillFar)
     // Arbres et haie minuscules sur la ligne de collines.
-    val treeColor = lerp(look.hillFar, look.skyTop, if (look.dark) 0.2f else 0.18f)
+    val treeColor = lerp(look.hillFar, look.skyTop, look.mix(0.18f, 0.2f))
     for ((i, fx) in listOf(0.07f, 0.16f, 0.39f, 0.71f, 0.9f).withIndex()) {
         val x = w * fx
         val y = hz - w * 0.05f + w * 0.012f * sin(i * 2.1f)
@@ -258,7 +414,7 @@ private fun DrawScope.drawBackdrop(layout: SceneLayout, look: Look) {
         drawCircle(treeColor, s * 0.42f, Offset(x + s * 0.4f, y - s * 0.85f))
     }
     hill(hz - w * 0.012f, w * 0.032f, 1.3f, 2.4f, look.hillNear)
-    val bush = lerp(look.hillNear, if (look.dark) Color(0xFF0F2A20) else Color(0xFF3F7A45), 0.45f)
+    val bush = lerp(look.hillNear, look.bushDeep, 0.45f)
     for (i in 0 until 14) {
         val x = w * (0.2f + 0.045f * i)
         val r = w * (0.016f + 0.01f * hash01(i, 5))
@@ -286,7 +442,7 @@ private fun DrawScope.drawGround(layout: SceneLayout, look: Look) {
             if (i % 2 == 1) {
                 drawPath(
                     polygon(proj.project(-9f, 0f, z), proj.project(9f, 0f, z), proj.project(9f, 0f, z + band), proj.project(-9f, 0f, z + band)),
-                    if (look.dark) Color(0x0DFFFFFF) else Color(0x1EF2FFB0),
+                    lerp(Color(0x1EF2FFB0), Color(0x0DFFFFFF), look.mix(0f, 1f)),
                 )
             }
             z += band
@@ -294,7 +450,7 @@ private fun DrawScope.drawGround(layout: SceneLayout, look: Look) {
         }
         // Brume au loin.
         drawRect(
-            Brush.verticalGradient(listOf(look.skyHorizon.copy(alpha = if (look.dark) 0.35f else 0.5f), Color.Transparent), startY = hz, endY = hz + size.height * 0.12f),
+            Brush.verticalGradient(listOf(look.skyHorizon.copy(alpha = look.mix(0.5f, 0.35f)), Color.Transparent), startY = hz, endY = hz + size.height * 0.12f),
             topLeft = Offset(0f, hz),
             size = Size(size.width, size.height * 0.12f),
         )
@@ -313,7 +469,7 @@ private fun DrawScope.drawGround(layout: SceneLayout, look: Look) {
             val c = proj.project(x, 0f, zz)
             val r = proj.scaleAt(zz) * (0.008f + 0.01f * hash01(n, 13))
             drawOval(look.pathEdge.copy(alpha = 0.45f), Offset(c.x - r, c.y - r * 0.6f + r * 0.2f), Size(r * 2f, r * 1.2f))
-            drawOval(Color.White.copy(alpha = if (look.dark) 0.1f else 0.35f), Offset(c.x - r * 0.8f, c.y - r * 0.7f), Size(r * 1.3f, r * 0.8f))
+            drawOval(Color.White.copy(alpha = look.mix(0.35f, 0.1f)), Offset(c.x - r * 0.8f, c.y - r * 0.7f), Size(r * 1.3f, r * 0.8f))
         }
         // Touffes d'herbe et petites fleurs, semées de façon déterministe hors des parcelles et de l'allée.
         val spots = (0 until 90).map { n -> Triple(-3.2f + 6.4f * hash01(n, 21), -0.45f + 2.9f * hash01(n, 22), n) }
@@ -332,7 +488,7 @@ private fun DrawScope.drawGround(layout: SceneLayout, look: Look) {
                 val color = listOf(Color(0xFFFFFFFF), Color(0xFFFFD84D), Color(0xFFFFA8C4))[n % 9 / 3]
                 val top = Offset(c.x, c.y - s * 1.1f)
                 drawLine(look.grass, c, top, strokeWidth = max(1.2f, s * 0.08f))
-                drawCircle(if (look.dark) lerp(color, Color(0xFF14223A), 0.35f) else color, max(2f, s * 0.28f), top)
+                drawCircle(look.cool(color, 0.35f), max(2f, s * 0.28f), top)
                 drawCircle(Color(0xFFE8B63A), max(1f, s * 0.1f), top)
             }
         }
@@ -351,10 +507,11 @@ private fun DrawScope.drawParcel(
     selectedCell: Pair<Int, Int>?,
     measurer: TextMeasurer,
     displayFontFamily: FontFamily?,
+    settled: Boolean,
 ) {
     val fp = pl.fp
     val s = pl.scale
-    val fogAmount = if (pl.selected) 0f else 0.2f
+    val fogAmount = pl.fogAmount
     fun P(x: Float, y: Float, z: Float) = proj.project(x, y, z)
     fun wood(c: Color, night: Float = 0.45f) = look.fog(look.g(c, night), fogAmount)
     val lineW = max(1.2f, proj.scaleAt(fp.z0) * 0.008f * s)
@@ -367,7 +524,7 @@ private fun DrawScope.drawParcel(
                 P(fp.x0 - e + 0.12f * s, 0f, fp.z0 - e - 0.05f * s), P(fp.x1 + e + 0.12f * s, 0f, fp.z0 - e - 0.05f * s),
                 P(fp.x1 + e + 0.1f * s, 0f, fp.z1 + e - 0.04f * s), P(fp.x0 - e + 0.1f * s, 0f, fp.z1 + e - 0.04f * s),
             ),
-            Color.Black.copy(alpha = alpha * (if (look.dark) 1.4f else 1f)),
+            Color.Black.copy(alpha = alpha * look.mix(1f, 1.4f)),
         )
     }
 
@@ -448,7 +605,7 @@ private fun DrawScope.drawParcel(
                 tint.copy(alpha = 0.06f + 0.1f * abs(h - 0.5f)),
             )
             // Petits monticules de terre.
-            val mounds = if (pl.selected) 3 else 1
+            val mounds = if (pl.detailed) 3 else 1
             for (m in 0 until mounds) {
                 val mx = cx + (hash01(r * 31 + c * 7 + m, 41) - 0.5f) * fp.cell * 0.8f
                 val mz = cz + (hash01(r * 31 + c * 7 + m, 42) - 0.5f) * fp.cell * 0.8f
@@ -510,8 +667,8 @@ private fun DrawScope.drawParcel(
         drawLine(Color(0xFF6B4423).copy(alpha = 0.18f), P(xa, pl.frameH, z), P(xa + (fp.x1 - fp.x0) * 0.2f, pl.frameH, z), strokeWidth = lineW * 0.8f)
     }
 
-    // Anneaux d'état sur la terre (sous les plantes) : sélection, affinité, alerte.
-    if (pl.selected) {
+    // Anneaux d'état sur la terre (sous les plantes) : sélection, affinité, alerte. Ils attendent la fin du déplacement.
+    if (pl.selected && settled) {
         for (r in 0 until fp.rows) {
             for (c in 0 until fp.cols) {
                 val nb = neighborhood[r to c]
@@ -542,7 +699,7 @@ private fun DrawScope.drawParcel(
     }
 
     // Plantes, rangée par rangée du fond (rangée 0) vers l'avant, pour un recouvrement correct.
-    val tone = PlantTone(look.dark, look.fogColor, fogAmount)
+    val tone = PlantTone(look.plantNight, look.fogColor, fogAmount)
     for (r in 0 until fp.rows) {
         for (c in 0 until fp.cols) {
             val slot = pl.parcel.getSlot(r, c) ?: continue
@@ -551,11 +708,11 @@ private fun DrawScope.drawParcel(
             val base = P(fp.cellCenterX(c), pl.soilY, cz)
             val unit = proj.scaleAt(cz, pl.soilY) * fp.cell
             val growth = plantGrowth(veg, slot.plantedDate, today)
-            drawPlant(veg, growth, base, unit, tone, seed = r * 31 + c * 17 + veg.id.hashCode(), simple = !pl.selected)
+            drawPlant(veg, growth, base, unit, tone, seed = r * 31 + c * 17 + veg.id.hashCode(), simple = !pl.detailed)
         }
     }
 
-    if (pl.selected) {
+    if (pl.selected && settled) {
         drawCellBadges(proj, pl, byId, today, neighborhood)
         drawSign(proj, look, pl, measurer, displayFontFamily)
     }
@@ -624,7 +781,7 @@ private fun DrawScope.drawSign(proj: GardenProjection, look: Look, pl: Placement
             fontFamily = displayFontFamily,
             fontWeight = FontWeight.SemiBold,
             fontSize = px.toSp(),
-            color = if (look.dark) Color(0xFFF3E7CC) else Color(0xFF3A2312),
+            color = SignInk,
         ),
         overflow = TextOverflow.Ellipsis,
         maxLines = 1,
@@ -652,7 +809,7 @@ private fun DrawScope.drawSign(proj: GardenProjection, look: Look, pl: Placement
     val corner = CornerRadius(fontPx * 0.28f)
     drawRoundRect(Color.Black.copy(alpha = 0.22f), Offset(left + fontPx * 0.12f, top + fontPx * 0.18f), Size(boardW, boardH), corner)
     drawRoundRect(look.g(Color(0xFFA6733F), 0.45f), Offset(left, top), Size(boardW, boardH), corner)
-    drawRoundRect(look.g(Color(0xFFD2A46C), 0.45f), Offset(left + fontPx * 0.1f, top + fontPx * 0.1f), Size(boardW - fontPx * 0.2f, boardH - fontPx * 0.2f), CornerRadius(fontPx * 0.2f))
+    drawRoundRect(signFace(look.night), Offset(left + fontPx * 0.1f, top + fontPx * 0.1f), Size(boardW - fontPx * 0.2f, boardH - fontPx * 0.2f), CornerRadius(fontPx * 0.2f))
     val tx = left + (boardW - layout.size.width) / 2f
     val ty = top + (boardH - layout.size.height) / 2f
     drawText(layout, topLeft = Offset(tx, ty))
