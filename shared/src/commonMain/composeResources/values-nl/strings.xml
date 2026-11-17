@@ -257,4 +257,19 @@
     <string name="garden_slot_plant">Een soort planten:</string>
     <string name="garden_needs_space">Heeft meer ruimte nodig dan een vak van 30 cm.</string>
     <string name="garden_indicative">Indicatieve teeltgegevens.</string>
+    <string name="garden_new_title">Nieuwe teeltruimte</string>
+    <string name="garden_new_type">Type opstelling</string>
+    <string name="garden_preset_pot">Losse pot</string>
+    <string name="garden_preset_planter">Plantenbak</string>
+    <string name="garden_preset_bin">Bak / Plank</string>
+    <string name="garden_volume_label">Inhoud van de bak (liter)</string>
+    <string name="garden_standard_format">Standaardformaat: verhoogde moestuinbak verdeeld in vakken van 30×30 cm.</string>
+    <string name="garden_size_3">9 vakken (90 cm)</string>
+    <string name="garden_size_4">16 vakken (1,20 m)</string>
+    <string name="garden_name_container">Pot / Bak</string>
+    <string name="garden_name_windowsill">Vensterbank</string>
+    <string name="garden_name_shelf">Plank</string>
+    <string name="garden_name_parcel">Perceel</string>
+    <string name="garden_name_square">Vak</string>
+    <string name="garden_create">Perceel aanmaken</string>
 </resources>

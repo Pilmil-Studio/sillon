@@ -257,4 +257,19 @@
     <string name="garden_slot_plant">Sorte pflanzen:</string>
     <string name="garden_needs_space">Braucht mehr Platz als ein 30-cm-Feld.</string>
     <string name="garden_indicative">Anbaudaten nur als Richtwerte.</string>
+    <string name="garden_new_title">Neuer Anbauplatz</string>
+    <string name="garden_new_type">Art der Anlage</string>
+    <string name="garden_preset_pot">Einzelner Topf</string>
+    <string name="garden_preset_planter">Pflanzkasten</string>
+    <string name="garden_preset_bin">Kasten / Regal</string>
+    <string name="garden_volume_label">Volumen des Behälters (Liter)</string>
+    <string name="garden_standard_format">Standardformat: Hochbeet, unterteilt in Felder von 30×30 cm.</string>
+    <string name="garden_size_3">9 Felder (90 cm)</string>
+    <string name="garden_size_4">16 Felder (1,20 m)</string>
+    <string name="garden_name_container">Topf / Kasten</string>
+    <string name="garden_name_windowsill">Fensterbank</string>
+    <string name="garden_name_shelf">Regal</string>
+    <string name="garden_name_parcel">Beet</string>
+    <string name="garden_name_square">Feld</string>
+    <string name="garden_create">Beet anlegen</string>
 </resources>

@@ -257,4 +257,19 @@
     <string name="garden_slot_plant">Plant a variety:</string>
     <string name="garden_needs_space">Needs more room than a 30 cm square.</string>
     <string name="garden_indicative">Indicative agronomic data.</string>
+    <string name="garden_new_title">New growing space</string>
+    <string name="garden_new_type">Type of setup</string>
+    <string name="garden_preset_pot">Single pot</string>
+    <string name="garden_preset_planter">Planter</string>
+    <string name="garden_preset_bin">Tray / Shelf</string>
+    <string name="garden_volume_label">Container volume (litres)</string>
+    <string name="garden_standard_format">Standard format: raised bed divided into 30×30 cm squares.</string>
+    <string name="garden_size_3">9 squares (90 cm)</string>
+    <string name="garden_size_4">16 squares (1.20 m)</string>
+    <string name="garden_name_container">Pot / Planter</string>
+    <string name="garden_name_windowsill">Windowsill</string>
+    <string name="garden_name_shelf">Shelf</string>
+    <string name="garden_name_parcel">Plot</string>
+    <string name="garden_name_square">Square</string>
+    <string name="garden_create">Create the plot</string>
 </resources>

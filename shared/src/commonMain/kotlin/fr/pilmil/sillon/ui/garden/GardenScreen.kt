@@ -494,11 +494,17 @@ fun GardenScreen(
         var containerFormat by remember { mutableStateOf(1 to 3) }
         var containerVolume by remember { mutableStateOf(20) }
 
+        val nameContainer = stringResource(Res.string.garden_name_container)
+        val nameWindowsill = stringResource(Res.string.garden_name_windowsill)
+        val nameShelf = stringResource(Res.string.garden_name_shelf)
+        val nameParcel = stringResource(Res.string.garden_name_parcel)
+        val nameSquare = stringResource(Res.string.garden_name_square)
+
         AlertDialog(
             onDismissRequest = { showAddParcelDialog = false },
             title = {
                 Text(
-                    text = "Nouvel espace de culture",
+                    text = stringResource(Res.string.garden_new_title),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                 )
@@ -506,7 +512,7 @@ fun GardenScreen(
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(
-                        text = "Type d'installation",
+                        text = stringResource(Res.string.garden_new_type),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -535,9 +541,9 @@ fun GardenScreen(
 
                     if (selectedType.isContainerBased) {
                         val presets = listOf(
-                            Triple(1 to 1, "1 × 1", "Pot individuel"),
-                            Triple(1 to 3, "1 × 3", "Jardinière"),
-                            Triple(2 to 3, "2 × 3", "Bac / Étagère"),
+                            Triple(1 to 1, "1 × 1", stringResource(Res.string.garden_preset_pot)),
+                            Triple(1 to 3, "1 × 3", stringResource(Res.string.garden_preset_planter)),
+                            Triple(2 to 3, "2 × 3", stringResource(Res.string.garden_preset_bin)),
                         )
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -571,12 +577,12 @@ fun GardenScreen(
                             onValueChange = { containerVolume = it },
                             min = 2,
                             max = 200,
-                            label = "Volume du contenant (litres)",
+                            label = stringResource(Res.string.garden_volume_label),
                             modifier = Modifier.fillMaxWidth(),
                         )
                     } else {
                         Text(
-                            text = "Format standard : Carré potager surélevé divisé en carrés de 30×30 cm.",
+                            text = stringResource(Res.string.garden_standard_format),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -601,7 +607,7 @@ fun GardenScreen(
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                 ) {
                                     Text(text = "3 × 3", fontWeight = FontWeight.Bold)
-                                    Text(text = "9 carrés (90 cm)", style = MaterialTheme.typography.bodySmall)
+                                    Text(text = stringResource(Res.string.garden_size_3), style = MaterialTheme.typography.bodySmall)
                                 }
                             }
 
@@ -622,7 +628,7 @@ fun GardenScreen(
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                 ) {
                                     Text(text = "4 × 4", fontWeight = FontWeight.Bold)
-                                    Text(text = "16 carrés (1,20 m)", style = MaterialTheme.typography.bodySmall)
+                                    Text(text = stringResource(Res.string.garden_size_4), style = MaterialTheme.typography.bodySmall)
                                 }
                             }
                         }
@@ -634,10 +640,10 @@ fun GardenScreen(
                     val idx = garden.parcels.size + 1
                     if (selectedType.isContainerBased) {
                         val prefix = when (selectedType) {
-                            ParcelType.CONTAINER -> "Pot / Jardinière"
-                            ParcelType.WINDOWSILL -> "Rebord"
-                            ParcelType.GROW_LIGHT_SHELF -> "Étagère"
-                            else -> "Parcelle"
+                            ParcelType.CONTAINER -> nameContainer
+                            ParcelType.WINDOWSILL -> nameWindowsill
+                            ParcelType.GROW_LIGHT_SHELF -> nameShelf
+                            else -> nameParcel
                         }
                         onAddParcelWithVolume(
                             "$prefix $idx",
@@ -648,7 +654,7 @@ fun GardenScreen(
                         )
                     } else {
                         onAddParcelWithVolume(
-                            "Carré $idx",
+                            "$nameSquare $idx",
                             selectedType,
                             selectedSize,
                             selectedSize,
@@ -657,12 +663,12 @@ fun GardenScreen(
                     }
                     showAddParcelDialog = false
                 }) {
-                    Text("Créer la parcelle", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+                    Text(stringResource(Res.string.garden_create), fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showAddParcelDialog = false }) {
-                    Text("Annuler")
+                    Text(stringResource(Res.string.action_cancel))
                 }
             },
             containerColor = MaterialTheme.colorScheme.surface,

@@ -259,4 +259,19 @@
     <string name="garden_slot_plant">Piantare una varietà:</string>
     <string name="garden_needs_space">Richiede più spazio di un quadrato da 30 cm.</string>
     <string name="garden_indicative">Dati agronomici indicativi.</string>
+    <string name="garden_new_title">Nuovo spazio di coltivazione</string>
+    <string name="garden_new_type">Tipo di installazione</string>
+    <string name="garden_preset_pot">Vaso singolo</string>
+    <string name="garden_preset_planter">Fioriera</string>
+    <string name="garden_preset_bin">Cassetta / Scaffale</string>
+    <string name="garden_volume_label">Volume del contenitore (litri)</string>
+    <string name="garden_standard_format">Formato standard: aiuola rialzata divisa in quadrati da 30×30 cm.</string>
+    <string name="garden_size_3">9 quadrati (90 cm)</string>
+    <string name="garden_size_4">16 quadrati (1,20 m)</string>
+    <string name="garden_name_container">Vaso / Fioriera</string>
+    <string name="garden_name_windowsill">Davanzale</string>
+    <string name="garden_name_shelf">Scaffale</string>
+    <string name="garden_name_parcel">Aiuola</string>
+    <string name="garden_name_square">Quadrato</string>
+    <string name="garden_create">Creare l’aiuola</string>
 </resources>

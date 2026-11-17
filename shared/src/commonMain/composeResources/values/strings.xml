@@ -259,4 +259,19 @@
     <string name="garden_slot_plant">Planter une variété :</string>
     <string name="garden_needs_space">Demande plus d’espace qu’un carré de 30 cm.</string>
     <string name="garden_indicative">Données agronomiques indicatives.</string>
+    <string name="garden_new_title">Nouvel espace de culture</string>
+    <string name="garden_new_type">Type d’installation</string>
+    <string name="garden_preset_pot">Pot individuel</string>
+    <string name="garden_preset_planter">Jardinière</string>
+    <string name="garden_preset_bin">Bac / Étagère</string>
+    <string name="garden_volume_label">Volume du contenant (litres)</string>
+    <string name="garden_standard_format">Format standard : carré potager surélevé divisé en carrés de 30×30 cm.</string>
+    <string name="garden_size_3">9 carrés (90 cm)</string>
+    <string name="garden_size_4">16 carrés (1,20 m)</string>
+    <string name="garden_name_container">Pot / Jardinière</string>
+    <string name="garden_name_windowsill">Rebord</string>
+    <string name="garden_name_shelf">Étagère</string>
+    <string name="garden_name_parcel">Parcelle</string>
+    <string name="garden_name_square">Carré</string>
+    <string name="garden_create">Créer la parcelle</string>
 </resources>

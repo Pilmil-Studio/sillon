@@ -259,4 +259,19 @@
     <string name="garden_slot_plant">Plantar una variedad:</string>
     <string name="garden_needs_space">Necesita más espacio que un cuadro de 30 cm.</string>
     <string name="garden_indicative">Datos agronómicos orientativos.</string>
+    <string name="garden_new_title">Nuevo espacio de cultivo</string>
+    <string name="garden_new_type">Tipo de instalación</string>
+    <string name="garden_preset_pot">Maceta individual</string>
+    <string name="garden_preset_planter">Jardinera</string>
+    <string name="garden_preset_bin">Bandeja / Estante</string>
+    <string name="garden_volume_label">Volumen del contenedor (litros)</string>
+    <string name="garden_standard_format">Formato estándar: bancal elevado dividido en cuadros de 30×30 cm.</string>
+    <string name="garden_size_3">9 cuadros (90 cm)</string>
+    <string name="garden_size_4">16 cuadros (1,20 m)</string>
+    <string name="garden_name_container">Maceta / Jardinera</string>
+    <string name="garden_name_windowsill">Alféizar</string>
+    <string name="garden_name_shelf">Estante</string>
+    <string name="garden_name_parcel">Parcela</string>
+    <string name="garden_name_square">Cuadro</string>
+    <string name="garden_create">Crear la parcela</string>
 </resources>
