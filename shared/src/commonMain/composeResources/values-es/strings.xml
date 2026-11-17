@@ -274,4 +274,13 @@
     <string name="garden_name_parcel">Parcela</string>
     <string name="garden_name_square">Cuadro</string>
     <string name="garden_create">Crear la parcela</string>
+    <string name="custom_frost_choice">Otro país / introducir mis fechas</string>
+    <string name="custom_frost_title">Mis fechas de helada</string>
+    <string name="custom_frost_help">Indique la fecha media de la última helada de primavera en su zona. La encontrará en el servicio meteorológico de su país o preguntando a los hortelanos del lugar. Es un promedio, no una garantía: todavía puede producirse una helada más tardía.</string>
+    <string name="custom_frost_month">Mes</string>
+    <string name="custom_frost_invalid">Esta fecha no existe en el calendario.</string>
+    <string name="custom_frost_confirm">Confirmar</string>
+    <string name="custom_frost_place">Mis fechas</string>
+    <string name="custom_frost_current">Mis fechas: %1$s</string>
+    <string name="frost_ref_custom_text">Estas fechas sustituyen a las de un departamento francés. Todas las tareas y los recordatorios de siembra se calculan a partir de este día. Es un promedio, no una garantía: vigile el tiempo local.</string>
 </resources>

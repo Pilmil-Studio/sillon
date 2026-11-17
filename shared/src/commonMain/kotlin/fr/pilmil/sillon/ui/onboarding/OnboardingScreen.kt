@@ -58,12 +58,27 @@ fun OnboardingScreen(
     onDepartment: (DepartmentFrost?) -> Unit,
     onFinish: (reminders: Boolean) -> Unit,
     onEnvironment: (GrowingEnvironment) -> Unit = {},
+    onCustomFrost: (month: Int, day: Int) -> Unit = { _, _ -> },
 ) {
     var step by rememberSaveable { mutableIntStateOf(0) }
+    var enteringCustomFrost by rememberSaveable { mutableStateOf(false) }
     var chosenEnvironment by rememberSaveable { mutableStateOf(GrowingEnvironment.OUTDOOR) }
     val requestReminders = rememberReminderPermissionRequester(onResult = onFinish)
     PlatformBackHandler(enabled = step > 0) {
         step = if (step == 2 && chosenEnvironment == GrowingEnvironment.INDOOR) 0 else step - 1
+    }
+
+    if (enteringCustomFrost) {
+        CustomFrostDialog(
+            initialMonth = 4,
+            initialDay = 15,
+            onConfirm = { month, day ->
+                enteringCustomFrost = false
+                onCustomFrost(month, day)
+                step = 2
+            },
+            onDismiss = { enteringCustomFrost = false },
+        )
     }
 
     Column(
@@ -143,6 +158,10 @@ fun OnboardingScreen(
                         onDepartment(it)
                         step = 2
                     },
+                )
+                SillonOutlinedButton(
+                    text = stringResource(Res.string.custom_frost_choice),
+                    onClick = { enteringCustomFrost = true },
                 )
                 SillonOutlinedButton(
                     text = stringResource(Res.string.onboarding_later),

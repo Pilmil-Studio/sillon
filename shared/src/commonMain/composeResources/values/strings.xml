@@ -274,4 +274,13 @@
     <string name="garden_name_parcel">Parcelle</string>
     <string name="garden_name_square">Carré</string>
     <string name="garden_create">Créer la parcelle</string>
+    <string name="custom_frost_choice">Autre pays / saisir mes dates</string>
+    <string name="custom_frost_title">Mes dates de gelée</string>
+    <string name="custom_frost_help">Indiquez la date moyenne de la dernière gelée de printemps chez vous. Vous la trouverez auprès du service météo de votre pays ou en demandant aux jardiniers du coin. C’est une moyenne, pas une garantie : une gelée plus tardive reste possible.</string>
+    <string name="custom_frost_month">Mois</string>
+    <string name="custom_frost_invalid">Cette date n’existe pas au calendrier.</string>
+    <string name="custom_frost_confirm">Valider</string>
+    <string name="custom_frost_place">Mes dates</string>
+    <string name="custom_frost_current">Mes dates : %1$s</string>
+    <string name="frost_ref_custom_text">Ces dates remplacent celles d’un département. Tous les travaux et rappels de semis sont calculés par rapport à ce jour. C’est une moyenne, pas une garantie : surveillez la météo locale.</string>
 </resources>

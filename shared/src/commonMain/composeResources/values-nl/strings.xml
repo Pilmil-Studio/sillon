@@ -272,4 +272,13 @@
     <string name="garden_name_parcel">Perceel</string>
     <string name="garden_name_square">Vak</string>
     <string name="garden_create">Perceel aanmaken</string>
+    <string name="custom_frost_choice">Ander land / mijn eigen data invoeren</string>
+    <string name="custom_frost_title">Mijn vorstdata</string>
+    <string name="custom_frost_help">Vul de gemiddelde datum van de laatste voorjaarsvorst bij u in. U vindt die bij de weerdienst van uw land of door lokale tuiniers te vragen. Het is een gemiddelde, geen garantie: een latere vorst blijft mogelijk.</string>
+    <string name="custom_frost_month">Maand</string>
+    <string name="custom_frost_invalid">Deze datum bestaat niet in de kalender.</string>
+    <string name="custom_frost_confirm">Bevestigen</string>
+    <string name="custom_frost_place">Mijn data</string>
+    <string name="custom_frost_current">Mijn data: %1$s</string>
+    <string name="frost_ref_custom_text">Deze data vervangen die van een Frans departement. Alle werkzaamheden en zaaiherinneringen worden vanaf deze dag berekend. Het is een gemiddelde, geen garantie: houd het lokale weer in de gaten.</string>
 </resources>

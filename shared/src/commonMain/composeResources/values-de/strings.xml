@@ -272,4 +272,13 @@
     <string name="garden_name_parcel">Beet</string>
     <string name="garden_name_square">Feld</string>
     <string name="garden_create">Beet anlegen</string>
+    <string name="custom_frost_choice">Anderes Land / eigene Daten eingeben</string>
+    <string name="custom_frost_title">Meine Frostdaten</string>
+    <string name="custom_frost_help">Geben Sie das durchschnittliche Datum des letzten Frühjahrsfrosts bei Ihnen ein. Sie finden es beim Wetterdienst Ihres Landes oder bei Gärtnern aus der Gegend. Es ist ein Durchschnitt, keine Garantie: Ein späterer Frost bleibt möglich.</string>
+    <string name="custom_frost_month">Monat</string>
+    <string name="custom_frost_invalid">Dieses Datum gibt es im Kalender nicht.</string>
+    <string name="custom_frost_confirm">Bestätigen</string>
+    <string name="custom_frost_place">Meine Daten</string>
+    <string name="custom_frost_current">Meine Daten: %1$s</string>
+    <string name="frost_ref_custom_text">Diese Daten ersetzen die eines französischen Départements. Alle Arbeiten und Aussaaterinnerungen werden von diesem Tag aus berechnet. Es ist ein Durchschnitt, keine Garantie: Behalten Sie das örtliche Wetter im Blick.</string>
 </resources>

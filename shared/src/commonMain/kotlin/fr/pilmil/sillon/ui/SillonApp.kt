@@ -166,7 +166,11 @@ fun SillonApp(
         prefs.departmentCode = code
         departmentCode = code
         val dep = code?.let(FrenchFrostCatalog::getByCode) ?: return
-        update { store.updateFrostDate(dep.medianLastFrost.month, dep.medianLastFrost.day) }
+        update {
+            store.updateFrostDate(dep.medianLastFrost.month, dep.medianLastFrost.day)
+            // Choisir un département quitte le mode « mes dates », sans effacer celles qui ont été saisies.
+            store.setUseCustomFrost(false)
+        }
     }
 
     fun setReminders(on: Boolean, garden: Garden) {
@@ -200,6 +204,7 @@ fun SillonApp(
     if (!onboarded) {
         OnboardingScreen(
             onDepartment = { chooseDepartment(it?.code) },
+            onCustomFrost = { month, day -> update { store.updateCustomFrost(month, day) } },
             onEnvironment = { env ->
                 update { store.updateEnvironment(environment = env) }
             },
@@ -222,6 +227,9 @@ fun SillonApp(
             onDismiss = { pickingDepartment = false },
         )
     }
+
+    // Les dates saisies sont actives seulement si elles existent : sans date, c'est le département qui sert.
+    val customFrostActive = garden.useCustomFrost && garden.customFrostDate != null
 
     PlatformBackHandler(enabled = currentScreen != SillonScreen.DASHBOARD) {
         currentScreen = SillonScreen.DASHBOARD
@@ -248,7 +256,9 @@ fun SillonApp(
             when (currentScreen) {
                 SillonScreen.DASHBOARD -> {
                     val today = remember { todayLocalDate() }
-                    val climate = remember(departmentCode) { FrenchFrostCatalog.getClimate(departmentCode) }
+                    val climate = remember(departmentCode, garden.useCustomFrost, garden.customFrostDate) {
+                        garden.climateFor(FrenchFrostCatalog.getClimate(departmentCode))
+                    }
                     val frostEngine = remember(climate) { FrostEngine(climate = climate) }
                     val horizonToday = stringResource(Res.string.horizon_today)
                     val horizonTodayHint = stringResource(Res.string.horizon_today_hint)
@@ -292,7 +302,11 @@ fun SillonApp(
                     }
                     DashboardScreen(
                         horizons = horizons,
-                        placeLabel = departmentCode?.let(FrenchFrostCatalog::getByCode)?.let { "${it.name} (${it.code})" },
+                        placeLabel = if (customFrostActive) {
+                            stringResource(Res.string.custom_frost_place)
+                        } else {
+                            departmentCode?.let(FrenchFrostCatalog::getByCode)?.let { "${it.name} (${it.code})" }
+                        },
                         tip = tip,
                         showIntroHints = showIntroHints,
                         activeGardenMarker = activeGardenMarker,
@@ -329,9 +343,9 @@ fun SillonApp(
                 )
 
                 SillonScreen.SETTINGS -> SettingsScreen(
-                    frostMonth = garden.frostDate.month,
-                    frostDay = garden.frostDate.day,
-                    climate = FrenchFrostCatalog.getClimate(departmentCode),
+                    frostMonth = garden.activeFrostDate.month,
+                    frostDay = garden.activeFrostDate.day,
+                    climate = garden.climateFor(FrenchFrostCatalog.getClimate(departmentCode)),
                     altitudeMeters = garden.altitudeMeters,
                     onAltitudeChange = { meters ->
                         update { store.updateAltitude(meters) }
@@ -356,8 +370,11 @@ fun SillonApp(
                     onEnvironmentChange = { env, ori, wind, cov, src, hours ->
                         update { store.updateEnvironment(env, ori, wind, cov, src, hours) }
                     },
-                    departmentLabel = departmentCode?.let(FrenchFrostCatalog::getByCode)?.let { "${it.name} (${it.code})" },
+                    departmentLabel = departmentCode?.takeUnless { customFrostActive }
+                        ?.let(FrenchFrostCatalog::getByCode)?.let { "${it.name} (${it.code})" },
                     onPickDepartment = { pickingDepartment = true },
+                    customFrostActive = customFrostActive,
+                    onCustomFrost = { month, day -> update { store.updateCustomFrost(month, day) } },
                     remindersOn = remindersOn,
                     onRemindersChange = { on ->
                         if (on) {

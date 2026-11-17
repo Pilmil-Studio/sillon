@@ -272,4 +272,13 @@
     <string name="garden_name_parcel">Plot</string>
     <string name="garden_name_square">Square</string>
     <string name="garden_create">Create the plot</string>
+    <string name="custom_frost_choice">Other country / enter my dates</string>
+    <string name="custom_frost_title">My frost dates</string>
+    <string name="custom_frost_help">Enter the average date of the last spring frost where you live. You can find it from your country’s weather service or by asking local gardeners. It is an average, not a guarantee: a later frost is still possible.</string>
+    <string name="custom_frost_month">Month</string>
+    <string name="custom_frost_invalid">This date does not exist in the calendar.</string>
+    <string name="custom_frost_confirm">Confirm</string>
+    <string name="custom_frost_place">My dates</string>
+    <string name="custom_frost_current">My dates: %1$s</string>
+    <string name="frost_ref_custom_text">These dates replace those of a French département. All tasks and sowing reminders are calculated from this day. It is an average, not a guarantee: keep an eye on the local weather.</string>
 </resources>

@@ -66,6 +66,7 @@ import fr.pilmil.sillon.ui.components.SillonButton
 import fr.pilmil.sillon.ui.components.SillonCard
 import fr.pilmil.sillon.ui.components.SillonOutlinedButton
 import fr.pilmil.sillon.ui.components.SillonStepper
+import fr.pilmil.sillon.ui.onboarding.CustomFrostDialog
 import fr.pilmil.sillon.ui.rememberAmbientLuxSensor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringArrayResource
@@ -104,6 +105,8 @@ fun SettingsScreen(
     onExportCsv: () -> Unit = {},
     departmentLabel: String? = null,
     onPickDepartment: () -> Unit = {},
+    customFrostActive: Boolean = false,
+    onCustomFrost: (month: Int, day: Int) -> Unit = { _, _ -> },
     remindersOn: Boolean = false,
     onRemindersChange: (Boolean) -> Unit = {},
     cloudBackupAvailable: Boolean = false,
@@ -116,6 +119,19 @@ fun SettingsScreen(
     val monthNames = stringArrayResource(Res.array.month_names)
     var pilmilDialogMode by remember { mutableStateOf<String?>(null) }
     var passphraseInput by remember { mutableStateOf("") }
+    var enteringCustomFrost by remember { mutableStateOf(false) }
+
+    if (enteringCustomFrost) {
+        CustomFrostDialog(
+            initialMonth = frostMonth,
+            initialDay = frostDay,
+            onConfirm = { month, day ->
+                enteringCustomFrost = false
+                onCustomFrost(month, day)
+            },
+            onDismiss = { enteringCustomFrost = false },
+        )
+    }
 
     if (pilmilDialogMode != null) {
         val isExport = pilmilDialogMode == "export"
@@ -458,7 +474,11 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = stringResource(
-                            if (climate == Climate.TROPICAL) Res.string.frost_ref_tropical_text else Res.string.frost_ref_temperate_text,
+                            when {
+                                customFrostActive -> Res.string.frost_ref_custom_text
+                                climate == Climate.TROPICAL -> Res.string.frost_ref_tropical_text
+                                else -> Res.string.frost_ref_temperate_text
+                            },
                         ),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -466,32 +486,45 @@ fun SettingsScreen(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    ) {
-                        SillonStepper(
-                            value = frostDay,
-                            onValueChange = { onFrostDateChange(frostMonth, it) },
-                            min = 1,
-                            max = 31,
-                            label = stringResource(Res.string.day_of_month),
-                            modifier = Modifier.weight(1f),
-                        )
-                        SillonStepper(
-                            value = frostMonth,
-                            onValueChange = { onFrostDateChange(it, frostDay) },
-                            min = 1,
-                            max = 12,
-                            label = stringResource(Res.string.month_label, monthNames.getOrElse(frostMonth - 1) { "" }),
-                            modifier = Modifier.weight(1f),
-                        )
+                    // Dates saisies : on les change par le dialogue, qui refuse les dates impossibles.
+                    if (!customFrostActive) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            SillonStepper(
+                                value = frostDay,
+                                onValueChange = { onFrostDateChange(frostMonth, it) },
+                                min = 1,
+                                max = 31,
+                                label = stringResource(Res.string.day_of_month),
+                                modifier = Modifier.weight(1f),
+                            )
+                            SillonStepper(
+                                value = frostMonth,
+                                onValueChange = { onFrostDateChange(it, frostDay) },
+                                min = 1,
+                                max = 12,
+                                label = stringResource(Res.string.month_label, monthNames.getOrElse(frostMonth - 1) { "" }),
+                                modifier = Modifier.weight(1f),
+                            )
+                        }
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                     SillonOutlinedButton(
                         text = departmentLabel?.let { stringResource(Res.string.place_label, it) } ?: stringResource(Res.string.pick_department),
                         icon = Icons.Filled.Place,
                         onClick = onPickDepartment,
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    SillonOutlinedButton(
+                        text = if (customFrostActive) {
+                            stringResource(Res.string.custom_frost_current, "$frostDay ${monthNames.getOrElse(frostMonth - 1) { "" }}")
+                        } else {
+                            stringResource(Res.string.custom_frost_choice)
+                        },
+                        icon = Icons.Filled.Place,
+                        onClick = { enteringCustomFrost = true },
                     )
                     Spacer(modifier = Modifier.height(14.dp))
                     SillonStepper(

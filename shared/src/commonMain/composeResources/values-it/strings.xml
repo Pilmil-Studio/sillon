@@ -274,4 +274,13 @@
     <string name="garden_name_parcel">Aiuola</string>
     <string name="garden_name_square">Quadrato</string>
     <string name="garden_create">Creare l’aiuola</string>
+    <string name="custom_frost_choice">Altro paese / inserire le mie date</string>
+    <string name="custom_frost_title">Le mie date di gelo</string>
+    <string name="custom_frost_help">Inserite la data media dell’ultima gelata primaverile dove vivete. La trovate presso il servizio meteorologico del vostro paese o chiedendo agli ortolani della zona. È una media, non una garanzia: una gelata più tardiva resta possibile.</string>
+    <string name="custom_frost_month">Mese</string>
+    <string name="custom_frost_invalid">Questa data non esiste nel calendario.</string>
+    <string name="custom_frost_confirm">Conferma</string>
+    <string name="custom_frost_place">Le mie date</string>
+    <string name="custom_frost_current">Le mie date: %1$s</string>
+    <string name="frost_ref_custom_text">Queste date sostituiscono quelle di un dipartimento francese. Tutti i lavori e i promemoria di semina sono calcolati a partire da questo giorno. È una media, non una garanzia: tenete d’occhio il meteo locale.</string>
 </resources>
