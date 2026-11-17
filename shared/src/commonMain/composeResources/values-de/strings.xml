@@ -226,4 +226,27 @@
     <string name="camera_unusable">Unbrauchbar</string>
     <string name="camera_capture">Jetzt Foto aufnehmen</string>
     <string name="camera_press_when_green">Auslösen, wenn der Rahmen grün ist</string>
+    <string name="garden_title">Mein Garten</string>
+    <string name="garden_view_perspective">Perspektive</string>
+    <string name="garden_view_flat">Flach</string>
+    <string name="garden_add_parcel">Beet hinzufügen</string>
+    <string name="garden_volume">%1$s l</string>
+    <string name="garden_renew_substrate">Substrat zwischen zwei Durchgängen erneuern</string>
+    <string name="garden_legend_positive">Gute Nachbarschaft</string>
+    <string name="garden_legend_alert">Warnung Nachbarschaft</string>
+    <string name="garden_empty">Noch kein Beet angelegt. Tippen Sie auf „+“, um Ihr erstes Beet zu erstellen.</string>
+    <string name="garden_slot_free">Freies Feld</string>
+    <string name="garden_slot_open">Platz öffnen</string>
+    <string name="garden_slot_add">Hinzufügen</string>
+    <string name="garden_stage_ready">Erntereif</string>
+    <string name="garden_stage_finished">Beendet</string>
+    <string name="garden_neighborhood">Nachbarschaft</string>
+    <string name="garden_neighborhood_none">Zwischen den Pflanzen dieses Beets gibt es derzeit weder Nachbarschaftsvorteile noch Warnungen.</string>
+    <string name="garden_link_protect">%1$s und %2$s schützen sich gegenseitig</string>
+    <string name="garden_link_help">%1$s und %2$s fördern sich gegenseitig</string>
+    <string name="garden_link_clash">%1$s und %2$s stören sich: auseinanderpflanzen</string>
+    <plurals name="garden_links_more">
+        <item quantity="one">und %1$d weitere</item>
+        <item quantity="other">und %1$d weitere</item>
+    </plurals>
 </resources>

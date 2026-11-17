@@ -227,4 +227,28 @@
     <string name="camera_unusable">Inutilizzabile</string>
     <string name="camera_capture">Scattare la foto ora</string>
     <string name="camera_press_when_green">Premete quando il riquadro è verde</string>
+    <string name="garden_title">Il mio orto</string>
+    <string name="garden_view_perspective">Prospettiva</string>
+    <string name="garden_view_flat">In piano</string>
+    <string name="garden_add_parcel">Aggiungere un’aiuola</string>
+    <string name="garden_volume">%1$s L</string>
+    <string name="garden_renew_substrate">Rinnovare il substrato tra due cicli</string>
+    <string name="garden_legend_positive">Affinità positiva</string>
+    <string name="garden_legend_alert">Allerta vicinato</string>
+    <string name="garden_empty">Nessuna aiuola configurata. Toccate «+» per creare il vostro primo quadrato.</string>
+    <string name="garden_slot_free">Quadrato libero</string>
+    <string name="garden_slot_open">Aprire la posizione</string>
+    <string name="garden_slot_add">Aggiungere</string>
+    <string name="garden_stage_ready">Da raccogliere</string>
+    <string name="garden_stage_finished">Terminata</string>
+    <string name="garden_neighborhood">Vicinato</string>
+    <string name="garden_neighborhood_none">Per ora nessuna affinità né allerta tra le piante di questo quadrato.</string>
+    <string name="garden_link_protect">%1$s e %2$s si proteggono a vicenda</string>
+    <string name="garden_link_help">%1$s e %2$s si aiutano</string>
+    <string name="garden_link_clash">%1$s e %2$s si ostacolano: da allontanare</string>
+    <plurals name="garden_links_more">
+        <item quantity="one">e %1$d altro</item>
+        <item quantity="many">e %1$d altri</item>
+        <item quantity="other">e %1$d altri</item>
+    </plurals>
 </resources>

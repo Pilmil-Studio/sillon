@@ -226,4 +226,27 @@
     <string name="camera_unusable">Unusable</string>
     <string name="camera_capture">Take the photo now</string>
     <string name="camera_press_when_green">Press when the frame is green</string>
+    <string name="garden_title">My garden</string>
+    <string name="garden_view_perspective">Perspective</string>
+    <string name="garden_view_flat">Flat</string>
+    <string name="garden_add_parcel">Add a plot</string>
+    <string name="garden_volume">%1$s L</string>
+    <string name="garden_renew_substrate">Renew the substrate between two cycles</string>
+    <string name="garden_legend_positive">Positive affinity</string>
+    <string name="garden_legend_alert">Neighbour alert</string>
+    <string name="garden_empty">No plot set up yet. Tap “+” to create your first square.</string>
+    <string name="garden_slot_free">Empty square</string>
+    <string name="garden_slot_open">Open the slot</string>
+    <string name="garden_slot_add">Add</string>
+    <string name="garden_stage_ready">Ready to harvest</string>
+    <string name="garden_stage_finished">Finished</string>
+    <string name="garden_neighborhood">Neighbours</string>
+    <string name="garden_neighborhood_none">No affinity or alert between the plants of this square for now.</string>
+    <string name="garden_link_protect">%1$s and %2$s protect each other</string>
+    <string name="garden_link_help">%1$s and %2$s help each other</string>
+    <string name="garden_link_clash">%1$s and %2$s hinder each other: keep apart</string>
+    <plurals name="garden_links_more">
+        <item quantity="one">and %1$d other</item>
+        <item quantity="other">and %1$d others</item>
+    </plurals>
 </resources>

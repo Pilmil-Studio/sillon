@@ -226,4 +226,27 @@
     <string name="camera_unusable">Onbruikbaar</string>
     <string name="camera_capture">Nu de foto nemen</string>
     <string name="camera_press_when_green">Druk wanneer het kader groen is</string>
+    <string name="garden_title">Mijn moestuin</string>
+    <string name="garden_view_perspective">Perspectief</string>
+    <string name="garden_view_flat">Plat</string>
+    <string name="garden_add_parcel">Een perceel toevoegen</string>
+    <string name="garden_volume">%1$s l</string>
+    <string name="garden_renew_substrate">Potgrond vernieuwen tussen twee teeltcycli</string>
+    <string name="garden_legend_positive">Positieve verwantschap</string>
+    <string name="garden_legend_alert">Waarschuwing buren</string>
+    <string name="garden_empty">Nog geen perceel ingesteld. Tik op „+” om uw eerste vak te maken.</string>
+    <string name="garden_slot_free">Vrij vak</string>
+    <string name="garden_slot_open">Plek openen</string>
+    <string name="garden_slot_add">Toevoegen</string>
+    <string name="garden_stage_ready">Oogstklaar</string>
+    <string name="garden_stage_finished">Afgelopen</string>
+    <string name="garden_neighborhood">Buren</string>
+    <string name="garden_neighborhood_none">Voorlopig geen verwantschappen of waarschuwingen tussen de planten van dit vak.</string>
+    <string name="garden_link_protect">%1$s en %2$s beschermen elkaar</string>
+    <string name="garden_link_help">%1$s en %2$s helpen elkaar</string>
+    <string name="garden_link_clash">%1$s en %2$s hinderen elkaar: uit elkaar zetten</string>
+    <plurals name="garden_links_more">
+        <item quantity="one">en %1$d andere</item>
+        <item quantity="other">en %1$d andere</item>
+    </plurals>
 </resources>

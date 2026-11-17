@@ -72,6 +72,7 @@ import fr.pilmil.sillon.model.Parcel
 import fr.pilmil.sillon.model.ParcelSlot
 import fr.pilmil.sillon.model.ParcelType
 import fr.pilmil.sillon.model.Vegetable
+import fr.pilmil.sillon.shared.resources.*
 import fr.pilmil.sillon.ui.components.SillonBadge
 import fr.pilmil.sillon.ui.components.SillonButton
 import fr.pilmil.sillon.ui.components.SillonCard
@@ -83,6 +84,8 @@ import fr.pilmil.sillon.model.daysBetween
 import fr.pilmil.sillon.model.epochMillisToLocalDate
 import fr.pilmil.sillon.model.todayLocalDate
 import kotlinx.datetime.LocalDate
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -124,13 +127,13 @@ fun GardenScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    text = "Mon potager",
+                    text = stringResource(Res.string.garden_title),
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.onBackground,
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    ViewChip("Perspective", perspectiveView) { perspectiveView = true }
-                    ViewChip("À plat", !perspectiveView) { perspectiveView = false }
+                    ViewChip(stringResource(Res.string.garden_view_perspective), perspectiveView) { perspectiveView = true }
+                    ViewChip(stringResource(Res.string.garden_view_flat), !perspectiveView) { perspectiveView = false }
                 }
             }
         }
@@ -181,7 +184,7 @@ fun GardenScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
-                        contentDescription = "Ajouter une parcelle",
+                        contentDescription = stringResource(Res.string.garden_add_parcel),
                         tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                 }
@@ -203,14 +206,14 @@ fun GardenScreen(
                     )
                     activeParcel.containerVolumeLiters?.let { vol ->
                         SillonBadge(
-                            text = "$vol L",
+                            text = stringResource(Res.string.garden_volume, vol),
                             containerColor = MaterialTheme.colorScheme.surfaceVariant,
                             textColor = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                     if (activeParcel.type.isContainerBased) {
                         Text(
-                            text = "Renouveler le substrat entre deux cycles",
+                            text = stringResource(Res.string.garden_renew_substrate),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -264,7 +267,7 @@ fun GardenScreen(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "Affinité positive",
+                            text = stringResource(Res.string.garden_legend_positive),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -279,7 +282,7 @@ fun GardenScreen(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "Alerte voisinage",
+                            text = stringResource(Res.string.garden_legend_alert),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -291,7 +294,7 @@ fun GardenScreen(
         } else {
             item {
                 Text(
-                    text = "Aucune parcelle configurée. Cliquez sur '+' pour créer votre premier carré.",
+                    text = stringResource(Res.string.garden_empty),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -728,13 +731,13 @@ private fun SlotCell(
 ) {
     // Un seul énoncé pour les lecteurs d'écran : nom, stade et délai, sans dépendre du pictogramme.
     val description = when {
-        vegetable == null -> "Case libre"
+        vegetable == null -> stringResource(Res.string.garden_slot_free)
         growth != null -> "${vegetable.name}. ${growth.summary()}"
         else -> vegetable.name
     }
     Surface(
         modifier = modifier
-            .clickable(onClickLabel = "Ouvrir l'emplacement", onClick = onClick)
+            .clickable(onClickLabel = stringResource(Res.string.garden_slot_open), onClick = onClick)
             .semantics { contentDescription = description },
         shape = RoundedCornerShape(16.dp),
         color = if (vegetable != null) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant,
@@ -804,7 +807,7 @@ private fun SlotCell(
                     } else if (growth.stage == GrowthStage.READY || growth.stage == GrowthStage.FINISHED) {
                         // Le mot double la couleur : « À récolter » ne se lit pas seulement à la teinte.
                         Text(
-                            text = if (growth.stage == GrowthStage.READY) "À récolter" else "Terminée",
+                            text = stringResource(if (growth.stage == GrowthStage.READY) Res.string.garden_stage_ready else Res.string.garden_stage_finished),
                             style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
                             color = if (growth.stage == GrowthStage.READY) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.78f),
                             fontWeight = FontWeight.Bold,
@@ -818,7 +821,7 @@ private fun SlotCell(
             } else {
                 Icon(
                     imageVector = Icons.Filled.Add,
-                    contentDescription = "Ajouter",
+                    contentDescription = stringResource(Res.string.garden_slot_add),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(18.dp),
                 )
@@ -901,24 +904,28 @@ private fun NeighborhoodCard(parcel: Parcel, vegetables: List<Vegetable>) {
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(
-                text = "Voisinage",
+                text = stringResource(Res.string.garden_neighborhood),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface,
             )
             if (links.isEmpty()) {
                 Text(
-                    text = "Aucune affinité ni alerte entre les plantes de ce carré pour l'instant.",
+                    text = stringResource(Res.string.garden_neighborhood_none),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
             for (link in links.take(6)) {
                 val second = link.second.name.replaceFirstChar { it.lowercase() }
-                val sentence = when {
-                    link.positive && link.protects -> "${link.first.name} et $second se protègent mutuellement"
-                    link.positive -> "${link.first.name} et $second s'entraident"
-                    else -> "${link.first.name} et $second se gênent : à éloigner"
-                }
+                val sentence = stringResource(
+                    when {
+                        link.positive && link.protects -> Res.string.garden_link_protect
+                        link.positive -> Res.string.garden_link_help
+                        else -> Res.string.garden_link_clash
+                    },
+                    link.first.name,
+                    second,
+                )
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         modifier = Modifier
@@ -936,7 +943,7 @@ private fun NeighborhoodCard(parcel: Parcel, vegetables: List<Vegetable>) {
             }
             if (links.size > 6) {
                 Text(
-                    text = "et ${links.size - 6} autres",
+                    text = pluralStringResource(Res.plurals.garden_links_more, links.size - 6, links.size - 6),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
