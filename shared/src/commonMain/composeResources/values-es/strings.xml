@@ -189,7 +189,7 @@
     <string name="evidence_etaye">Respaldado por ensayos</string>
     <string name="evidence_plausible">Plausible, poco estudiado</string>
     <string name="evidence_tradition">Tradición de jardinería</string>
-    <string name="evidence_explanation">Respaldado por ensayos: ensayos en huerto o en cultivo han observado el efecto. Plausible, poco estudiado: la idea es razonable, pero nadie la ha medido de verdad. Tradición de jardinería: transmitida desde hace mucho, sin pruebas, ¡pruébala en tu huerto!</string>
+    <string name="evidence_explanation">Respaldado por ensayos: ensayos en huerto o en cultivo han observado el efecto. Plausible, poco estudiado: la idea es razonable, pero nadie la ha medido de verdad. Tradición de jardinería: transmitida desde hace mucho, sin pruebas, ¡pruébela en su huerto!</string>
     <string name="companion_note">%1$s: %2$s. %3$s</string>
     <string name="companion_detail_their_sheet">descrito en su ficha</string>
     <string name="companion_detail_rationale">«%1$s»</string>
@@ -214,13 +214,13 @@
     <string name="doctor_step_organ">1. ¿Qué órgano está afectado?</string>
     <string name="organ_all">Todos los órganos</string>
     <string name="organ_leaf">Hojas</string>
-    <string name="organ_stem">Tallos / Cuello</string>
+    <string name="organ_stem">Tallos / Cuello de la raíz</string>
     <string name="organ_seedling">Plántulas / Brotes</string>
     <string name="organ_fruit">Frutos / Hortalizas</string>
     <string name="organ_root">Raíces</string>
     <string name="doctor_step_diagnoses">2. Diagnósticos probables (%1$d)</string>
     <string name="doctor_symptoms">Síntomas característicos:</string>
-    <string name="doctor_remedies">Remedios admitidos en ecológico y permacultura:</string>
+    <string name="doctor_remedies">Remedios admitidos en agricultura ecológica y permacultura:</string>
     <string name="doctor_prevention">Medidas preventivas:</string>
     <string name="photo_title">Analizar una foto</string>
     <string name="photo_hint">Una hoja bien iluminada, en primer plano. El análisis se hace en el teléfono: la foto no se envía a ninguna parte.</string>
@@ -236,7 +236,7 @@
     <string name="photo_healthy">Hoja de aspecto sano (%1$s).</string>
     <string name="photo_healthy_hint">Si la planta parece debilitada de todos modos (tallos alargados, follaje flácido), compruebe abajo el estado del sustrato y la exposición.</string>
     <string name="photo_resembles">Se parece a: %1$s (%2$s).</string>
-    <string name="photo_open_sheet">Ver la ficha %1$s</string>
+    <string name="photo_open_sheet">Ver la ficha «%1$s»</string>
     <string name="photo_leafspot">Probable mancha foliar (mildiu o alternaria): compare las dos fichas de abajo.</string>
     <string name="photo_no_clear">No reconozco con suficiente certeza una enfermedad foliar clara.</string>
     <string name="photo_lead">Pista (%1$s): %2$s</string>
