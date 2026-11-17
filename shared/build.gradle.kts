@@ -28,8 +28,8 @@ kotlin {
             api(compose.materialIconsExtended)
             api(compose.ui)
             api(compose.components.resources)
-            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
-            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.8.0")
+            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.13.0")
             implementation("fr.pilmil.core:core-platform:0.1.0")
         }
         androidMain.dependencies {
