@@ -58,4 +58,86 @@
     <string name="rest_next_work">Sin siembras ni plantaciones en este período. Próximas tareas hacia el %1$s.</string>
     <string name="rest_no_work">Sin siembras ni plantaciones en este período: acolchado, compost y preparación de los bancales.</string>
     <string name="rest_prepare">Preparar la temporada en el catálogo</string>
+    <string name="settings_title">Ajustes y datos</string>
+    <string name="settings_subtitle">Ajustes del microclima y control de sus datos.</string>
+    <string name="env_title">Entorno de cultivo</string>
+    <string name="env_outdoor">Tierra</string>
+    <string name="env_balcony">Balcón / terraza</string>
+    <string name="env_indoor">Interior</string>
+    <string name="orientation_label">Orientación</string>
+    <string name="orientation_n">N</string>
+    <string name="orientation_ne">NE</string>
+    <string name="orientation_e">E</string>
+    <string name="orientation_se">SE</string>
+    <string name="orientation_s">S</string>
+    <string name="orientation_sw">SO</string>
+    <string name="orientation_w">O</string>
+    <string name="orientation_nw">NO</string>
+    <string name="wind_label">Exposición al viento</string>
+    <string name="wind_low">Baja</string>
+    <string name="wind_medium">Moderada</string>
+    <string name="wind_high">Alta</string>
+    <string name="covered_balcony">Balcón cubierto</string>
+    <string name="covered_hint">La lluvia no llega a las macetas.</string>
+    <string name="light_source_label">Fuente de luz</string>
+    <string name="light_window">Ventana</string>
+    <string name="light_grow">Lámpara de cultivo</string>
+    <string name="light_hours_label">Duración de la iluminación (h/día)</string>
+    <string name="light_sensor">Sensor de luz: %1$s</string>
+    <string name="light_sensor_note">Estimación orientativa en el lugar del teléfono (depende de la hora y del tiempo; mida en varios momentos del día).</string>
+    <string name="frost_ref_title">Fecha de referencia de las últimas heladas</string>
+    <string name="frost_ref_tropical_text">En los territorios franceses de ultramar no hay heladas: el calendario parte del inicio de la temporada de plantación de su territorio. Esta fecha es una estimación que varía de 1 a 2 meses según las fuentes y los microclimas: ajústela al día. Todas las tareas y los recordatorios de siembra se calculan a partir de ese día.</string>
+    <string name="frost_ref_temperate_text">En la Francia metropolitana, la fecha mediana se sitúa entre mediados de marzo (zona mediterránea) y mediados de mayo (Santos de Hielo en llanura y montaña). Todas las tareas y los recordatorios de siembra se calculan a partir de este día de referencia.</string>
+    <string name="day_of_month">Día del mes</string>
+    <string name="month_label">Mes (%1$s)</string>
+    <string-array name="month_names">
+        <item>Enero</item>
+        <item>Febrero</item>
+        <item>Marzo</item>
+        <item>Abril</item>
+        <item>Mayo</item>
+        <item>Junio</item>
+        <item>Julio</item>
+        <item>Agosto</item>
+        <item>Septiembre</item>
+        <item>Octubre</item>
+        <item>Noviembre</item>
+        <item>Diciembre</item>
+    </string-array>
+    <string name="place_label">Lugar: %1$s</string>
+    <string name="pick_department">Elegir mi departamento o territorio</string>
+    <string name="altitude_label">Altitud (%1$d m)</string>
+    <string name="altitude_note_tropical">Por encima de 500 m (p. ej. las alturas de La Reunión), el aire más fresco favorece el chayote, las lechugas y las coles.</string>
+    <string name="altitude_note_temperate">Por encima de 200 m, la fecha de la última helada se retrasa unos 3,5 días por cada 100 m.</string>
+    <string name="mulched">Suelo acolchado</string>
+    <string name="weather_label">Tiempo local reciente</string>
+    <string name="weather_normal">Tiempo normal</string>
+    <string name="weather_dry_hot">Seco y caluroso</string>
+    <string name="weather_rainy">Lluvioso / húmedo</string>
+    <string name="reminders_title">Recordatorios de siembra</string>
+    <string name="reminders_text">El sábado por la mañana, cuando se abren siembras o plantaciones en los próximos quince días.</string>
+    <string name="viewfinder_title">Asistente de encuadre de foto</string>
+    <string name="viewfinder_text">Visor con indicador dinámico de nitidez y exposición (verde/amarillo/rojo): haga la foto cuando el marco pase a verde.</string>
+    <string name="viewfinder_off">Si está desactivado, Sillon usa la cámara estándar del teléfono sin pedir permiso.</string>
+    <string name="backup_title">Copia de seguridad y cambio de teléfono</string>
+    <string name="backup_text">Sillon no necesita cuenta ni tiene servidor remoto. Para guardar o pasar sus parcelas a un smartphone nuevo, exporte su archivo de copia con un toque.</string>
+    <string name="backup_json">Guardar mi huerto (JSON)</string>
+    <string name="restore_json">Restaurar una copia (JSON)</string>
+    <string name="export_csv">Exportar para hoja de cálculo (CSV / LibreOffice)</string>
+    <string name="vault_export">Bóveda cifrada (.pilmil)</string>
+    <string name="vault_import">Restaurar una bóveda (.pilmil)</string>
+    <string name="dialog_export_title">Cifrar la copia (.pilmil)</string>
+    <string name="dialog_import_title">Descifrar la copia (.pilmil)</string>
+    <string name="dialog_export_text">Elija una frase secreta para cifrar su bóveda .pilmil (AES-256-GCM).</string>
+    <string name="dialog_import_text">Escriba la frase secreta usada al exportar.</string>
+    <string name="passphrase">Frase secreta</string>
+    <string name="action_export">Exportar</string>
+    <string name="action_import">Importar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="cloud_title">Copia en mi cuenta de Google</string>
+    <string name="cloud_possible">Desactivada por defecto. Si la activa, Android copia su huerto en su cuenta de Google, cifrado con el código de bloqueo de su teléfono: ni Google ni Sillon pueden leerlo. Para recuperarlo en otro teléfono, tendrá que introducir el código del antiguo. Desactivar este ajuste no borra una copia ya enviada: elimínela desde la copia de seguridad de su cuenta de Google. La exportación JSON de arriba sigue siendo la forma más segura de cambiar de teléfono.</string>
+    <string name="cloud_unavailable">No disponible: defina primero un código, patrón o contraseña de bloqueo de pantalla. Sin él, Android no cifra la copia y Sillon no la envía.</string>
+    <string name="legal_title">Pilmil Studio · Aviso legal</string>
+    <string name="legal_country">Francia</string>
+    <string name="legal_text">• Editor: Pilmil Studio (Francia).\n• Sin permiso de Internet en el manifiesto de Android.\n• Sin rastreadores, sin SDK publicitarios, sin cuenta.\n• Calendario, asociaciones de cultivos y diagnóstico se calculan al 100 % en su teléfono.\n• Software libre bajo licencia Mozilla Public License 2.0 (MPL-2.0).\n• Contacto: pilmil.studio@proton.me · https://pilmil-studio.github.io\n• ¿Necesita una herramienta sin conexión, sin publicidad ni seguimiento? Escríbanos a pilmil.studio@proton.me.</string>
 </resources>

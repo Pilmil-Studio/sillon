@@ -58,4 +58,86 @@
     <string name="rest_next_work">Geen zaai- of plantwerk in deze periode. Volgend werk rond %1$s.</string>
     <string name="rest_no_work">Geen zaai- of plantwerk in deze periode: mulchen, compost en het voorbereiden van de bedden.</string>
     <string name="rest_prepare">Het seizoen voorbereiden in de catalogus</string>
+    <string name="settings_title">Instellingen en gegevens</string>
+    <string name="settings_subtitle">Microklimaatinstellingen en controle over uw gegevens.</string>
+    <string name="env_title">Teeltomgeving</string>
+    <string name="env_outdoor">Volle grond</string>
+    <string name="env_balcony">Balkon / terras</string>
+    <string name="env_indoor">Binnen</string>
+    <string name="orientation_label">Oriëntatie</string>
+    <string name="orientation_n">N</string>
+    <string name="orientation_ne">NO</string>
+    <string name="orientation_e">O</string>
+    <string name="orientation_se">ZO</string>
+    <string name="orientation_s">Z</string>
+    <string name="orientation_sw">ZW</string>
+    <string name="orientation_w">W</string>
+    <string name="orientation_nw">NW</string>
+    <string name="wind_label">Windblootstelling</string>
+    <string name="wind_low">Laag</string>
+    <string name="wind_medium">Matig</string>
+    <string name="wind_high">Hoog</string>
+    <string name="covered_balcony">Overdekt balkon</string>
+    <string name="covered_hint">De regen bereikt de potten niet.</string>
+    <string name="light_source_label">Lichtbron</string>
+    <string name="light_window">Raam</string>
+    <string name="light_grow">Kweeklamp</string>
+    <string name="light_hours_label">Verlichtingsduur (u/dag)</string>
+    <string name="light_sensor">Lichtsensor: %1$s</string>
+    <string name="light_sensor_note">Indicatieve schatting op de plek van de telefoon (hangt af van het tijdstip en het weer; meet op verschillende momenten van de dag).</string>
+    <string name="frost_ref_title">Richtdatum van de laatste vorst</string>
+    <string name="frost_ref_tropical_text">In de Franse overzeese gebieden is er geen vorst: de kalender begint bij het begin van het plantseizoen in uw gebied. Deze datum is een schatting die, afhankelijk van de bron en het microklimaat, 1 à 2 maanden kan verschillen: stel hem op de dag nauwkeurig in. Alle werkzaamheden en zaaiherinneringen worden vanaf deze dag berekend.</string>
+    <string name="frost_ref_temperate_text">In Frankrijk zelf ligt de mediane datum tussen half maart (mediterraan gebied) en half mei (ijsheiligen in laagland en gebergte). Alle werkzaamheden en zaaiherinneringen worden vanaf deze referentiedag berekend.</string>
+    <string name="day_of_month">Dag van de maand</string>
+    <string name="month_label">Maand (%1$s)</string>
+    <string-array name="month_names">
+        <item>Januari</item>
+        <item>Februari</item>
+        <item>Maart</item>
+        <item>April</item>
+        <item>Mei</item>
+        <item>Juni</item>
+        <item>Juli</item>
+        <item>Augustus</item>
+        <item>September</item>
+        <item>Oktober</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+    <string name="place_label">Plaats: %1$s</string>
+    <string name="pick_department">Mijn departement of gebied kiezen</string>
+    <string name="altitude_label">Hoogte (%1$d m)</string>
+    <string name="altitude_note_tropical">Boven 500 m (bijv. het hoogland van La Réunion) is de koelere lucht gunstig voor chayote, sla en kool.</string>
+    <string name="altitude_note_temperate">Boven 200 m schuift de datum van de laatste vorst ongeveer 3,5 dagen per 100 m op.</string>
+    <string name="mulched">Gemulchte grond</string>
+    <string name="weather_label">Recent lokaal weer</string>
+    <string name="weather_normal">Normaal weer</string>
+    <string name="weather_dry_hot">Droog en warm</string>
+    <string name="weather_rainy">Regenachtig / vochtig</string>
+    <string name="reminders_title">Zaaiherinneringen</string>
+    <string name="reminders_text">Op zaterdagochtend, wanneer er de komende twee weken zaai- of plantwerk begint.</string>
+    <string name="viewfinder_title">Fotokaderhulp</string>
+    <string name="viewfinder_text">Zoeker met een live indicator voor scherpte en belichting (groen/geel/rood): maak de foto zodra het kader groen wordt.</string>
+    <string name="viewfinder_off">Als dit uit staat, gebruikt Sillon de standaardcamera van uw telefoon zonder toestemming te vragen.</string>
+    <string name="backup_title">Back-up en van telefoon wisselen</string>
+    <string name="backup_text">Sillon heeft geen account nodig en geen externe server. Om uw percelen te bewaren of naar een nieuwe smartphone over te zetten, exporteert u uw back-upbestand met één tik.</string>
+    <string name="backup_json">Mijn tuin opslaan (JSON)</string>
+    <string name="restore_json">Een back-up terugzetten (JSON)</string>
+    <string name="export_csv">Exporteren voor spreadsheet (CSV / LibreOffice)</string>
+    <string name="vault_export">Versleutelde kluis (.pilmil)</string>
+    <string name="vault_import">Een kluis terugzetten (.pilmil)</string>
+    <string name="dialog_export_title">De back-up versleutelen (.pilmil)</string>
+    <string name="dialog_import_title">De back-up ontsleutelen (.pilmil)</string>
+    <string name="dialog_export_text">Kies een geheime zin om uw .pilmil-kluis te versleutelen (AES-256-GCM).</string>
+    <string name="dialog_import_text">Voer de geheime zin in die bij het exporteren is gebruikt.</string>
+    <string name="passphrase">Geheime zin</string>
+    <string name="action_export">Exporteren</string>
+    <string name="action_import">Importeren</string>
+    <string name="action_cancel">Annuleren</string>
+    <string name="cloud_title">Kopie in mijn Google-account</string>
+    <string name="cloud_possible">Standaard uitgeschakeld. Als u dit inschakelt, kopieert Android uw tuin naar uw Google-account, versleuteld met de vergrendelingscode van uw telefoon: noch Google noch Sillon kan hem lezen. Om hem op een andere telefoon terug te krijgen, moet u de code van de oude telefoon invoeren. Het uitschakelen van deze instelling wist geen kopie die al is verstuurd: verwijder die via de back-up van uw Google-account. De JSON-export hierboven blijft de veiligste manier om van telefoon te wisselen.</string>
+    <string name="cloud_unavailable">Niet beschikbaar: stel eerst een code, patroon of wachtwoord voor schermvergrendeling in. Zonder dat versleutelt Android de kopie niet en verstuurt Sillon haar niet.</string>
+    <string name="legal_title">Pilmil Studio · Juridische informatie</string>
+    <string name="legal_country">Frankrijk</string>
+    <string name="legal_text">• Uitgever: Pilmil Studio (Frankrijk).\n• Geen internetrechten in het Android-manifest.\n• Geen trackers, geen advertentie-SDK’s, geen account.\n• Kalender, combinaties van gewassen en diagnose worden voor 100 % op uw telefoon berekend.\n• Vrije software onder de Mozilla Public License 2.0 (MPL-2.0).\n• Contact: pilmil.studio@proton.me · https://pilmil-studio.github.io\n• Een offline hulpmiddel zonder reclame of tracking nodig? Schrijf ons via pilmil.studio@proton.me.</string>
 </resources>
