@@ -99,9 +99,11 @@ class FrostEngine(
 
     /**
      * Calcule la date de dernière gelée pour l'année courante de référence.
+     * Une date saisie qui n'existe pas cette année-là (29 février) tombe sur le dernier jour du mois.
      */
     fun getLastFrostDate(frostDate: FrostDate, year: Int): LocalDate {
-        return frostDate.toLocalDate(year)
+        val day = (frostDate.day downTo 28).firstOrNull { runCatching { LocalDate(year, frostDate.month, it) }.isSuccess }
+        return LocalDate(year, frostDate.month, day ?: frostDate.day)
     }
 
     /**

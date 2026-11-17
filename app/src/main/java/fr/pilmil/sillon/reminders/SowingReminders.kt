@@ -83,7 +83,7 @@ class SowingReminderWorker(context: Context, params: WorkerParameters) : Corouti
         val plan = DashboardPlanner.plan(
             garden,
             todayLocalDate(),
-            FrostEngine(climate = prefs.climate),
+            FrostEngine(climate = garden.climateFor(prefs.climate)),
         )
         val names = (plan.sowIndoors + plan.sowOutdoors + plan.transplant).map { it.vegetable.name }.distinct()
         if (names.isEmpty()) return Result.success()

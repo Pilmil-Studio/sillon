@@ -155,7 +155,7 @@ object DashboardPlanner {
             )
         }
 
-        val frost = effectiveFrostDate(garden.frostDate, garden.altitudeMeters, engine.climate)
+        val frost = effectiveFrostDate(garden.activeFrostDate, garden.altitudeMeters, engine.climate)
         val sowIndoors = engine.getSowIndoorsTasks(frost, today, TOLERANCE_DAYS)
         val sowOutdoors = engine.getSowOutdoorsTasks(frost, today, TOLERANCE_DAYS)
         val transplant = engine.getTransplantTasks(frost, today, TOLERANCE_DAYS)
