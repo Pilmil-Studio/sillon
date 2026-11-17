@@ -107,7 +107,7 @@ dependencies {
     implementation("androidx.camera:camera-view:$cameraVersion")
 
     // Inférence locale du diagnostic photo (Apache 2.0), sans accès réseau.
-    implementation("com.google.ai.edge.litert:litert:1.4.0")
+    implementation("com.google.ai.edge.litert:litert:2.3.2")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 
