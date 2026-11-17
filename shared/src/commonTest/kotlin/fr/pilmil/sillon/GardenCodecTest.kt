@@ -2,6 +2,7 @@ package fr.pilmil.sillon
 
 import fr.pilmil.sillon.data.GardenCodec
 import fr.pilmil.sillon.data.GardenValidationException
+import fr.pilmil.sillon.data.GardenVersionException
 import fr.pilmil.sillon.model.FrostDate
 import fr.pilmil.sillon.model.Garden
 import fr.pilmil.sillon.model.Parcel
@@ -10,6 +11,8 @@ import fr.pilmil.sillon.model.ParcelType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
 
 class GardenCodecTest {
 
@@ -136,5 +139,56 @@ class GardenCodecTest {
                 now = now,
             )
         }
+    }
+
+    @Test
+    fun customFrostFieldsRoundtripAndStayWhenSwitchingBack() {
+        val custom = baseGarden().copy(customFrostDate = FrostDate(6, 10), useCustomFrost = true)
+        val decoded = GardenCodec.decodeAndValidate(GardenCodec.encode(custom), now = now)
+        assertEquals(custom, decoded)
+        assertEquals(FrostDate(6, 10), decoded.activeFrostDate)
+
+        val back = custom.copy(useCustomFrost = false)
+        val decodedBack = GardenCodec.decodeAndValidate(GardenCodec.encode(back), now = now)
+        assertEquals(FrostDate(6, 10), decodedBack.customFrostDate)
+        assertEquals(FrostDate(5, 15), decodedBack.activeFrostDate)
+    }
+
+    @Test
+    fun versionOneFileIsReadInDepartmentMode() {
+        val v1 = """{ "schemaVersion": 1, "id": "g", "name": "Ancien", "frostDate": { "month": 4, "day": 20 } }"""
+        val garden = GardenCodec.decode(v1)
+        assertFalse(garden.useCustomFrost)
+        assertNull(garden.customFrostDate)
+        assertEquals(FrostDate(4, 20), garden.activeFrostDate)
+    }
+
+    @Test
+    fun versionOneFileCannotCarryCustomFrost() {
+        val v1 = """{ "schemaVersion": 1, "id": "g", "name": "Ancien", "frostDate": { "month": 4, "day": 20 },
+            "customFrostDate": { "month": 6, "day": 1 }, "useCustomFrost": true }"""
+        val garden = GardenCodec.decode(v1)
+        assertFalse(garden.useCustomFrost)
+        assertNull(garden.customFrostDate)
+    }
+
+    @Test
+    fun fileWithoutSchemaVersionIsReadInDepartmentMode() {
+        val legacy = """{ "id": "g", "name": "Sans version", "frostDate": { "month": 5, "day": 1 } }"""
+        assertFalse(GardenCodec.decode(legacy).useCustomFrost)
+    }
+
+    @Test
+    fun newerVersionIsRefusedByDecodeAndByImport() {
+        val future = """{ "schemaVersion": ${GardenCodec.SCHEMA_VERSION + 1}, "id": "g", "name": "F", "frostDate": { "month": 5, "day": 1 } }"""
+        assertFailsWith<GardenVersionException> { GardenCodec.decode(future) }
+        assertFailsWith<GardenValidationException> { GardenCodec.decodeAndValidate(future, now = now) }
+    }
+
+    @Test
+    fun rejectsCustomFrostDateThatDoesNotExist() {
+        val bad = baseGarden().copy(customFrostDate = FrostDate(4, 31), useCustomFrost = true)
+        assertFailsWith<GardenValidationException> { GardenCodec.validate(bad, now = now) }
+        GardenCodec.validate(baseGarden().copy(customFrostDate = FrostDate(2, 29), useCustomFrost = true), now = now)
     }
 }

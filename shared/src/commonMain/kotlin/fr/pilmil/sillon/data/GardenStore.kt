@@ -214,6 +214,20 @@ class GardenStore(private val storage: PlatformGardenStorage) {
         )
     }
 
+    /**
+     * Enregistre les dates saisies hors France et les active. La date du département ([Garden.frostDate]) n'est pas touchée.
+     * Une date qui n'existe pas au calendrier (31 avril) est refusée sans rien modifier.
+     */
+    fun updateCustomFrost(month: Int, day: Int): GardenUpdate = mutate { current ->
+        if (!FrostDate.isValid(month, day)) current
+        else current.copy(customFrostDate = FrostDate(month, day), useCustomFrost = true)
+    }
+
+    /** Revient au département (false) ou réactive les dates saisies (true, seulement s'il y en a). Rien n'est effacé. */
+    fun setUseCustomFrost(use: Boolean): GardenUpdate = mutate { current ->
+        current.copy(useCustomFrost = use && current.customFrostDate != null)
+    }
+
     fun updateAltitude(meters: Int): GardenUpdate = mutate { current ->
         current.copy(
             altitudeMeters = meters.coerceIn(0, 3000),

@@ -1,5 +1,6 @@
 package fr.pilmil.sillon.data
 
+import fr.pilmil.sillon.model.FrostDate
 import fr.pilmil.sillon.model.Garden
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
@@ -21,8 +22,11 @@ class GardenVersionException(val foundVersion: Int, val supportedVersion: Int) :
  * Sérialisation et validation du potager, sans dépendance Android : testable en JVM pure.
  */
 object GardenCodec {
-    /** Version du format du fichier. Les fichiers sans champ `schemaVersion` sont en version 1. */
-    const val SCHEMA_VERSION = 1
+    /**
+     * Version du format du fichier. Les fichiers sans champ `schemaVersion` sont en version 1.
+     * La version 2 ajoute `customFrostDate` et `useCustomFrost` (dates de gelée saisies hors France).
+     */
+    const val SCHEMA_VERSION = 2
     const val MAX_PARCELS = 100
     const val MAX_SIDE = 50
     const val MAX_FILE_CHARS = 5_000_000
@@ -54,10 +58,11 @@ object GardenCodec {
 
     /**
      * Point d'accroche des migrations : amène un document de la version [from] à [SCHEMA_VERSION].
-     * Aujourd'hui, la version 1 est la seule : rien à transformer. Une version 2 ajoutera ici
-     * un `if (from < 2) { ... }` qui réécrit l'objet avant le décodage.
+     * Version 1 -> 2 : les champs de dates saisies n'existent pas, la lecture est en mode département ;
+     * ils sont écartés pour qu'un fichier v1 ne puisse jamais en porter. Le fichier n'est pas réécrit à la lecture.
      */
-    private fun migrate(root: JsonObject, from: Int): JsonObject = root
+    private fun migrate(root: JsonObject, from: Int): JsonObject =
+        if (from < 2) JsonObject(root - setOf("customFrostDate", "useCustomFrost")) else root
 
     /** Lecture d'un fichier importé : refuse tout ce qui sortirait du cadre de l'appli. */
     fun decodeAndValidate(content: String, now: Long = Clock.System.now().toEpochMilliseconds()): Garden {
@@ -77,6 +82,9 @@ object GardenCodec {
         fun refuse(reason: String): Nothing = throw GardenValidationException("Sauvegarde refusée : $reason")
         if (garden.parcels.size > MAX_PARCELS) refuse("plus de $MAX_PARCELS parcelles.")
         if (garden.parcels.map { it.id }.toSet().size != garden.parcels.size) refuse("deux parcelles portent le même identifiant.")
+        garden.customFrostDate?.let { date ->
+            if (!FrostDate.isValid(date.month, date.day)) refuse("date de gelée saisie invalide (${date.day}/${date.month}).")
+        }
         garden.growLightHoursPerDay?.let { hours ->
             if (hours !in 1..24) refuse("durée d'éclairage invalide ($hours h/j, doit être entre 1 et 24).")
         }

@@ -18,6 +18,16 @@ data class FrostDate(
     companion object {
         fun of(month: Int, day: Int): FrostDate = FrostDate(month, day)
         fun from(localDate: LocalDate): FrostDate = FrostDate(localDate.monthNumber, localDate.dayOfMonth)
+
+        /** Nombre de jours maximal d'un mois d'une date saisie ; février compte 29 jours (année bissextile). */
+        fun maxDayOfMonth(month: Int): Int = when (month) {
+            2 -> 29
+            4, 6, 9, 11 -> 30
+            else -> 31
+        }
+
+        /** Vrai si [month] et [day] forment une date du calendrier (29 février accepté, 31 avril refusé). */
+        fun isValid(month: Int, day: Int): Boolean = month in 1..12 && day in 1..maxDayOfMonth(month)
     }
 }
 
@@ -101,6 +111,10 @@ data class Garden(
     val id: String,
     val name: String,
     val frostDate: FrostDate,
+    /** Date de dernière gelée saisie par la personne (hors France). Conservée quand on revient au département. */
+    val customFrostDate: FrostDate? = null,
+    /** Vrai : [customFrostDate] remplace la date du département dans le calendrier. */
+    val useCustomFrost: Boolean = false,
     val parcels: List<Parcel> = emptyList(),
     val environment: GrowingEnvironment = GrowingEnvironment.OUTDOOR,
     val orientation: Orientation? = null,
@@ -112,7 +126,15 @@ data class Garden(
     val history: List<CropHistoryEntry> = emptyList(),
     val mulched: Boolean = false,
     val localWeather: LocalWeather = LocalWeather.NORMAL,
-)
+) {
+    /** La date qui ancre le calendrier : celle saisie si le mode « mes dates » est actif, sinon [frostDate]. */
+    val activeFrostDate: FrostDate
+        get() = if (useCustomFrost) customFrostDate ?: frostDate else frostDate
+
+    /** Avec des dates saisies, le calendrier est tempéré : le climat du département ne s'applique plus. */
+    fun climateFor(departmentClimate: Climate): Climate =
+        if (useCustomFrost && customFrostDate != null) Climate.TEMPERATE else departmentClimate
+}
 
 @Serializable
 data class CropHistoryEntry(

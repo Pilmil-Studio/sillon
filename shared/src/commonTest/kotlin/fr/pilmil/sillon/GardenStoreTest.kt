@@ -306,6 +306,46 @@ class GardenStoreTest {
     }
 
     @Test
+    fun customFrostKeepsTheDepartmentDateAndSwitchesBothWays() {
+        val storage = FakeGardenStorage()
+        val store = GardenStore(storage)
+        val departmentDate = store.ready().frostDate
+
+        val custom = store.updateCustomFrost(6, 10).garden
+        assertTrue(custom.useCustomFrost)
+        assertEquals(FrostDate(6, 10), custom.activeFrostDate)
+        assertEquals(departmentDate, custom.frostDate)
+
+        val back = store.setUseCustomFrost(false).garden
+        assertEquals(departmentDate, back.activeFrostDate)
+        assertEquals(FrostDate(6, 10), back.customFrostDate)
+
+        assertEquals(FrostDate(6, 10), store.setUseCustomFrost(true).garden.activeFrostDate)
+        assertEquals(FrostDate(6, 10), GardenCodec.decode(storage.content!!).activeFrostDate)
+    }
+
+    @Test
+    fun customFrostRefusesImpossibleDateAndNeedsADateToBeActivated() {
+        val store = GardenStore(FakeGardenStorage())
+        store.ready()
+        assertFalse(store.setUseCustomFrost(true).garden.useCustomFrost)
+        val unchanged = store.updateCustomFrost(4, 31).garden
+        assertNull(unchanged.customFrostDate)
+        assertFalse(unchanged.useCustomFrost)
+        assertEquals(FrostDate(2, 29), store.updateCustomFrost(2, 29).garden.customFrostDate)
+    }
+
+    @Test
+    fun readingAVersionOneFileDoesNotRewriteIt() {
+        val v1 = """{ "schemaVersion": 1, "id": "g", "name": "Ancien", "frostDate": { "month": 5, "day": 1 } }"""
+        val storage = FakeGardenStorage(v1)
+        val garden = (GardenStore(storage).load() as GardenLoad.Ready).garden
+        assertFalse(garden.useCustomFrost)
+        assertEquals(0, storage.writeCalls)
+        assertEquals(v1, storage.content)
+    }
+
+    @Test
     fun exportThenImportRoundTripIsUnchanged() {
         val garden = Garden(
             id = "g", name = "Aller-retour", frostDate = FrostDate(4, 2),
