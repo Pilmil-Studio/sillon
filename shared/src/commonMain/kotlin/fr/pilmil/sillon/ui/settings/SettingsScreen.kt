@@ -60,12 +60,16 @@ import fr.pilmil.sillon.model.LightSource
 import fr.pilmil.sillon.model.LocalWeather
 import fr.pilmil.sillon.model.Orientation
 import fr.pilmil.sillon.model.WindExposure
+import fr.pilmil.sillon.shared.resources.*
 import fr.pilmil.sillon.ui.components.SillonBadge
 import fr.pilmil.sillon.ui.components.SillonButton
 import fr.pilmil.sillon.ui.components.SillonCard
 import fr.pilmil.sillon.ui.components.SillonOutlinedButton
 import fr.pilmil.sillon.ui.components.SillonStepper
 import fr.pilmil.sillon.ui.rememberAmbientLuxSensor
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringArrayResource
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -109,10 +113,7 @@ fun SettingsScreen(
     smartViewfinderOn: Boolean = true,
     onSmartViewfinderChange: (Boolean) -> Unit = {},
 ) {
-    val monthNames = listOf(
-        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-    )
+    val monthNames = stringArrayResource(Res.array.month_names)
     var pilmilDialogMode by remember { mutableStateOf<String?>(null) }
     var passphraseInput by remember { mutableStateOf("") }
 
@@ -123,21 +124,17 @@ fun SettingsScreen(
                 pilmilDialogMode = null
                 passphraseInput = ""
             },
-            title = { Text(if (isExport) "Chiffrer la sauvegarde (.pilmil)" else "Déchiffrer la sauvegarde (.pilmil)") },
+            title = { Text(stringResource(if (isExport) Res.string.dialog_export_title else Res.string.dialog_import_title)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
-                        text = if (isExport) {
-                            "Choisissez une phrase secrète pour chiffrer votre coffre .pilmil (AES-256-GCM)."
-                        } else {
-                            "Saisissez la phrase secrète utilisée lors de l'export."
-                        },
+                        text = stringResource(if (isExport) Res.string.dialog_export_text else Res.string.dialog_import_text),
                         style = MaterialTheme.typography.bodySmall,
                     )
                     OutlinedTextField(
                         value = passphraseInput,
                         onValueChange = { passphraseInput = it },
-                        label = { Text("Phrase secrète") },
+                        label = { Text(stringResource(Res.string.passphrase)) },
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation(),
                     )
@@ -153,7 +150,7 @@ fun SettingsScreen(
                         if (isExport) onExportPilmil?.invoke(chars) else onImportPilmil?.invoke(chars)
                     },
                 ) {
-                    Text(if (isExport) "Exporter" else "Importer")
+                    Text(stringResource(if (isExport) Res.string.action_export else Res.string.action_import))
                 }
             },
             dismissButton = {
@@ -161,7 +158,7 @@ fun SettingsScreen(
                     pilmilDialogMode = null
                     passphraseInput = ""
                 }) {
-                    Text("Annuler")
+                    Text(stringResource(Res.string.action_cancel))
                 }
             },
         )
@@ -179,14 +176,14 @@ fun SettingsScreen(
         item {
             Column {
                 Text(
-                    text = "Réglages & Données",
+                    text = stringResource(Res.string.settings_title),
                     style = MaterialTheme.typography.displaySmall,
                     color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.Bold,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Paramétrage microclimatique et souveraineté de vos données.",
+                    text = stringResource(Res.string.settings_subtitle),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -209,7 +206,7 @@ fun SettingsScreen(
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(
-                            text = "Environnement de culture",
+                            text = stringResource(Res.string.env_title),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.Bold,
@@ -235,7 +232,7 @@ fun SettingsScreen(
                                 ),
                             ) {
                                 Text(
-                                    text = env.frenchLabel,
+                                    text = stringResource(env.labelRes()),
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 10.dp),
                                     style = MaterialTheme.typography.labelMedium,
                                     color = if (selected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
@@ -247,7 +244,7 @@ fun SettingsScreen(
 
                     if (environment == GrowingEnvironment.BALCONY || (environment == GrowingEnvironment.INDOOR && lightSource != LightSource.GROW_LIGHT)) {
                         Text(
-                            text = "Orientation",
+                            text = stringResource(Res.string.orientation_label),
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -276,7 +273,7 @@ fun SettingsScreen(
                                     ),
                                 ) {
                                     Text(
-                                        text = dir.name,
+                                        text = stringResource(dir.labelRes()),
                                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
@@ -289,7 +286,7 @@ fun SettingsScreen(
 
                     if (environment == GrowingEnvironment.BALCONY) {
                         Text(
-                            text = "Exposition au vent",
+                            text = stringResource(Res.string.wind_label),
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -317,7 +314,7 @@ fun SettingsScreen(
                                     ),
                                 ) {
                                     Text(
-                                        text = wind.frenchLabel,
+                                        text = stringResource(wind.labelRes()),
                                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
@@ -333,13 +330,13 @@ fun SettingsScreen(
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = "Balcon couvert",
+                                    text = stringResource(Res.string.covered_balcony),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurface,
                                     fontWeight = FontWeight.SemiBold,
                                 )
                                 Text(
-                                    text = "La pluie n'atteint pas les pots.",
+                                    text = stringResource(Res.string.covered_hint),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
@@ -355,7 +352,7 @@ fun SettingsScreen(
 
                     if (environment == GrowingEnvironment.INDOOR) {
                         Text(
-                            text = "Source de lumière",
+                            text = stringResource(Res.string.light_source_label),
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -383,7 +380,7 @@ fun SettingsScreen(
                                     ),
                                 ) {
                                     Text(
-                                        text = src.frenchLabel,
+                                        text = stringResource(src.labelRes()),
                                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
@@ -400,7 +397,7 @@ fun SettingsScreen(
                                 },
                                 min = 1,
                                 max = 24,
-                                label = "Durée d'éclairage (h/jour)",
+                                label = stringResource(Res.string.light_hours_label),
                                 modifier = Modifier.fillMaxWidth(),
                             )
                         }
@@ -413,7 +410,7 @@ fun SettingsScreen(
                             Divider(color = MaterialTheme.colorScheme.outlineVariant)
                             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                 Text(
-                                    text = "Capteur de lumière : ${LightEstimator.formatSummary(ambientLux)}",
+                                    text = stringResource(Res.string.light_sensor, LightEstimator.formatSummary(ambientLux)),
                                     style = MaterialTheme.typography.labelMedium,
                                     color = MaterialTheme.colorScheme.primary,
                                     fontWeight = FontWeight.Bold,
@@ -424,7 +421,7 @@ fun SettingsScreen(
                                     color = MaterialTheme.colorScheme.onSurface,
                                 )
                                 Text(
-                                    text = "Estimation indicative à l'emplacement du téléphone (dépend de l'heure et de la météo ; mesurez à plusieurs moments de la journée).",
+                                    text = stringResource(Res.string.light_sensor_note),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
@@ -452,7 +449,7 @@ fun SettingsScreen(
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(
-                            text = if (climate == Climate.TROPICAL) "Début de la saison de plantation" else "Date repère des dernières gelées",
+                            text = stringResource(if (climate == Climate.TROPICAL) Res.string.season_start else Res.string.frost_ref_title),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.Bold,
@@ -460,11 +457,9 @@ fun SettingsScreen(
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = if (climate == Climate.TROPICAL) {
-                            "En outre-mer, il n'y a pas de gelée : le calendrier part du début de la saison de plantation de votre territoire. Cette date est une estimation, qui varie de 1 à 2 mois selon les sources et les microclimats : ajustez-la au jour près. Tous les travaux et rappels de semis sont calculés par rapport à ce jour."
-                        } else {
-                            "En France métropolitaine, la date médiane se situe entre mi-mars (zone méditerranéenne) et mi-mai (Saints de Glace en plaine / montagne). Tous les travaux et rappels de semis sont calculés par rapport à ce jour J."
-                        },
+                        text = stringResource(
+                            if (climate == Climate.TROPICAL) Res.string.frost_ref_tropical_text else Res.string.frost_ref_temperate_text,
+                        ),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         lineHeight = 20.sp,
@@ -480,7 +475,7 @@ fun SettingsScreen(
                             onValueChange = { onFrostDateChange(frostMonth, it) },
                             min = 1,
                             max = 31,
-                            label = "Jour du mois",
+                            label = stringResource(Res.string.day_of_month),
                             modifier = Modifier.weight(1f),
                         )
                         SillonStepper(
@@ -488,13 +483,13 @@ fun SettingsScreen(
                             onValueChange = { onFrostDateChange(it, frostDay) },
                             min = 1,
                             max = 12,
-                            label = "Mois (${monthNames.getOrElse(frostMonth - 1) { "" }})",
+                            label = stringResource(Res.string.month_label, monthNames.getOrElse(frostMonth - 1) { "" }),
                             modifier = Modifier.weight(1f),
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                     SillonOutlinedButton(
-                        text = departmentLabel?.let { "Lieu : $it" } ?: "Choisir mon département ou territoire",
+                        text = departmentLabel?.let { stringResource(Res.string.place_label, it) } ?: stringResource(Res.string.pick_department),
                         icon = Icons.Filled.Place,
                         onClick = onPickDepartment,
                     )
@@ -504,16 +499,14 @@ fun SettingsScreen(
                         onValueChange = { onAltitudeChange(it * 100) },
                         min = 0,
                         max = 25,
-                        label = "Altitude (${altitudeMeters} m)",
+                        label = stringResource(Res.string.altitude_label, altitudeMeters),
                         modifier = Modifier.fillMaxWidth(),
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = if (climate == Climate.TROPICAL) {
-                            "Au-delà de 500 m (ex. Hauts de La Réunion), l'air plus frais favorise le chouchou, les salades et les choux."
-                        } else {
-                            "Au-dessus de 200 m, la date de dernière gelée est décalée d'environ 3,5 jours par tranche de 100 m."
-                        },
+                        text = stringResource(
+                            if (climate == Climate.TROPICAL) Res.string.altitude_note_tropical else Res.string.altitude_note_temperate,
+                        ),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -524,7 +517,7 @@ fun SettingsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(
-                            text = "Sol paillé",
+                            text = stringResource(Res.string.mulched),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurface,
                         )
@@ -535,7 +528,7 @@ fun SettingsScreen(
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Météo locale récente",
+                        text = stringResource(Res.string.weather_label),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -558,7 +551,7 @@ fun SettingsScreen(
                                 ),
                             ) {
                                 Text(
-                                    text = weather.frenchLabel,
+                                    text = stringResource(weather.labelRes()),
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
@@ -588,13 +581,13 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.width(10.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Rappels de semis",
+                            text = stringResource(Res.string.reminders_title),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.Bold,
                         )
                         Text(
-                            text = "Le samedi matin, quand des semis ou plantations s'ouvrent dans la quinzaine.",
+                            text = stringResource(Res.string.reminders_text),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -625,7 +618,7 @@ fun SettingsScreen(
                             )
                             Spacer(modifier = Modifier.width(10.dp))
                             Text(
-                                text = "Assistant de cadrage photo",
+                                text = stringResource(Res.string.viewfinder_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 fontWeight = FontWeight.Bold,
@@ -635,14 +628,14 @@ fun SettingsScreen(
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Viseur avec indicateur dynamique de netteté et d'exposition (vert/jaune/rouge) : prenez la photo quand le cadre passe au vert.",
+                        text = stringResource(Res.string.viewfinder_text),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         lineHeight = 18.sp,
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = "Si désactivé, Sillon utilise l'appareil photo standard de votre téléphone sans demander de permission.",
+                        text = stringResource(Res.string.viewfinder_off),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -666,7 +659,7 @@ fun SettingsScreen(
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(
-                            text = "Sauvegarde & Changement de téléphone",
+                            text = stringResource(Res.string.backup_title),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.Bold,
@@ -674,7 +667,7 @@ fun SettingsScreen(
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Sillon ne requiert aucun compte et n'a aucun serveur distant. Pour sauvegarder ou migrer vos parcelles vers un nouveau smartphone, exportez votre fichier de sauvegarde en un tap.",
+                        text = stringResource(Res.string.backup_text),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         lineHeight = 20.sp,
@@ -682,7 +675,7 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     SillonButton(
-                        text = "Sauvegarder mon potager (JSON)",
+                        text = stringResource(Res.string.backup_json),
                         icon = Icons.Filled.FileDownload,
                         onClick = onExportJson,
                     )
@@ -690,7 +683,7 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(10.dp))
 
                     SillonOutlinedButton(
-                        text = "Restaurer une sauvegarde (JSON)",
+                        text = stringResource(Res.string.restore_json),
                         icon = Icons.Filled.FileUpload,
                         onClick = onImportJson,
                     )
@@ -698,7 +691,7 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(10.dp))
 
                     SillonOutlinedButton(
-                        text = "Exporter pour tableur (CSV / LibreOffice)",
+                        text = stringResource(Res.string.export_csv),
                         icon = Icons.Filled.TableChart,
                         onClick = onExportCsv,
                     )
@@ -706,13 +699,13 @@ fun SettingsScreen(
                     if (onExportPilmil != null && onImportPilmil != null) {
                         Spacer(modifier = Modifier.height(10.dp))
                         SillonOutlinedButton(
-                            text = "Coffre chiffré (.pilmil)",
+                            text = stringResource(Res.string.vault_export),
                             icon = Icons.Filled.Lock,
                             onClick = { pilmilDialogMode = "export" },
                         )
                         Spacer(modifier = Modifier.height(10.dp))
                         SillonOutlinedButton(
-                            text = "Restaurer un coffre (.pilmil)",
+                            text = stringResource(Res.string.vault_import),
                             icon = Icons.Filled.FileUpload,
                             onClick = { pilmilDialogMode = "import" },
                         )
@@ -735,7 +728,7 @@ fun SettingsScreen(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(
-                                text = "Copie dans mon compte Google",
+                                text = stringResource(Res.string.cloud_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 fontWeight = FontWeight.Bold,
@@ -749,11 +742,7 @@ fun SettingsScreen(
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = if (cloudBackupPossible) {
-                                "Désactivée par défaut. Si vous l'activez, c'est Android qui copie votre potager dans votre compte Google, chiffré avec le code de verrouillage de votre téléphone : ni Google ni Sillon ne peuvent le lire. Pour le retrouver sur un autre téléphone, il faudra saisir le code de l'ancien. Désactiver ce réglage n'efface pas une copie déjà envoyée : supprimez-la depuis la sauvegarde de votre compte Google. L'export JSON ci-dessus reste le moyen le plus sûr de changer de téléphone."
-                            } else {
-                                "Indisponible : définissez d'abord un code, un schéma ou un mot de passe de verrouillage d'écran. Sans lui, Android ne chiffre pas la copie et Sillon ne l'envoie pas."
-                            },
+                            text = stringResource(if (cloudBackupPossible) Res.string.cloud_possible else Res.string.cloud_unavailable),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             lineHeight = 18.sp,
@@ -775,13 +764,13 @@ fun SettingsScreen(
                         Spacer(modifier = Modifier.width(12.dp))
                         Column {
                             Text(
-                                text = "Pilmil Studio · Mentions légales",
+                                text = stringResource(Res.string.legal_title),
                                 style = MaterialTheme.typography.titleSmall,
                                 color = MaterialTheme.colorScheme.primary,
                                 fontWeight = FontWeight.Bold,
                             )
                             Text(
-                                text = "France",
+                                text = stringResource(Res.string.legal_country),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -789,13 +778,7 @@ fun SettingsScreen(
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "• Éditeur : Pilmil Studio (France).\n" +
-                               "• Aucune permission Internet dans le manifeste Android.\n" +
-                               "• Zéro traceur, zéro SDK publicitaire, zéro compte.\n" +
-                               "• Calendrier, associations et diagnostic 100 % calculés sur votre téléphone.\n" +
-                               "• Logiciel libre sous licence Mozilla Public License 2.0 (MPL-2.0).\n" +
-                               "• Contact : pilmil.studio@proton.me · https://pilmil-studio.github.io\n" +
-                               "• Un besoin d'outil hors-ligne sans pub ni suivi ? Écrivez-nous à pilmil.studio@proton.me.",
+                        text = stringResource(Res.string.legal_text),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurface,
                         lineHeight = 20.sp,
@@ -804,4 +787,38 @@ fun SettingsScreen(
             }
         }
     }
+}
+
+private fun GrowingEnvironment.labelRes(): StringResource = when (this) {
+    GrowingEnvironment.OUTDOOR -> Res.string.env_outdoor
+    GrowingEnvironment.BALCONY -> Res.string.env_balcony
+    GrowingEnvironment.INDOOR -> Res.string.env_indoor
+}
+
+private fun Orientation.labelRes(): StringResource = when (this) {
+    Orientation.N -> Res.string.orientation_n
+    Orientation.NE -> Res.string.orientation_ne
+    Orientation.E -> Res.string.orientation_e
+    Orientation.SE -> Res.string.orientation_se
+    Orientation.S -> Res.string.orientation_s
+    Orientation.SW -> Res.string.orientation_sw
+    Orientation.W -> Res.string.orientation_w
+    Orientation.NW -> Res.string.orientation_nw
+}
+
+private fun WindExposure.labelRes(): StringResource = when (this) {
+    WindExposure.LOW -> Res.string.wind_low
+    WindExposure.MEDIUM -> Res.string.wind_medium
+    WindExposure.HIGH -> Res.string.wind_high
+}
+
+private fun LightSource.labelRes(): StringResource = when (this) {
+    LightSource.WINDOW -> Res.string.light_window
+    LightSource.GROW_LIGHT -> Res.string.light_grow
+}
+
+private fun LocalWeather.labelRes(): StringResource = when (this) {
+    LocalWeather.NORMAL -> Res.string.weather_normal
+    LocalWeather.DRY_HOT -> Res.string.weather_dry_hot
+    LocalWeather.RAINY -> Res.string.weather_rainy
 }
