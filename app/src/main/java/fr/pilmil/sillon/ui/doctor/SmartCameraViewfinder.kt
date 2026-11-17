@@ -53,11 +53,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import fr.pilmil.sillon.shared.resources.*
 import fr.pilmil.sillon.vision.FrameQuality
 import fr.pilmil.sillon.vision.FrameQualityAnalyzer
 import fr.pilmil.sillon.vision.FrameQualityStatus
 import java.io.File
 import java.util.concurrent.Executors
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * Viseur caméra interactif plein-écran avec assistant de cadrage intelligent :
@@ -211,7 +213,7 @@ fun SmartCameraViewfinder(
             ) {
                 Icon(
                     imageVector = Icons.Filled.Close,
-                    contentDescription = "Fermer le viseur",
+                    contentDescription = stringResource(Res.string.camera_close),
                     tint = Color.White,
                 )
             }
@@ -233,9 +235,9 @@ fun SmartCameraViewfinder(
                     Spacer(modifier = Modifier.size(8.dp))
                     Text(
                         text = when (quality.status) {
-                            FrameQualityStatus.OPTIMAL -> "Optimal"
-                            FrameQualityStatus.WARNING -> "Acceptable"
-                            FrameQualityStatus.UNUSABLE -> "Inexploitable"
+                            FrameQualityStatus.OPTIMAL -> stringResource(Res.string.camera_optimal)
+                            FrameQualityStatus.WARNING -> stringResource(Res.string.camera_acceptable)
+                            FrameQualityStatus.UNUSABLE -> stringResource(Res.string.camera_unusable)
                         },
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
@@ -296,7 +298,7 @@ fun SmartCameraViewfinder(
                     } else {
                         Icon(
                             imageVector = Icons.Filled.CameraAlt,
-                            contentDescription = "Prendre la photo maintenant",
+                            contentDescription = stringResource(Res.string.camera_capture),
                             tint = if (quality.status == FrameQualityStatus.OPTIMAL) Color.White else Color.Black,
                             modifier = Modifier.size(32.dp),
                         )
@@ -306,7 +308,7 @@ fun SmartCameraViewfinder(
 
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Appuyez quand le cadre est vert",
+                text = stringResource(Res.string.camera_press_when_green),
                 color = Color.White.copy(alpha = 0.75f),
                 fontSize = 12.sp,
             )

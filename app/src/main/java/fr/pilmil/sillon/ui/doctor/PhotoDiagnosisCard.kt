@@ -57,6 +57,7 @@ import fr.pilmil.sillon.engine.ConfidenceTier
 import fr.pilmil.sillon.engine.PhotoDiagnosis
 import fr.pilmil.sillon.engine.PhotoVerdict
 import fr.pilmil.sillon.engine.SubstrateMoisture
+import fr.pilmil.sillon.shared.resources.*
 import fr.pilmil.sillon.ui.components.SillonButton
 import fr.pilmil.sillon.ui.components.SillonCard
 import fr.pilmil.sillon.ui.components.SillonOutlinedButton
@@ -66,6 +67,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.stringResource
 import java.io.File
 
 /**
@@ -171,20 +173,20 @@ fun PhotoDiagnosisCard(onOpenDisease: (String) -> Unit, onOpenKey: () -> Unit) {
 
     SillonCard(backgroundColor = MaterialTheme.colorScheme.surface, borderColor = MaterialTheme.colorScheme.outline) {
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text("Analyser une photo", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text(stringResource(Res.string.photo_title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             Text(
-                "Une feuille bien éclairée, en gros plan. L'analyse se fait sur le téléphone : la photo n'est envoyée nulle part.",
+                stringResource(Res.string.photo_hint),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             SillonButton(
-                text = "Prendre une photo",
+                text = stringResource(Res.string.photo_take),
                 icon = Icons.Filled.CameraAlt,
                 enabled = !busy,
                 onClick = { launchCamera() },
             )
             SillonOutlinedButton(
-                text = "Choisir dans la galerie",
+                text = stringResource(Res.string.photo_pick),
                 icon = Icons.Filled.PhotoLibrary,
                 onClick = { gallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
             )
@@ -198,14 +200,14 @@ fun PhotoDiagnosisCard(onOpenDisease: (String) -> Unit, onOpenKey: () -> Unit) {
                     busy -> Row(verticalAlignment = Alignment.CenterVertically) {
                         CircularProgressIndicator(Modifier.height(20.dp).width(20.dp), strokeWidth = 2.dp)
                         Spacer(Modifier.width(10.dp))
-                        Text("Analyse en cours…", style = MaterialTheme.typography.bodyMedium)
+                        Text(stringResource(Res.string.photo_busy), style = MaterialTheme.typography.bodyMedium)
                     }
-                    failed -> Text("La photo n'a pas pu être lue. Réessayez avec une autre image.", style = MaterialTheme.typography.bodyMedium)
+                    failed -> Text(stringResource(Res.string.photo_failed), style = MaterialTheme.typography.bodyMedium)
                     else -> verdict?.let { VerdictText(it, threshold, onOpenDisease, onOpenKey) }
                 }
             }
             Text(
-                "Reconnaît une dizaine de maladies et de ravageurs courants (mildiou, oïdium, pucerons, limaces, doryphore…) et répond « je ne sais pas » quand il n'est pas assez sûr. Aide indicative, en amélioration continue : à confirmer avec la clé ci-dessous, pas un diagnostic certain.",
+                stringResource(Res.string.photo_disclaimer),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -221,24 +223,27 @@ private fun VerdictText(
     onOpenDisease: (String) -> Unit,
     onOpenKey: () -> Unit,
 ) {
+    val tierProbable = stringResource(Res.string.photo_tier_probable)
+    val tierPossible = stringResource(Res.string.photo_tier_possible)
+    val tierUnsure = stringResource(Res.string.photo_tier_unsure)
     fun tier(score: Float) = when (PhotoDiagnosis.confidenceTier(score, threshold)) {
-        ConfidenceTier.PROBABLE -> "probable"
-        ConfidenceTier.POSSIBLE -> "possible"
-        ConfidenceTier.UNSURE -> "je ne sais pas"
+        ConfidenceTier.PROBABLE -> tierProbable
+        ConfidenceTier.POSSIBLE -> tierPossible
+        ConfidenceTier.UNSURE -> tierUnsure
     }
     // Le verdict, même sûr, reste une piste : la clé de diagnostic est toujours proposée.
     val keyButton: @Composable () -> Unit = {
-        TextButton(onClick = onOpenKey) { Text("Vérifier avec la clé") }
+        TextButton(onClick = onOpenKey) { Text(stringResource(Res.string.photo_open_key)) }
     }
     when (verdict) {
         is PhotoVerdict.Healthy -> {
             Text(
-                "Feuille d'apparence saine (${tier(verdict.confidence)}).",
+                stringResource(Res.string.photo_healthy, tier(verdict.confidence)),
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.SemiBold,
             )
             Text(
-                "Si la plante semble malgré tout affaiblie (tiges qui filent, feuillage mou), vérifiez l'état du terreau et l'exposition ci-dessous.",
+                stringResource(Res.string.photo_healthy_hint),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -247,11 +252,11 @@ private fun VerdictText(
         is PhotoVerdict.Disease -> {
             val name = DiseaseCatalog.getById(verdict.catalogId)?.name ?: verdict.catalogId
             Text(
-                "Ressemble à : $name (${tier(verdict.confidence)}).",
+                stringResource(Res.string.photo_resembles, name, tier(verdict.confidence)),
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.SemiBold,
             )
-            TextButton(onClick = { onOpenDisease(verdict.catalogId) }) { Text("Voir la fiche $name") }
+            TextButton(onClick = { onOpenDisease(verdict.catalogId) }) { Text(stringResource(Res.string.photo_open_sheet, name)) }
             keyButton()
         }
         is PhotoVerdict.Unsure -> {
@@ -264,29 +269,29 @@ private fun VerdictText(
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 if (PhotoDiagnosis.leafSpotCombinedConfidence(verdict.leads) != null) {
                     Text(
-                        "Tache foliaire probable (mildiou ou alternariose) : comparez les deux fiches ci-dessous.",
+                        stringResource(Res.string.photo_leafspot),
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.SemiBold,
                     )
                 } else {
                     Text(
-                        "Je ne reconnais pas de maladie foliaire franche avec assez de certitude.",
+                        stringResource(Res.string.photo_no_clear),
                         style = MaterialTheme.typography.bodyLarge,
                     )
                 }
                 verdict.leads.forEach { (id, p) ->
                     val name = DiseaseCatalog.getById(id)?.name ?: id
-                    TextButton(onClick = { onOpenDisease(id) }) { Text("Piste ${tier(p)} : $name") }
+                    TextButton(onClick = { onOpenDisease(id) }) { Text(stringResource(Res.string.photo_lead, tier(p), name)) }
                 }
 
                 Text(
-                    "Affiner avec le contexte (arrosage, lumière, pot) :",
+                    stringResource(Res.string.photo_refine),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
-                    "1. État du terreau à 2–3 cm de profondeur :",
+                    stringResource(Res.string.photo_step_moisture),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -319,7 +324,7 @@ private fun VerdictText(
                 }
 
                 Text(
-                    "2. Allure générale ou indice :",
+                    stringResource(Res.string.photo_step_hint),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -354,7 +359,7 @@ private fun VerdictText(
                 abioticLeads.forEach { id ->
                     val name = DiseaseCatalog.getById(id)?.name ?: id
                     TextButton(onClick = { onOpenDisease(id) }) {
-                        Text("Fiche conseillée : $name", fontWeight = FontWeight.SemiBold)
+                        Text(stringResource(Res.string.photo_recommended, name), fontWeight = FontWeight.SemiBold)
                     }
                 }
                 keyButton()
