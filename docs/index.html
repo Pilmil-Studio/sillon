@@ -62,11 +62,16 @@ h2 { font-size:var(--step-3); line-height:1.1; margin:0 0 var(--space-1); }
 .rules strong { display:block; font-size:var(--step-1); } .rules span { color:var(--muted); font-size:var(--step--1); }
 .doc { max-width:40em; padding-block:var(--space-4) var(--space-5); } .doc h1 { font-size:var(--step-3); margin-bottom:var(--space-1); }
 .doc h2 { font-size:var(--step-2); margin:var(--space-5) 0 var(--space-1); } .doc p,.doc li { color:var(--muted); } .doc strong { color:var(--fg); } .doc li { margin-bottom:6px; }
-.foot { border-top:var(--border); padding-block:var(--space-4) var(--space-5); color:var(--muted); font-size:var(--step--1); display:grid; gap:var(--space-2); } .foot p { margin:0; line-height:2.6; } .foot a { color:var(--fg); display:inline-block; padding-block:12px; margin-block:-12px; }
+.foot { border-top:var(--border); padding-block:var(--space-4) var(--space-5); color:var(--muted); font-size:var(--step--1); display:grid; gap:var(--space-2); } .foot p { margin:0; line-height:2.6; } .foot a { color:var(--fg); display:inline-block; line-height:1.2; padding-block:14px; margin-block:-14px; }
+.skip { position:absolute; left:var(--space-3); top:-4rem; z-index:10; display:inline-flex; align-items:center; min-height:44px; padding:0 var(--space-3); border-radius:var(--radius-s); background:var(--accent-solid); color:var(--on-accent); font-weight:700; text-decoration:none; }
+.skip:focus { top:var(--space-1); }
+#simulateur button:focus-visible, #simulateur input:focus-visible { outline-offset:-3px; }
 @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+@media print { body { background:#fff; color:#000; } .nav, .skip, .cta, #simulateur { display:none; } a, .sub, .lead, .card p, .rules span, .doc p, .doc li, .foot { color:#000; } .card { background:#fff; } }
 </style>
 </head>
 <body>
+<a class="skip" href="#contenu">Aller au contenu</a>
 <header class="wrap top">
   <a class="brand" href="./">Sillon</a>
   <nav class="nav" aria-label="Navigation">
@@ -74,7 +79,7 @@ h2 { font-size:var(--step-3); line-height:1.1; margin:0 0 var(--space-1); }
     <a href="https://github.com/Pilmil-Studio/sillon">Code source</a>
   </nav>
 </header>
-<main>
+<main id="contenu">
 <div class="wrap hero">
   <div>
     <p class="kicker">Compagnon de potager</p>
@@ -116,15 +121,15 @@ h2 { font-size:var(--step-3); line-height:1.1; margin:0 0 var(--space-1); }
   <h2>Essayer l'application en direct</h2>
   <p class="sub">Naviguez dans cet aperçu interactif pour vous projeter dans l'usage quotidien de Sillon.</p>
   <div style="display:flex;justify-content:center">
-    <div style="width:min(340px,100%);border:8px solid #1e1d1a;border-radius:32px;background:#faf8f4;color:#1c1b18;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,.22);font-size:14px">
-      <div style="background:#2c6e49;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;font-weight:700">
+    <div style="width:min(340px,100%);border:8px solid #1e1d1a;border-radius:32px;background:#faf8f4;color:#1c1b18;overflow:hidden;box-shadow:var(--shadow-m);font-size:14px">
+      <div style="background:var(--accent-solid);color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;font-weight:700">
         <span>Sillon</span><span style="font-size:11px;opacity:.85">Hors-ligne · Ille-et-Vilaine (35)</span>
       </div>
       <div id="si-screen" style="padding:14px;min-height:360px;display:grid;gap:10px;align-content:start;background:linear-gradient(180deg,rgba(44,110,73,.09),#faf8f4 45%)"></div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #e4dfd4;background:#fff">
-        <button type="button" class="si-tab" data-tab="home" style="padding:10px 4px;border:0;background:none;font:inherit;font-weight:700;color:#2c6e49;cursor:pointer">Aujourd'hui</button>
-        <button type="button" class="si-tab" data-tab="garden" style="padding:10px 4px;border:0;background:none;font:inherit;font-weight:600;color:#666;cursor:pointer">Potager</button>
-        <button type="button" class="si-tab" data-tab="doctor" style="padding:10px 4px;border:0;background:none;font:inherit;font-weight:600;color:#666;cursor:pointer">Docteur</button>
+        <button type="button" class="si-tab" data-tab="home" style="min-height:44px;padding:0 4px;border:0;background:none;font:inherit;font-weight:700;color:var(--accent-solid);cursor:pointer">Aujourd'hui</button>
+        <button type="button" class="si-tab" data-tab="garden" style="min-height:44px;padding:0 4px;border:0;background:none;font:inherit;font-weight:600;color:#666;cursor:pointer">Potager</button>
+        <button type="button" class="si-tab" data-tab="doctor" style="min-height:44px;padding:0 4px;border:0;background:none;font:inherit;font-weight:600;color:#666;cursor:pointer">Docteur</button>
       </div>
     </div>
   </div>
@@ -143,7 +148,7 @@ h2 { font-size:var(--step-3); line-height:1.1; margin:0 0 var(--space-1); }
     const scr = document.getElementById("si-screen");
     document.querySelectorAll(".si-tab").forEach(b => {
       const act = b.dataset.tab === tab;
-      b.style.color = act ? "#2c6e49" : "#6b675e";
+      b.style.color = act ? "var(--accent-solid)" : "#6b675e";
       b.style.fontWeight = act ? "700" : "500";
     });
     if (tab === "home") {
@@ -155,7 +160,7 @@ h2 { font-size:var(--step-3); line-height:1.1; margin:0 0 var(--space-1); }
           <div style="font-size:12px;color:#5a574f">2 parcelles · 6 cultures en place</div>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
-          ${horizons.map((x,i) => `<button type="button" data-h="${i}" style="padding:5px 10px;border-radius:999px;border:1px solid ${i===horizon?'#2c6e49':'#d8d2c5'};background:${i===horizon?'#2c6e49':'#fff'};color:${i===horizon?'#fff':'#1c1b18'};font-size:12px;cursor:pointer">${x.label}</button>`).join("")}
+          ${horizons.map((x,i) => `<button type="button" data-h="${i}" style="min-height:44px;padding:0 14px;border-radius:999px;border:1px solid ${i===horizon?'var(--accent-solid)':'#d8d2c5'};background:${i===horizon?'var(--accent-solid)':'#fff'};color:${i===horizon?'#fff':'#1c1b18'};font-size:12px;cursor:pointer">${x.label}</button>`).join("")}
         </div>
         ${h.tasks.map(t => `<div style="background:#fff;border:1px solid #e4dfd4;border-radius:14px;padding:10px;font-size:13px">${t}</div>`).join("")}
       `;
@@ -167,14 +172,14 @@ h2 { font-size:var(--step-3); line-height:1.1; margin:0 0 var(--space-1); }
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
           ${crops.map(c => `<div style="background:#ebe5d8;border:1px solid #d5ccb9;border-radius:12px;padding:10px 4px;text-align:center">
             <div style="height:34px;display:flex;align-items:flex-end;justify-content:center">
-              <div style="width:14px;height:${hPx}px;border-radius:7px 7px 2px 2px;background:#2c6e49"></div>
+              <div style="width:14px;height:${hPx}px;border-radius:7px 7px 2px 2px;background:var(--accent-solid)"></div>
             </div>
             <div style="font-weight:700;font-size:12px;margin-top:4px">${c}</div>
             <div style="font-size:10px;color:#5a574f">${stage}</div>
           </div>`).join("")}
         </div>
         <label style="font-size:12px;color:#5a574f">Voir pousser : <strong>+${growthDay} jours</strong>
-          <input id="si-grow" type="range" min="5" max="80" value="${growthDay}" style="width:100%">
+          <input id="si-grow" type="range" min="5" max="80" value="${growthDay}" style="width:100%;min-height:44px">
         </label>
       `;
     } else {
@@ -185,8 +190,8 @@ h2 { font-size:var(--step-3); line-height:1.1; margin:0 0 var(--space-1); }
         <div style="font-weight:800;font-size:17px">Docteur du potager</div>
         <div style="font-size:12px;color:#5a574f">Organe touché :</div>
         <div style="display:flex;gap:8px">
-          <button type="button" data-org="feuille" style="flex:1;padding:8px;border-radius:10px;border:1px solid ${organ==='feuille'?'#2c6e49':'#d8d2c5'};background:${organ==='feuille'?'#2c6e49':'#fff'};color:${organ==='feuille'?'#fff':'#1c1b18'};cursor:pointer">Feuille</button>
-          <button type="button" data-org="tige" style="flex:1;padding:8px;border-radius:10px;border:1px solid ${organ==='tige'?'#2c6e49':'#d8d2c5'};background:${organ==='tige'?'#2c6e49':'#fff'};color:${organ==='tige'?'#fff':'#1c1b18'};cursor:pointer">Tige / collet</button>
+          <button type="button" data-org="feuille" style="flex:1;min-height:44px;padding:0 8px;border-radius:10px;border:1px solid ${organ==='feuille'?'var(--accent-solid)':'#d8d2c5'};background:${organ==='feuille'?'var(--accent-solid)':'#fff'};color:${organ==='feuille'?'#fff':'#1c1b18'};cursor:pointer">Feuille</button>
+          <button type="button" data-org="tige" style="flex:1;min-height:44px;padding:0 8px;border-radius:10px;border:1px solid ${organ==='tige'?'var(--accent-solid)':'#d8d2c5'};background:${organ==='tige'?'var(--accent-solid)':'#fff'};color:${organ==='tige'?'#fff':'#1c1b18'};cursor:pointer">Tige / collet</button>
         </div>
         <div style="background:#fff;border:1px solid #e4dfd4;border-radius:14px;padding:12px;font-size:13px;line-height:1.45">${diag}</div>
       `;

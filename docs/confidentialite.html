@@ -62,11 +62,16 @@ h2 { font-size:var(--step-3); line-height:1.1; margin:0 0 var(--space-1); }
 .rules strong { display:block; font-size:var(--step-1); } .rules span { color:var(--muted); font-size:var(--step--1); }
 .doc { max-width:40em; padding-block:var(--space-4) var(--space-5); } .doc h1 { font-size:var(--step-3); margin-bottom:var(--space-1); }
 .doc h2 { font-size:var(--step-2); margin:var(--space-5) 0 var(--space-1); } .doc p,.doc li { color:var(--muted); } .doc strong { color:var(--fg); } .doc li { margin-bottom:6px; }
-.foot { border-top:var(--border); padding-block:var(--space-4) var(--space-5); color:var(--muted); font-size:var(--step--1); display:grid; gap:var(--space-2); } .foot p { margin:0; line-height:2.6; } .foot a { color:var(--fg); display:inline-block; padding-block:12px; margin-block:-12px; }
+.foot { border-top:var(--border); padding-block:var(--space-4) var(--space-5); color:var(--muted); font-size:var(--step--1); display:grid; gap:var(--space-2); } .foot p { margin:0; line-height:2.6; } .foot a { color:var(--fg); display:inline-block; line-height:1.2; padding-block:14px; margin-block:-14px; }
+.skip { position:absolute; left:var(--space-3); top:-4rem; z-index:10; display:inline-flex; align-items:center; min-height:44px; padding:0 var(--space-3); border-radius:var(--radius-s); background:var(--accent-solid); color:var(--on-accent); font-weight:700; text-decoration:none; }
+.skip:focus { top:var(--space-1); }
+#simulateur button:focus-visible, #simulateur input:focus-visible { outline-offset:-3px; }
 @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+@media print { body { background:#fff; color:#000; } .nav, .skip, .cta, #simulateur { display:none; } a, .sub, .lead, .card p, .rules span, .doc p, .doc li, .foot { color:#000; } .card { background:#fff; } }
 </style>
 </head>
 <body>
+<a class="skip" href="#contenu">Aller au contenu</a>
 <header class="wrap top">
   <a class="brand" href="./">Sillon</a>
   <nav class="nav" aria-label="Navigation">
@@ -74,7 +79,7 @@ h2 { font-size:var(--step-3); line-height:1.1; margin:0 0 var(--space-1); }
     <a href="https://github.com/Pilmil-Studio/sillon">Code source</a>
   </nav>
 </header>
-<main class="wrap doc">
+<main class="wrap doc" id="contenu">
 <h1>Confidentialité</h1>
 <p>Dernière mise à jour : 10 novembre 2026.</p>
 <h2>En bref</h2>
