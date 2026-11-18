@@ -56,7 +56,7 @@ import fr.pilmil.sillon.ui.components.SillonBadge
 import fr.pilmil.sillon.ui.components.SillonCard
 import fr.pilmil.sillon.ui.theme.SillonTheme
 import kotlinx.coroutines.launch
-import fr.pilmil.sillon.model.formatDayMonthFr
+import fr.pilmil.sillon.ui.formatDayMonth
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.pluralStringResource
@@ -404,8 +404,8 @@ private fun FrostCard(
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     val subtitleText = when (frost) {
-                        is FrostStatus.Upcoming -> listOfNotNull(formatDayMonthFr(frost.date), placeLabel).joinToString(" · ")
-                        is FrostStatus.Passed -> listOfNotNull(formatDayMonthFr(frost.date), placeLabel).joinToString(" · ")
+                        is FrostStatus.Upcoming -> listOfNotNull(formatDayMonth(frost.date), placeLabel).joinToString(" · ")
+                        is FrostStatus.Passed -> listOfNotNull(formatDayMonth(frost.date), placeLabel).joinToString(" · ")
                         FrostStatus.FrostFree -> stringResource(Res.string.frost_continuous)
                     }
                     Text(
@@ -455,7 +455,7 @@ private fun RestCard(nextWorkFrom: LocalDate?, onNavigateToCatalog: () -> Unit) 
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = if (nextWorkFrom != null) {
-                    stringResource(Res.string.rest_next_work, formatDayMonthFr(nextWorkFrom))
+                    stringResource(Res.string.rest_next_work, formatDayMonth(nextWorkFrom))
                 } else {
                     stringResource(Res.string.rest_no_work)
                 },

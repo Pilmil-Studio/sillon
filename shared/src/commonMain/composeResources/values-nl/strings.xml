@@ -104,6 +104,21 @@
         <item>November</item>
         <item>December</item>
     </string-array>
+    <string name="day_month_pattern">%1$d %2$s</string>
+    <string-array name="month_names_in_date">
+        <item>januari</item>
+        <item>februari</item>
+        <item>maart</item>
+        <item>april</item>
+        <item>mei</item>
+        <item>juni</item>
+        <item>juli</item>
+        <item>augustus</item>
+        <item>september</item>
+        <item>oktober</item>
+        <item>november</item>
+        <item>december</item>
+    </string-array>
     <string name="place_label">Plaats: %1$s</string>
     <string name="pick_department">Mijn departement of gebied kiezen</string>
     <string name="altitude_label">Hoogte (%1$d m)</string>

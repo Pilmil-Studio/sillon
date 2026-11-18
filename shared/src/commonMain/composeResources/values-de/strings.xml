@@ -55,7 +55,7 @@
     <string name="badge_all_year">Ganzjährig</string>
     <string name="adjust_department">An mein Département anpassen</string>
     <string name="rest_title">Der Garten ruht</string>
-    <string name="rest_next_work">In diesem Zeitraum keine Aussaat und keine Pflanzung. Nächste Arbeiten um den %1$s.</string>
+    <string name="rest_next_work">In diesem Zeitraum keine Aussaat und keine Pflanzung. Nächste Arbeiten etwa am %1$s.</string>
     <string name="rest_no_work">In diesem Zeitraum keine Aussaat und keine Pflanzung: Mulchen, Kompost und Beete vorbereiten.</string>
     <string name="rest_prepare">Die Saison im Katalog vorbereiten</string>
     <string name="settings_title">Einstellungen &amp; Daten</string>
@@ -91,6 +91,21 @@
     <string name="day_of_month">Tag des Monats</string>
     <string name="month_label">Monat (%1$s)</string>
     <string-array name="month_names">
+        <item>Januar</item>
+        <item>Februar</item>
+        <item>März</item>
+        <item>April</item>
+        <item>Mai</item>
+        <item>Juni</item>
+        <item>Juli</item>
+        <item>August</item>
+        <item>September</item>
+        <item>Oktober</item>
+        <item>November</item>
+        <item>Dezember</item>
+    </string-array>
+    <string name="day_month_pattern">%1$d. %2$s</string>
+    <string-array name="month_names_in_date">
         <item>Januar</item>
         <item>Februar</item>
         <item>März</item>

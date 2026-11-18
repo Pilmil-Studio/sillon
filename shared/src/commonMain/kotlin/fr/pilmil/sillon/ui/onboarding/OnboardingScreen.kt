@@ -40,7 +40,7 @@ import fr.pilmil.sillon.data.DepartmentFrost
 import fr.pilmil.sillon.data.FrenchFrostCatalog
 import fr.pilmil.sillon.engine.DiagnosticEngine
 import fr.pilmil.sillon.model.GrowingEnvironment
-import fr.pilmil.sillon.model.formatDayMonthFr
+import fr.pilmil.sillon.ui.formatDayMonth
 import fr.pilmil.sillon.shared.resources.*
 import fr.pilmil.sillon.ui.PlatformBackHandler
 import fr.pilmil.sillon.ui.components.SillonButton
@@ -257,7 +257,7 @@ fun DepartmentSearch(
                     Column(Modifier.weight(1f)) {
                         Text(dep.name, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
                         Text(
-                            stringResource(Res.string.department_last_frost, formatDayMonthFr(dep.medianLastFrost.toLocalDate(2026))),
+                            stringResource(Res.string.department_last_frost, formatDayMonth(dep.medianLastFrost.toLocalDate(2026))),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )

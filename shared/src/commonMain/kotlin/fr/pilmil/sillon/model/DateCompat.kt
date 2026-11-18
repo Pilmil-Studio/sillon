@@ -28,10 +28,11 @@ fun todayLocalDate(): LocalDate =
 
 fun nowEpochMillis(): Long = Clock.System.now().toEpochMilliseconds()
 
-private val FRENCH_MONTHS = arrayOf(
-    "janvier", "février", "mars", "avril", "mai", "juin",
-    "juillet", "août", "septembre", "octobre", "novembre", "décembre",
-)
-
-fun formatDayMonthFr(date: LocalDate): String =
-    "${date.dayOfMonth} ${FRENCH_MONTHS[date.monthNumber - 1]}"
+/**
+ * Jour + mois selon un motif localisé (`%1$d` = jour, `%2$s` = nom du mois) et les 12 noms de mois
+ * de la langue, lus dans les ressources.
+ */
+fun formatDayMonth(date: LocalDate, monthNames: List<String>, pattern: String): String =
+    pattern
+        .replace("%1\$d", date.dayOfMonth.toString())
+        .replace("%2\$s", monthNames[date.monthNumber - 1])

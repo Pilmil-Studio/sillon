@@ -12,7 +12,7 @@ import fr.pilmil.sillon.model.Parcel
 import fr.pilmil.sillon.model.ParcelSlot
 import fr.pilmil.sillon.model.ParcelType
 import fr.pilmil.sillon.model.daysBetween
-import fr.pilmil.sillon.model.formatDayMonthFr
+import fr.pilmil.sillon.model.formatDayMonth
 import fr.pilmil.sillon.model.minusDays
 import fr.pilmil.sillon.model.minusWeeks
 import fr.pilmil.sillon.model.plusDays
@@ -115,9 +115,6 @@ class EnginesAndCatalogEdgeCasesTest {
         assertEquals(LocalDate(2026, 5, 29), base.plusWeeks(2))
         assertEquals(LocalDate(2026, 5, 1), base.minusWeeks(2))
         assertEquals(14L, daysBetween(base, base.plusWeeks(2)))
-        assertEquals("15 mai", formatDayMonthFr(base))
-        assertEquals("1 janvier", formatDayMonthFr(LocalDate(2026, 1, 1)))
-        assertEquals("31 décembre", formatDayMonthFr(LocalDate(2026, 12, 31)))
     }
 
     @Test

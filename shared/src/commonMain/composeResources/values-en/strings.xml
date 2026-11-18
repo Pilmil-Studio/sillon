@@ -104,6 +104,21 @@
         <item>November</item>
         <item>December</item>
     </string-array>
+    <string name="day_month_pattern">%2$s %1$d</string>
+    <string-array name="month_names_in_date">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
     <string name="place_label">Place: %1$s</string>
     <string name="pick_department">Choose my département or territory</string>
     <string name="altitude_label">Altitude (%1$d m)</string>
