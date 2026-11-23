@@ -50,7 +50,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.pilmil.sillon.engine.DashboardPlan
 import fr.pilmil.sillon.engine.FrostStatus
+import fr.pilmil.sillon.engine.DiagnosticJournal
 import fr.pilmil.sillon.model.Climate
+import fr.pilmil.sillon.model.DiagnosticJournalEntry
 import fr.pilmil.sillon.shared.resources.*
 import fr.pilmil.sillon.ui.components.SillonBadge
 import fr.pilmil.sillon.ui.components.SillonCard
@@ -100,6 +102,8 @@ fun DashboardScreen(
     tip: Pair<String, String>?,
     showIntroHints: Boolean = true,
     activeGardenMarker: String? = null,
+    followUps: List<DiagnosticJournalEntry> = emptyList(),
+    onOpenFollowUp: (DiagnosticJournalEntry) -> Unit = {},
     onNavigateToGarden: () -> Unit = {},
     onNavigateToCatalog: () -> Unit = {},
     onOpenSettings: () -> Unit = {},
@@ -146,6 +150,35 @@ fun DashboardScreen(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
+                }
+            }
+        }
+
+        // Plantes dont la revérification, choisie par la personne, est arrivée : une seule carte, sans compteur ni insistance.
+        if (followUps.isNotEmpty()) item {
+            SillonCard(
+                backgroundColor = MaterialTheme.colorScheme.surface,
+                borderColor = MaterialTheme.colorScheme.outline,
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(
+                        text = pluralStringResource(Res.plurals.dashboard_followup_title, followUps.size, followUps.size),
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.semantics { heading() },
+                    )
+                    followUps.take(MAX_FOLLOW_UPS_SHOWN).forEach { entry ->
+                        TextButton(onClick = { onOpenFollowUp(entry) }) {
+                            Text(
+                                text = stringResource(
+                                    Res.string.dashboard_followup_line,
+                                    DiagnosticJournal.vegetableName(entry),
+                                    stringResource(Res.string.garden_slot_title, entry.row + 1, entry.col + 1),
+                                ),
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -514,3 +547,5 @@ private fun IconBubble(icon: ImageVector, accent: Color) {
         Icon(imageVector = icon, contentDescription = null, tint = accent, modifier = Modifier.size(22.dp))
     }
 }
+
+private const val MAX_FOLLOW_UPS_SHOWN = 3

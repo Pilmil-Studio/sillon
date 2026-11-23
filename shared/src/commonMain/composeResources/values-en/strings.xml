@@ -319,4 +319,70 @@
     <string name="custom_frost_place">My dates</string>
     <string name="custom_frost_current">My dates: %1$s</string>
     <string name="frost_ref_custom_text">These dates replace those of a French département. All tasks and sowing reminders are calculated from this day. It is an average, not a guarantee: keep an eye on the local weather.</string>
+    <string name="doctor_context_title">For this plant</string>
+    <string name="doctor_context_plant">%1$s (%2$s)</string>
+    <string name="doctor_context_planted_today">Planted today</string>
+    <string name="doctor_context_season_spring">Spring</string>
+    <string name="doctor_context_season_summer">Summer</string>
+    <string name="doctor_context_season_autumn">Autumn</string>
+    <string name="doctor_context_season_winter">Winter</string>
+    <string name="doctor_context_back">Back to the garden</string>
+    <string name="doctor_likely_title">Most likely causes for this plant (%1$d)</string>
+    <string name="doctor_others_title">Other causes, less common on this plant (%1$d)</string>
+    <string name="doctor_others_show">Show</string>
+    <string name="doctor_others_hide">Hide</string>
+    <string name="doctor_note_action">Keep this cause and note it in the journal</string>
+    <string name="doctor_note_uncertain">Not sure yet: note it as uncertain</string>
+    <string name="journal_sheet_title">Note in this square’s journal</string>
+    <string name="journal_sheet_cause">Cause kept: %1$s</string>
+    <string name="journal_cause_uncertain">Uncertain cause</string>
+    <string name="journal_sheet_plant">Plant: %1$s</string>
+    <string name="journal_sheet_today">Date: today</string>
+    <string name="journal_action_label">Treatment or action (optional)</string>
+    <string name="journal_action_hint">E.g. affected leaves removed</string>
+    <string name="journal_save">Note it</string>
+    <string name="journal_saved_title">Noted</string>
+    <string name="journal_close">Close</string>
+    <string name="followup_hint">Suggested delay based on the kind of problem. You can change it.</string>
+    <string name="followup_set">Remind me</string>
+    <string name="followup_none">No reminder</string>
+    <string name="followup_notifications_off">Notifications are denied: the follow-up will still show in the app.</string>
+    <string name="journal_section_title">This square’s journal</string>
+    <string name="journal_entry_line">%1$s on %2$s, noted on %3$s</string>
+    <string name="journal_status_open">Ongoing</string>
+    <string name="journal_status_better">Getting better</string>
+    <string name="journal_status_lost">Plant lost</string>
+    <string name="journal_status_ended">Spot emptied or replanted</string>
+    <string name="journal_action_line">Action: %1$s</string>
+    <string name="journal_followup_on">Check planned on %1$s</string>
+    <string name="journal_followup_due">Time to check again</string>
+    <string name="journal_ask">Is it getting better?</string>
+    <string name="journal_yes">Yes</string>
+    <string name="journal_no">No</string>
+    <string name="journal_lost">The plant is lost</string>
+    <string name="garden_slot_problem_button">It has a problem</string>
+    <string name="garden_slot_problem_open">Ongoing problem: %1$s</string>
+    <string name="rotation_soil_warning">%1$s noted here in %2$d: avoid %3$s (%4$s) until %5$d.</string>
+    <string name="rotation_soil_label">Persistent disease noted here</string>
+    <string name="dashboard_followup_line">%1$s · %2$s</string>
+    <plurals name="doctor_context_planted">
+        <item quantity="one">Planted %1$d day ago</item>
+        <item quantity="other">Planted %1$d days ago</item>
+    </plurals>
+    <plurals name="followup_question">
+        <item quantity="one">Check again in %1$d day?</item>
+        <item quantity="other">Check again in %1$d days?</item>
+    </plurals>
+    <plurals name="followup_days_chip">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
+    <plurals name="garden_scene_problems">
+        <item quantity="one">%1$d plant with an ongoing problem.</item>
+        <item quantity="other">%1$d plants with an ongoing problem.</item>
+    </plurals>
+    <plurals name="dashboard_followup_title">
+        <item quantity="one">%1$d plant to check again</item>
+        <item quantity="other">%1$d plants to check again</item>
+    </plurals>
 </resources>

@@ -38,6 +38,10 @@ actual fun rememberReminderPermissionRequester(onResult: (Boolean) -> Unit): () 
 }
 
 @Composable
+actual fun rememberNotificationPermissionRequester(onResult: (Boolean) -> Unit): () -> Unit =
+    rememberReminderPermissionRequester(onResult)
+
+@Composable
 actual fun rememberAmbientLuxSensor(): Float? {
     val context = LocalContext.current
     var lux by remember { mutableStateOf<Float?>(null) }

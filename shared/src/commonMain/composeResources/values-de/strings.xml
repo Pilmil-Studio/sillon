@@ -319,4 +319,70 @@
     <string name="custom_frost_place">Meine Daten</string>
     <string name="custom_frost_current">Meine Daten: %1$s</string>
     <string name="frost_ref_custom_text">Diese Daten ersetzen die eines französischen Départements. Alle Arbeiten und Aussaaterinnerungen werden von diesem Tag aus berechnet. Es ist ein Durchschnitt, keine Garantie: Behalten Sie das örtliche Wetter im Blick.</string>
+    <string name="doctor_context_title">Für diese Pflanze</string>
+    <string name="doctor_context_plant">%1$s (%2$s)</string>
+    <string name="doctor_context_planted_today">Heute gepflanzt</string>
+    <string name="doctor_context_season_spring">Frühling</string>
+    <string name="doctor_context_season_summer">Sommer</string>
+    <string name="doctor_context_season_autumn">Herbst</string>
+    <string name="doctor_context_season_winter">Winter</string>
+    <string name="doctor_context_back">Zurück zum Garten</string>
+    <string name="doctor_likely_title">Wahrscheinlichste Ursachen für diese Pflanze (%1$d)</string>
+    <string name="doctor_others_title">Weitere Ursachen, bei dieser Pflanze seltener (%1$d)</string>
+    <string name="doctor_others_show">Anzeigen</string>
+    <string name="doctor_others_hide">Ausblenden</string>
+    <string name="doctor_note_action">Diese Ursache übernehmen und im Tagebuch notieren</string>
+    <string name="doctor_note_uncertain">Noch unsicher: als ungewiss notieren</string>
+    <string name="journal_sheet_title">Im Tagebuch dieses Feldes notieren</string>
+    <string name="journal_sheet_cause">Gewählte Ursache: %1$s</string>
+    <string name="journal_cause_uncertain">Ursache ungewiss</string>
+    <string name="journal_sheet_plant">Pflanze: %1$s</string>
+    <string name="journal_sheet_today">Datum: heute</string>
+    <string name="journal_action_label">Behandlung oder Maßnahme (optional)</string>
+    <string name="journal_action_hint">z. B. befallene Blätter entfernt</string>
+    <string name="journal_save">Notieren</string>
+    <string name="journal_saved_title">Notiert</string>
+    <string name="journal_close">Schließen</string>
+    <string name="followup_hint">Vorgeschlagene Frist je nach Art des Problems. Sie können sie ändern.</string>
+    <string name="followup_set">Erinnern</string>
+    <string name="followup_none">Keine Erinnerung</string>
+    <string name="followup_notifications_off">Benachrichtigungen sind abgelehnt: Die Nachkontrolle bleibt in der App sichtbar.</string>
+    <string name="journal_section_title">Tagebuch dieses Feldes</string>
+    <string name="journal_entry_line">%1$s bei %2$s, notiert am %3$s</string>
+    <string name="journal_status_open">Aktuell</string>
+    <string name="journal_status_better">Es geht besser</string>
+    <string name="journal_status_lost">Pflanze verloren</string>
+    <string name="journal_status_ended">Platz geleert oder neu bepflanzt</string>
+    <string name="journal_action_line">Maßnahme: %1$s</string>
+    <string name="journal_followup_on">Nachkontrolle geplant am %1$s</string>
+    <string name="journal_followup_due">Erneut prüfen</string>
+    <string name="journal_ask">Geht es besser?</string>
+    <string name="journal_yes">Ja</string>
+    <string name="journal_no">Nein</string>
+    <string name="journal_lost">Die Pflanze ist verloren</string>
+    <string name="garden_slot_problem_button">Es gibt ein Problem</string>
+    <string name="garden_slot_problem_open">Aktuelles Problem: %1$s</string>
+    <string name="rotation_soil_warning">%1$s hier %2$d notiert: Vermeiden Sie %3$s (%4$s) bis %5$d.</string>
+    <string name="rotation_soil_label">Hier notierte, bodenbürtige Krankheit</string>
+    <string name="dashboard_followup_line">%1$s · %2$s</string>
+    <plurals name="doctor_context_planted">
+        <item quantity="one">Vor %1$d Tag gepflanzt</item>
+        <item quantity="other">Vor %1$d Tagen gepflanzt</item>
+    </plurals>
+    <plurals name="followup_question">
+        <item quantity="one">In %1$d Tag erneut prüfen?</item>
+        <item quantity="other">In %1$d Tagen erneut prüfen?</item>
+    </plurals>
+    <plurals name="followup_days_chip">
+        <item quantity="one">%1$d Tag</item>
+        <item quantity="other">%1$d Tage</item>
+    </plurals>
+    <plurals name="garden_scene_problems">
+        <item quantity="one">%1$d Pflanze mit einem aktuellen Problem.</item>
+        <item quantity="other">%1$d Pflanzen mit einem aktuellen Problem.</item>
+    </plurals>
+    <plurals name="dashboard_followup_title">
+        <item quantity="one">%1$d Pflanze erneut prüfen</item>
+        <item quantity="other">%1$d Pflanzen erneut prüfen</item>
+    </plurals>
 </resources>

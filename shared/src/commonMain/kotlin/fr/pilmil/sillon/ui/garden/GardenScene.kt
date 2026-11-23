@@ -37,10 +37,15 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
+import org.jetbrains.compose.resources.pluralStringResource
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.text.font.FontFamily
+import fr.pilmil.sillon.engine.DiagnosticJournal
+import fr.pilmil.sillon.model.DiagnosticJournalEntry
 import fr.pilmil.sillon.model.Parcel
 import fr.pilmil.sillon.model.Vegetable
+import fr.pilmil.sillon.shared.resources.Res
+import fr.pilmil.sillon.shared.resources.garden_scene_problems
 import fr.pilmil.sillon.ui.rememberReduceMotion
 import fr.pilmil.sillon.ui.theme.SillonPalette
 import kotlinx.datetime.LocalDate
@@ -254,6 +259,7 @@ fun GardenScene(
     modifier: Modifier = Modifier,
     skyPlace: SkyPlace = SkyPlace.Metropole,
     skyClock: SkyClock? = null,
+    journal: List<DiagnosticJournalEntry> = emptyList(),
 ) {
     val measurer = rememberTextMeasurer()
     val displayFontFamily = MaterialTheme.typography.displaySmall.fontFamily
@@ -265,11 +271,18 @@ fun GardenScene(
     val currentSelectParcel by rememberUpdatedState(onSelectParcel)
     val selected = parcels.getOrNull(selectedIndex)
     val selectedId = selected?.id
+    // Plantes abîmées par un problème en cours, par parcelle : voir DiagnosticJournal.damagedCells.
+    val damagedByParcel = remember(parcels, journal) {
+        parcels.associate { it.id to DiagnosticJournal.damagedCells(it, journal) }
+    }
+    val damagedCount = selected?.let { damagedByParcel[it.id]?.size } ?: 0
+    val problemsText = if (damagedCount > 0) pluralStringResource(Res.plurals.garden_scene_problems, damagedCount, damagedCount) else ""
     val description = if (selected == null) {
         "Aucune parcelle à afficher."
     } else {
         "${selected.name}, ${selected.rows * selected.cols} cases dont " +
-            "${selected.slots.count { it.vegetableId != null }} plantées. Touchez une case pour la modifier."
+            "${selected.slots.count { it.vegetableId != null }} plantées. Touchez une case pour la modifier." +
+            if (problemsText.isEmpty()) "" else " $problemsText"
     }
     val neighborhood = remember(selected, vegetables) { selected?.let { neighborhoodOf(it, vegetables) } ?: emptyMap() }
 
@@ -312,7 +325,7 @@ fun GardenScene(
         drawBackdrop(layout, look)
         drawGround(layout, look)
         for (pl in layout.placements) {
-            drawParcel(layout.proj, look, pl, byId, today, neighborhood, selectedCell, measurer, displayFontFamily, settled)
+            drawParcel(layout.proj, look, pl, byId, today, neighborhood, selectedCell, measurer, displayFontFamily, settled, damagedByParcel[pl.parcel.id].orEmpty())
         }
     }
 }
@@ -508,6 +521,7 @@ private fun DrawScope.drawParcel(
     measurer: TextMeasurer,
     displayFontFamily: FontFamily?,
     settled: Boolean,
+    damaged: Set<Pair<Int, Int>>,
 ) {
     val fp = pl.fp
     val s = pl.scale
@@ -700,6 +714,7 @@ private fun DrawScope.drawParcel(
 
     // Plantes, rangée par rangée du fond (rangée 0) vers l'avant, pour un recouvrement correct.
     val tone = PlantTone(look.plantNight, look.fogColor, fogAmount)
+    val dullTone = PlantTone(look.plantNight, look.fogColor, fogAmount, dull = DAMAGED_DULL)
     for (r in 0 until fp.rows) {
         for (c in 0 until fp.cols) {
             val slot = pl.parcel.getSlot(r, c) ?: continue
@@ -708,13 +723,33 @@ private fun DrawScope.drawParcel(
             val base = P(fp.cellCenterX(c), pl.soilY, cz)
             val unit = proj.scaleAt(cz, pl.soilY) * fp.cell
             val growth = plantGrowth(veg, slot.plantedDate, today)
-            drawPlant(veg, growth, base, unit, tone, seed = r * 31 + c * 17 + veg.id.hashCode(), simple = !pl.detailed)
+            val isDamaged = (r to c) in damaged
+            drawPlant(veg, growth, base, unit, if (isDamaged) dullTone else tone, seed = r * 31 + c * 17 + veg.id.hashCode(), simple = !pl.detailed)
+            if (isDamaged) drawLeafSpots(base, unit, plantHeightFactor(veg, growth), seed = r * 13 + c * 7)
         }
     }
 
     if (pl.selected && settled) {
         drawCellBadges(proj, pl, byId, today, neighborhood)
         drawSign(proj, look, pl, measurer, displayFontFamily)
+    }
+}
+
+/** Teinte terne d'une plante qui a un problème en cours (0 = normale, 1 = entièrement ternie). */
+private const val DAMAGED_DULL = 0.38f
+private val LeafSpotBrown = Color(0xFF6B4A22)
+
+/**
+ * Quelques taches brunes sur le feuillage d'une plante qui a un problème en cours. Purement visuel : le texte
+ * (description de la scène, détail de la case) dit toujours la même chose, l'image ne porte jamais l'information seule.
+ */
+private fun DrawScope.drawLeafSpots(base: Offset, unit: Float, heightFactor: Float, seed: Int) {
+    val height = heightFactor * unit
+    for (i in 0 until 4) {
+        val x = base.x + (hash01(seed + i, 61) - 0.5f) * unit * 0.4f
+        val y = base.y - height * (0.25f + 0.5f * hash01(seed + i, 62))
+        val r = max(1.5f, unit * (0.018f + 0.012f * hash01(seed + i, 63)))
+        drawCircle(LeafSpotBrown.copy(alpha = 0.75f), r, Offset(x, y))
     }
 }
 

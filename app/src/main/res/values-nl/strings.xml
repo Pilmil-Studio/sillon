@@ -22,4 +22,8 @@
     <string name="frame_tip_closer">Ga dichter bij het blad staan</string>
     <string name="frame_tip_center">Gemiddelde kwaliteit: centreer het blad</string>
     <string name="frame_tip_optimal">Beeld goed: klaar voor analyse</string>
+    <string name="followup_channel_name">Opvolging van problemen</string>
+    <string name="followup_channel_desc">Een herinnering om een plant opnieuw te bekijken, op de gekozen datum.</string>
+    <string name="followup_title">Nog eens kijken in de moestuin</string>
+    <string name="followup_text">%1$s: gaat het beter?</string>
 </resources>

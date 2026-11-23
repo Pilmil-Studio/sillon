@@ -23,4 +23,8 @@
     <string name="frame_tip_closer">Acérquese a la hoja</string>
     <string name="frame_tip_center">Calidad media: centre la hoja</string>
     <string name="frame_tip_optimal">Encuadre correcto: listo para analizar</string>
+    <string name="followup_channel_name">Seguimiento de problemas</string>
+    <string name="followup_channel_desc">Un recordatorio para revisar una planta de nuevo, en la fecha que eligió.</string>
+    <string name="followup_title">Revisar en el huerto</string>
+    <string name="followup_text">%1$s: ¿va mejor?</string>
 </resources>

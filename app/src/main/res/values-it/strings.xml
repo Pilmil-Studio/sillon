@@ -23,4 +23,8 @@
     <string name="frame_tip_closer">Si avvicini alla foglia</string>
     <string name="frame_tip_center">Qualità media: centri la foglia</string>
     <string name="frame_tip_optimal">Inquadratura corretta: pronto per l’analisi</string>
+    <string name="followup_channel_name">Controllo dei problemi</string>
+    <string name="followup_channel_desc">Un promemoria per ricontrollare una pianta, nella data che hai scelto.</string>
+    <string name="followup_title">Ricontrollare nell’orto</string>
+    <string name="followup_text">%1$s: va meglio?</string>
 </resources>

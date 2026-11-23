@@ -57,6 +57,7 @@ import fr.pilmil.sillon.engine.ConfidenceTier
 import fr.pilmil.sillon.engine.PhotoDiagnosis
 import fr.pilmil.sillon.engine.PhotoVerdict
 import fr.pilmil.sillon.engine.SubstrateMoisture
+import fr.pilmil.sillon.model.BotanicalFamily
 import fr.pilmil.sillon.shared.resources.*
 import fr.pilmil.sillon.ui.components.SillonButton
 import fr.pilmil.sillon.ui.components.SillonCard
@@ -77,7 +78,7 @@ import java.io.File
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PhotoDiagnosisCard(onOpenDisease: (String) -> Unit, onOpenKey: () -> Unit) {
+fun PhotoDiagnosisCard(onOpenDisease: (String) -> Unit, onOpenKey: () -> Unit, plantFamily: BotanicalFamily? = null) {
     val context = LocalContext.current
     // Le modèle se charge hors du fil principal ; la carte n'apparaît que s'il est disponible.
     var classifier by remember { mutableStateOf<PhotoClassifier?>(null) }
@@ -102,7 +103,7 @@ fun PhotoDiagnosisCard(onOpenDisease: (String) -> Unit, onOpenKey: () -> Unit) {
         scope.launch {
             // Que l'analyse réussisse, échoue ou soit interrompue (écran quitté), la photo ne reste pas dans le cache.
             try {
-                val result = withContext(Dispatchers.Default) { active.analyse(context, uri) }
+                val result = withContext(Dispatchers.Default) { active.analyse(context, uri, plantFamily) }
                 when (result) {
                     is PhotoResult.Success -> { verdict = result.verdict; failed = false; resultVersion++ }
                     is PhotoResult.Cancelled -> Unit
@@ -279,11 +280,11 @@ private fun VerdictText(
                         style = MaterialTheme.typography.bodyLarge,
                     )
                 }
-                verdict.leads.forEach { (id, p) ->
+                val shownLeads = verdict.leads
+                shownLeads.forEach { (id, p) ->
                     val name = DiseaseCatalog.getById(id)?.name ?: id
                     TextButton(onClick = { onOpenDisease(id) }) { Text(stringResource(Res.string.photo_lead, tier(p), name)) }
                 }
-
                 Text(
                     stringResource(Res.string.photo_refine),
                     style = MaterialTheme.typography.labelMedium,

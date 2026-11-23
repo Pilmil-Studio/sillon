@@ -2,6 +2,7 @@ package fr.pilmil.sillon.shared
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.window.ComposeUIViewController
+import fr.pilmil.sillon.model.todayLocalDate
 import fr.pilmil.sillon.ui.SillonApp
 import fr.pilmil.sillon.ui.theme.SillonTheme
 import platform.UIKit.UIViewController
@@ -13,6 +14,7 @@ fun MainViewController(): UIViewController = ComposeUIViewController {
             onApplyReminders = { enabled, _ ->
                 IosSowingReminders.setEnabled(enabled) {}
             },
+            onSyncFollowUps = { garden -> IosFollowUpReminders.sync(garden, todayLocalDate()) },
         )
     }
 }
