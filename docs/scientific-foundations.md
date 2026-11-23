@@ -231,6 +231,19 @@ Sillon segmente le catalogue végétal selon une matrice de rotation fonctionnel
 
 Le moteur de Sillon (`RotationEngine`) analyse l'historique pluriannuel de chaque case de parcelle. Tout chevauchement d'une même famille sur une fenêtre inférieure au délai de pause requis génère un `CONFLICT_ERROR` avec explicitation agronomique.
 
+### 4.3. Persistance dans le sol des maladies notées au potager
+
+Le tableau 4.2 donne des ordres de grandeur non sourcés ligne par ligne : le moteur ne s'en sert pas. L'avertissement « maladie notée ici » du journal du carré (`Disease.soilCarryover`, `RotationEngine.soilWarnings`) n'utilise que des durées adossées à une source, et retient la plus basse quand deux sources divergent, pour ne pas affirmer plus que ce qu'elles disent.
+
+| Maladie | Familles à éviter | Durée retenue | Sources |
+|---|---|:---:|---|
+| Mildiou (*Phytophthora infestans*) | Solanacées | 3 ans | Cornell Vegetable Program, fiche « Late Blight » : rotation hors solanacées pendant 3 ans |
+| Alternariose (*Alternaria solani*) | Solanacées | 2 ans | UMass Extension, fiche « Solanaceous Early Blight » : 2 ans hors tomates ; NDSU PP1892 indique 3 ans (la valeur la plus basse est retenue) |
+
+Réserves : le tableau 4.2 indique 4 ans pour le mildiou, ce qui dépasse la source retenue ici ; la persistance réelle dépend du climat, des débris de culture et des repousses de pommes de terre. Les durées sont comptées en années civiles à partir de l'année de la note, le détail est dans `RotationEngine.soilWarnings`. L'avertissement s'affiche l'année suivante et jusqu'à l'échéance, quel que soit le dénouement (« Ça va mieux » ou plant perdu), car l'inoculum reste.
+
+Non sourcé, donc sans durée ni avertissement (`TODO(sources)` en tête de `DiseaseCatalog.kt`) : anthracnose, fonte des semis (seulement signalée comme maladie de plantules), botrytis, mouche de la carotte. La hernie du chou (*Plasmodiophora brassicae*) n'a pas de fiche dans le catalogue ; l'ajouter permettrait de la couvrir une fois sourcée.
+
 ---
 
 ## 5. Gestion Intégrée des Maladies Foliaires en Permaculture

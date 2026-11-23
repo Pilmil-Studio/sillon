@@ -1,5 +1,10 @@
 package fr.pilmil.sillon.engine
 
+import fr.pilmil.sillon.data.DiseaseCatalog
+import fr.pilmil.sillon.data.HostPlausibility
+import fr.pilmil.sillon.model.BotanicalFamily
+import fr.pilmil.sillon.model.PlantOrgan
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
@@ -19,7 +24,12 @@ data class PhotoModelSpec(
     data class Input(val width: Int, val height: Int, val channels: Int = 3, val order: String = "RGB")
 
     @Serializable
-    data class ModelClass(val label: String, val catalogId: String? = null)
+    data class ModelClass(
+        val label: String,
+        val catalogId: String? = null,
+        /** Modèle fusionné : classes de base regroupées (ex. mildiou et alternariose dans « tache_feuille »). */
+        @SerialName("group_members") val groupMembers: List<String>? = null,
+    )
 
     companion object {
         private val json = Json { ignoreUnknownKeys = true }
@@ -92,13 +102,40 @@ object PhotoDiagnosis {
         else -> ConfidenceTier.UNSURE
     }
 
-    /** Probabilités du modèle -> verdict, avec le seuil calibré sur des photos de terrain. */
-    fun interpret(probabilities: FloatArray, spec: PhotoModelSpec): PhotoVerdict {
+    /**
+     * A priori de la plante : quand le diagnostic part d'une plantation, chaque probabilité d'une maladie ou
+     * d'un ravageur est multipliée par la plausibilité de cet hôte ([HostPlausibility], jamais nulle), puis le
+     * vecteur est renormalisé. Les classes sans fiche (sain, autre, hors_sujet, groupes fusionnés) ne sont pas
+     * pondérées. Sans [family] (écran docteur autonome), les probabilités sont rendues telles quelles.
+     */
+    fun applyHostPrior(probabilities: FloatArray, spec: PhotoModelSpec, family: BotanicalFamily?): FloatArray {
         require(probabilities.size == spec.classes.size) { "le modèle et sa description ne correspondent pas" }
+        if (family == null) return probabilities
+        val weighted = FloatArray(probabilities.size) { i ->
+            val id = spec.classes[i].catalogId
+            val weight = if (id == null || spec.classes[i].label == HEALTHY_LABEL) 1f else HostPlausibility.plausibility(id, family)
+            probabilities[i] * weight
+        }
+        val total = weighted.sum()
+        if (total <= 0f) return probabilities
+        return FloatArray(weighted.size) { weighted[it] / total }
+    }
+
+    /**
+     * Probabilités du modèle -> verdict, avec le seuil calibré sur des photos de terrain. Le seuil n'est pas
+     * recalibré pour l'a priori de [family] : il reste celui du modèle (voir specs/modele-diagnostic-ia.md).
+     */
+    fun interpret(rawProbabilities: FloatArray, spec: PhotoModelSpec, family: BotanicalFamily? = null): PhotoVerdict {
+        require(rawProbabilities.size == spec.classes.size) { "le modèle et sa description ne correspondent pas" }
+        val probabilities = applyHostPrior(rawProbabilities, spec, family)
         val ranked = probabilities.indices.sortedByDescending { probabilities[it] }
         val best = ranked.first()
         val confidence = probabilities[best]
         val bestClass = spec.classes[best]
+        // Classe fusionnée : jamais un verdict unique, les fiches du groupe sont proposées ensemble.
+        bestClass.groupMembers?.takeIf { it.isNotEmpty() }?.let { members ->
+            return PhotoVerdict.Unsure(members.map { it to confidence / members.size })
+        }
         if (confidence >= spec.threshold) {
             if (bestClass.label == HEALTHY_LABEL) return PhotoVerdict.Healthy(confidence)
             bestClass.catalogId?.let { return PhotoVerdict.Disease(it, confidence) }
@@ -184,5 +221,86 @@ object PhotoDiagnosis {
         val alternariose = leads.firstOrNull { it.first == "alternariose" }?.second ?: return null
         val combined = mildiou + alternariose
         return if (combined >= 0.55f) combined else null
+    }
+}
+
+/** Question posée pour départager mildiou et alternariose. */
+enum class LeafSpotQuestion { WHITE_FUZZ_OR_OILY, CONCENTRIC_RINGS }
+
+enum class TriageAnswer { YES, NO, UNKNOWN }
+
+/**
+ * Départage mildiou et alternariose, que la photo distingue mal, avec deux questions sur des signes visibles.
+ *
+ * Mise à jour simple : un « oui » multiplie par [YES_FACTOR] le poids de la maladie que le signe évoque, un « non »
+ * le divise par [NO_FACTOR], « je ne sais pas » ne change rien ; la masse cumulée des deux maladies est conservée.
+ * Ces facteurs sont des choix éditoriaux, pas des valeurs mesurées : ils ne servent qu'à ordonner les deux pistes,
+ * jamais à afficher un chiffre. Le signe évoque la maladie dont la fiche du catalogue le décrit
+ * (voir [target], qui s'appuie sur [DiagnosticEngine]).
+ */
+object LeafSpotTriage {
+
+    const val MILDIOU = "mildiou"
+    const val ALTERNARIOSE = "alternariose"
+
+    /** Écart de probabilité en dessous duquel les deux premières pistes sont jugées trop proches. */
+    const val CLOSE_GAP = 0.15f
+    const val YES_FACTOR = 3f
+    const val NO_FACTOR = 1.5f
+
+    private val clues = mapOf(
+        LeafSpotQuestion.WHITE_FUZZ_OR_OILY to "duvet blanc grisâtre au revers, taches d'aspect huileux",
+        LeafSpotQuestion.CONCENTRIC_RINGS to "taches brunes à anneaux concentriques en cible",
+    )
+
+    /** Vrai si mildiou et alternariose sont les deux premières pistes avec un écart inférieur à [CLOSE_GAP]. */
+    fun needsTriage(leads: List<Pair<String, Float>>): Boolean {
+        val top = leads.sortedByDescending { it.second }.take(2)
+        if (top.size < 2) return false
+        return top.map { it.first }.toSet() == setOf(MILDIOU, ALTERNARIOSE) && top[0].second - top[1].second < CLOSE_GAP
+    }
+
+    /** Maladie évoquée par le signe de [question], d'après les symptômes des fiches du catalogue. */
+    fun target(question: LeafSpotQuestion, engine: DiagnosticEngine = DiagnosticEngine()): String? =
+        engine.diagnose(
+            organ = PlantOrgan.LEAF,
+            symptoms = listOf(clues.getValue(question)),
+            family = BotanicalFamily.SOLANACEAE,
+            catalog = listOfNotNull(DiseaseCatalog.getById(MILDIOU), DiseaseCatalog.getById(ALTERNARIOSE)),
+        ).firstOrNull()?.disease?.id
+
+    /** Probabilités de mildiou et d'alternariose après les réponses, avec la même masse cumulée qu'avant. */
+    fun combine(mildiou: Float, alternariose: Float, answers: Map<LeafSpotQuestion, TriageAnswer>): Pair<Float, Float> {
+        var wMildiou = mildiou
+        var wAlternariose = alternariose
+        for ((question, answer) in answers) {
+            val factor = when (answer) {
+                TriageAnswer.YES -> YES_FACTOR
+                TriageAnswer.NO -> 1f / NO_FACTOR
+                TriageAnswer.UNKNOWN -> 1f
+            }
+            when (target(question)) {
+                MILDIOU -> wMildiou *= factor
+                ALTERNARIOSE -> wAlternariose *= factor
+            }
+        }
+        val mass = mildiou + alternariose
+        val total = wMildiou + wAlternariose
+        if (total <= 0f) return mildiou to alternariose
+        return wMildiou / total * mass to wAlternariose / total * mass
+    }
+
+    /** Pistes mises à jour par les réponses, de la plus à la moins probable ; les autres pistes ne changent pas. */
+    fun updatedLeads(leads: List<Pair<String, Float>>, answers: Map<LeafSpotQuestion, TriageAnswer>): List<Pair<String, Float>> {
+        val mildiou = leads.firstOrNull { it.first == MILDIOU }?.second ?: return leads
+        val alternariose = leads.firstOrNull { it.first == ALTERNARIOSE }?.second ?: return leads
+        val (m, a) = combine(mildiou, alternariose, answers)
+        return leads.map {
+            when (it.first) {
+                MILDIOU -> it.first to m
+                ALTERNARIOSE -> it.first to a
+                else -> it
+            }
+        }.sortedByDescending { it.second }
     }
 }

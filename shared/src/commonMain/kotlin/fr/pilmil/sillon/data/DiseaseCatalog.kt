@@ -4,7 +4,18 @@ import fr.pilmil.sillon.model.BotanicalFamily
 import fr.pilmil.sillon.model.Disease
 import fr.pilmil.sillon.model.PathogenType
 import fr.pilmil.sillon.model.PlantOrgan
+import fr.pilmil.sillon.model.SoilCarryover
 
+/*
+ * Persistance dans la terre ([SoilCarryover]) : seules les durées appuyées sur une source ouverte sont renseignées.
+ * Détail, réserves et renvois : docs/scientific-foundations.md, section 4.3. Les valeurs du tableau de la section 4.2
+ * ne sont pas sourcées et ne servent pas au moteur.
+ *
+ * TODO(sources) : aucune durée sourcée n'a été retenue pour anthracnose (graines et débris), fonte des semis
+ *  (Pythium, Rhizoctonia), botrytis (sclérotes) et mouche de la carotte (pupes dans le sol).
+ * TODO(sources) : la hernie du chou (Plasmodiophora brassicae), maladie tellurique de référence, n'a pas de fiche
+ *  dans ce catalogue. À ajouter avec une durée sourcée avant de l'ajouter aux avertissements de rotation.
+ */
 object DiseaseCatalog {
 
     val MILDIOU = Disease(
@@ -39,6 +50,12 @@ object DiseaseCatalog {
             "Espacer généreusement les plants (minimum 60 cm)",
             "Pailler le sol pour éviter les éclaboussures de terre sur les premières feuilles",
             "Ne pas planter de pommes de terre à proximité immédiate des tomates",
+        ),
+        // Le pathogène passe l'hiver sur des tubercules et des fruits restés au sol, et sur les repousses.
+        soilCarryover = SoilCarryover(
+            families = listOf(BotanicalFamily.SOLANACEAE),
+            years = 3,
+            source = "Cornell Vegetable Program, Late Blight : rotation hors solanacées pendant 3 ans",
         ),
     )
 
@@ -374,6 +391,7 @@ object DiseaseCatalog {
             "Désinfecter les terrines et godets à l'eau chaude savonneuse avant l'usage",
             "Placer les semis dans un endroit tiède, bien ventilé et lumineux",
         ),
+        seedlingStageOnly = true,
     )
 
     val DORYPHORE = Disease(
@@ -463,6 +481,13 @@ object DiseaseCatalog {
             "Pailler le sol pour éviter les éclaboussures",
             "Supprimer les feuilles touchant le sol sur les 30 premiers centimètres",
             "Détruire les débris de culture en fin de saison, ne pas les composter s'ils sont atteints",
+        ),
+        // Sources : 2 ans hors tomates (UMass Extension) ; 3 ans au moins hors pommes de terre (NDSU PP1892).
+        // On retient la valeur la plus basse, la seule sur laquelle les deux sources s'accordent.
+        soilCarryover = SoilCarryover(
+            families = listOf(BotanicalFamily.SOLANACEAE),
+            years = 2,
+            source = "UMass Extension, Solanaceous Early Blight : 2 ans hors tomates (NDSU PP1892 : 3 ans hors pommes de terre)",
         ),
     )
 

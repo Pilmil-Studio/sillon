@@ -54,9 +54,13 @@ import fr.pilmil.sillon.data.DiseaseCatalog
 import fr.pilmil.sillon.data.SillonPrefs
 import fr.pilmil.sillon.engine.AbioticSymptomHint
 import fr.pilmil.sillon.engine.ConfidenceTier
+import fr.pilmil.sillon.engine.LeafSpotQuestion
+import fr.pilmil.sillon.engine.LeafSpotTriage
 import fr.pilmil.sillon.engine.PhotoDiagnosis
 import fr.pilmil.sillon.engine.PhotoVerdict
 import fr.pilmil.sillon.engine.SubstrateMoisture
+import fr.pilmil.sillon.engine.TriageAnswer
+import fr.pilmil.sillon.model.BotanicalFamily
 import fr.pilmil.sillon.shared.resources.*
 import fr.pilmil.sillon.ui.components.SillonButton
 import fr.pilmil.sillon.ui.components.SillonCard
@@ -77,7 +81,7 @@ import java.io.File
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PhotoDiagnosisCard(onOpenDisease: (String) -> Unit, onOpenKey: () -> Unit) {
+fun PhotoDiagnosisCard(onOpenDisease: (String) -> Unit, onOpenKey: () -> Unit, plantFamily: BotanicalFamily? = null) {
     val context = LocalContext.current
     // Le modèle se charge hors du fil principal ; la carte n'apparaît que s'il est disponible.
     var classifier by remember { mutableStateOf<PhotoClassifier?>(null) }
@@ -102,7 +106,7 @@ fun PhotoDiagnosisCard(onOpenDisease: (String) -> Unit, onOpenKey: () -> Unit) {
         scope.launch {
             // Que l'analyse réussisse, échoue ou soit interrompue (écran quitté), la photo ne reste pas dans le cache.
             try {
-                val result = withContext(Dispatchers.Default) { active.analyse(context, uri) }
+                val result = withContext(Dispatchers.Default) { active.analyse(context, uri, plantFamily) }
                 when (result) {
                     is PhotoResult.Success -> { verdict = result.verdict; failed = false; resultVersion++ }
                     is PhotoResult.Cancelled -> Unit
@@ -279,9 +283,25 @@ private fun VerdictText(
                         style = MaterialTheme.typography.bodyLarge,
                     )
                 }
-                verdict.leads.forEach { (id, p) ->
+                // Mildiou et alternariose trop proches : deux questions sur des signes visibles, puis une mise à jour des pistes.
+                var answers by remember(verdict) { mutableStateOf(emptyMap<LeafSpotQuestion, TriageAnswer>()) }
+                val triage = remember(verdict) { LeafSpotTriage.needsTriage(verdict.leads) }
+                if (triage) {
+                    LeafSpotTriageBlock(answers = answers, onAnswer = { question, answer -> answers = answers + (question to answer) })
+                }
+                val shownLeads = if (triage) LeafSpotTriage.updatedLeads(verdict.leads, answers) else verdict.leads
+                shownLeads.forEach { (id, p) ->
                     val name = DiseaseCatalog.getById(id)?.name ?: id
                     TextButton(onClick = { onOpenDisease(id) }) { Text(stringResource(Res.string.photo_lead, tier(p), name)) }
+                }
+                if (triage && answers.values.any { it != TriageAnswer.UNKNOWN }) {
+                    shownLeads.firstOrNull()?.let { (id, _) ->
+                        Text(
+                            stringResource(Res.string.photo_triage_result, DiseaseCatalog.getById(id)?.name ?: id),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                 }
 
                 Text(
@@ -365,5 +385,55 @@ private fun VerdictText(
                 keyButton()
             }
         }
+    }
+}
+
+/** Deux questions pour départager mildiou et alternariose, et le conseil de photographier le revers de la feuille. */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun LeafSpotTriageBlock(
+    answers: Map<LeafSpotQuestion, TriageAnswer>,
+    onAnswer: (LeafSpotQuestion, TriageAnswer) -> Unit,
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Text(
+            stringResource(Res.string.photo_triage_title),
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.Bold,
+        )
+        listOf(
+            LeafSpotQuestion.WHITE_FUZZ_OR_OILY to Res.string.photo_triage_white,
+            LeafSpotQuestion.CONCENTRIC_RINGS to Res.string.photo_triage_rings,
+        ).forEach { (question, text) ->
+            Text(stringResource(text), style = MaterialTheme.typography.bodySmall)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                listOf(
+                    TriageAnswer.YES to Res.string.answer_yes,
+                    TriageAnswer.NO to Res.string.answer_no,
+                    TriageAnswer.UNKNOWN to Res.string.answer_unknown,
+                ).forEach { (answer, label) ->
+                    val selected = answers[question] == answer
+                    Surface(
+                        modifier = Modifier.clickable { onAnswer(question, answer) },
+                        shape = RoundedCornerShape(8.dp),
+                        color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
+                        border = BorderStroke(1.dp, if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline),
+                    ) {
+                        Text(
+                            text = stringResource(label),
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+                            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                        )
+                    }
+                }
+            }
+        }
+        Text(
+            stringResource(Res.string.photo_triage_tip),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
     }
 }

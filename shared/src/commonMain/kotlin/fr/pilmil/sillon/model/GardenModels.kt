@@ -124,6 +124,8 @@ data class Garden(
     val growLightHoursPerDay: Int? = null,
     val altitudeMeters: Int = 0,
     val history: List<CropHistoryEntry> = emptyList(),
+    /** Problèmes notés sur les plantes (schéma 3). Les potagers plus anciens n'en ont aucun. */
+    val diagnosticJournal: List<DiagnosticJournalEntry> = emptyList(),
     val mulched: Boolean = false,
     val localWeather: LocalWeather = LocalWeather.NORMAL,
 ) {

@@ -9,6 +9,7 @@ import android.net.Uri
 import fr.pilmil.sillon.engine.PhotoDiagnosis
 import fr.pilmil.sillon.engine.PhotoModelSpec
 import fr.pilmil.sillon.engine.PhotoVerdict
+import fr.pilmil.sillon.model.BotanicalFamily
 import org.tensorflow.lite.Interpreter
 import java.io.FileInputStream
 import java.nio.ByteBuffer
@@ -42,32 +43,35 @@ class PhotoClassifier private constructor(
     private val lock = Any()
     private var closed = false
 
-    /** Décode la photo puis l'analyse ; ne lève jamais d'exception. */
-    fun analyse(context: Context, uri: Uri): PhotoResult {
+    /**
+     * Décode la photo puis l'analyse ; ne lève jamais d'exception. [plantFamily] est la famille de la plante
+     * quand le diagnostic part d'une plantation (a priori de plausibilité), null pour l'écran docteur autonome.
+     */
+    fun analyse(context: Context, uri: Uri, plantFamily: BotanicalFamily? = null): PhotoResult {
         val bitmap = try {
             decode(context, uri)
         } catch (e: Exception) {
             return PhotoResult.DecodeFailed(e)
         }
         return try {
-            classify(bitmap)?.let { PhotoResult.Success(it) } ?: PhotoResult.Cancelled
+            classify(bitmap, plantFamily)?.let { PhotoResult.Success(it) } ?: PhotoResult.Cancelled
         } catch (e: Exception) {
             PhotoResult.InferenceFailed(e)
         }
     }
 
     /** Verdict du modèle (avec pré-cadrage YOLO optionnel si une zone suspecte est repérée), ou null si fermé. */
-    fun classify(bitmap: Bitmap): PhotoVerdict? {
-        val full = classifySingle(bitmap) ?: return null
+    fun classify(bitmap: Bitmap, plantFamily: BotanicalFamily? = null): PhotoVerdict? {
+        val full = classifySingle(bitmap, plantFamily) ?: return null
         val box = leafDetector?.detectBestBox(bitmap) ?: return full
         // Si la boîte couvre quasiment toute l'image, inutile de re-classifier.
         if (box.area >= 0.85f) return full
         val cropped = LeafDetector.cropWithMargin(bitmap, box)
-        val cropVerdict = classifySingle(cropped) ?: return full
+        val cropVerdict = classifySingle(cropped, plantFamily) ?: return full
         return selectBestVerdict(full, cropVerdict)
     }
 
-    private fun classifySingle(bitmap: Bitmap): PhotoVerdict? {
+    private fun classifySingle(bitmap: Bitmap, plantFamily: BotanicalFamily?): PhotoVerdict? {
         val w = spec.input.width
         val h = spec.input.height
         val square = centerSquare(bitmap)
@@ -78,7 +82,7 @@ class PhotoClassifier private constructor(
         val directProbs = runInference(pixels, w, h) ?: return null
         val flippedProbs = runInference(PhotoDiagnosis.flipHorizontal(pixels, w, h), w, h) ?: return null
         val avgProbs = PhotoDiagnosis.averageProbabilities(listOf(directProbs, flippedProbs))
-        return PhotoDiagnosis.interpret(avgProbs, spec)
+        return PhotoDiagnosis.interpret(avgProbs, spec, plantFamily)
     }
 
     private fun runInference(argb: IntArray, width: Int, height: Int): FloatArray? {

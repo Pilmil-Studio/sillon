@@ -21,6 +21,7 @@ import fr.pilmil.sillon.backup.CloudBackupConsent
 import fr.pilmil.sillon.data.GardenRepository
 import fr.pilmil.sillon.data.GardenValidationException
 import fr.pilmil.sillon.model.Garden
+import fr.pilmil.sillon.reminders.FollowUpReminders
 import fr.pilmil.sillon.reminders.SowingReminders
 import fr.pilmil.sillon.ui.SillonApp
 import fr.pilmil.sillon.ui.doctor.PhotoDiagnosisCard
@@ -196,13 +197,16 @@ class MainActivity : ComponentActivity() {
                     externalGarden = importedGarden,
                     onGardenReplaced = { importedGarden = null },
                     photoDiagnosisContent = if (photoAvailable) {
-                        { onOpenDisease, onOpenKey -> PhotoDiagnosisCard(onOpenDisease = onOpenDisease, onOpenKey = onOpenKey) }
+                        { onOpenDisease, onOpenKey, plantFamily ->
+                            PhotoDiagnosisCard(onOpenDisease = onOpenDisease, onOpenKey = onOpenKey, plantFamily = plantFamily)
+                        }
                     } else {
                         null
                     },
                     onApplyReminders = { enabled, _ ->
                         SowingReminders.apply(this@MainActivity, enabled)
                     },
+                    onSyncFollowUps = { garden -> FollowUpReminders.sync(this@MainActivity, garden) },
                     cloudBackupAvailable = BackupPolicy.settingAvailable(Build.VERSION.SDK_INT),
                     cloudBackupPossible = deviceSecure,
                     cloudBackupOn = cloudBackupOn,

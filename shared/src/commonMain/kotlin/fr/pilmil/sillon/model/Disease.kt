@@ -21,6 +21,21 @@ enum class PathogenType(val frenchLabel: String) {
     VIRUS("Virus"),
 }
 
+/**
+ * Ce qu'un problème laisse dans la terre d'un carré. Ne se renseigne qu'avec une durée sourcée :
+ * une maladie sans valeur sourcée n'a pas de [SoilCarryover] et n'alimente aucun avertissement de rotation.
+ *
+ * @property families familles à éviter à l'emplacement où le problème a été noté.
+ * @property years nombre d'années à laisser passer, comptées à partir de l'année de la note.
+ * @property source référence courte ; le détail et les réserves sont dans docs/scientific-foundations.md.
+ */
+@Serializable
+data class SoilCarryover(
+    val families: List<BotanicalFamily>,
+    val years: Int,
+    val source: String,
+)
+
 @Serializable
 data class Disease(
     val id: String,
@@ -33,4 +48,7 @@ data class Disease(
     val organicRemedies: List<String>,
     val targetFamilies: List<BotanicalFamily> = emptyList(),
     val preventiveMeasures: List<String> = emptyList(),
+    val soilCarryover: SoilCarryover? = null,
+    /** Vrai pour un mal qui ne touche que les semis et jeunes plants (fonte des semis). */
+    val seedlingStageOnly: Boolean = false,
 )

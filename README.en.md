@@ -55,11 +55,16 @@ Google account backup is an option, disabled by default. It is described in "Eth
   3. *Year 3:* Atmospheric nitrogen-fixing legumes via symbiotic Rhizobium nodulation (Fabaceae).
   4. *Year 4:* Living cover crops, green manures (phacelia, white mustard, clover), and soil rest.
 - **Soil-borne pest breaking:** Identifies family replanting violations within a 3- to 5-year exclusion window to break the lifecycle of resting spores, root-knot nematodes, and fungal pathogens (*Plasmodiophora*, *Pythium*, *Rhizoctonia*).
+- **Diseases noted in the garden:** if downy mildew or early blight was noted in a bed square, the app warns in the following years (the message is in French: "Mildiou noté ici en 2026 : évitez les Solanacées jusqu'en 2029", localised in the app). The durations used (3 years for downy mildew, 2 years for early blight) are the most cautious of the cited sources in [`docs/scientific-foundations.md`](docs/scientific-foundations.md) (section 4.3); for other diseases the duration is not sourced and no warning is shown.
 
 ### 5. Plant Health Doctor & 100% Offline Edge Vision (`DiagnosticEngine`)
 - **Dichotomous differential diagnosis:** Step-by-step symptomatic triage across affected organs (leaf, stem, fruit, collar, roots) covering 21 common garden diseases and pests.
 - **On-device photo diagnosis (an indicative aid, continuously improving):** the photo is analysed on the phone and nothing is sent. The model (`sillon_disease.tflite`, 3.2 MB, 288 × 288 px input) tells 13 classes apart: healthy leaf, off-topic, "other" and 10 diseases or pests (downy mildew, powdery mildew, early blight, rust, grey mould, aphids, flea beetles, slugs, cabbage white, Colorado beetle). Below a 65% confidence threshold the app says it cannot recognise anything with enough certainty instead of guessing. Downy mildew and early blight look alike: the app shows them together as "leaf spot" and points to both sheets.
 - **Measured accuracy:** on 1,182 held-out field photos (not used for training) the model returns the right class 86% of the time (95% confidence interval: 84 to 88%). At the 65% threshold the app answers on about 86% of photos, and 93% of those answers are correct. It is weaker for downy mildew and early blight (precision around 49% and 40%). These figures come from `sillon_disease.json` and promise nothing about your own photos: it is an aid, not a certain diagnosis, to be cross-checked with the in-app diagnostic key. The model is retrained regularly (pipeline in [`tools/ml`](tools/ml/README.md)).
+- **The diagnosis starts from the garden and returns to it:** the "Il a un problème" (it has a problem) button on a plant opens the diagnosis with the plant, its family, its sowing or planting date and the season. This context reorders the causes (Colorado beetle first on a nightshade, cabbage white on a cabbage) without hiding any: "Other causes" stays one tap away. The standalone doctor works as before. For photos, the plant also weights the model probabilities (5% floor, never an exclusion).
+- **Square journal:** at the end of a diagnosis, "note it in this square's journal" records the cause (or "uncertain"), the date, the plant and an optional short action. The photo is never kept. Entries appear in the slot history. The app offers "Check again in N days" (default depends on the problem, editable) with a local notification if you accept, then asks "Better? Yes / No / The plant is lost". Journal data stays on the device (backup schema 3, older backups open with an empty journal).
+- **A sick plant shows:** while a problem is open, the plant is discreetly damaged in the garden scene (spotted leaf, duller tint, TalkBack description) and returns to normal when you answer "better". No penalty, no guilt.
+- **Telling downy mildew from early blight:** when the photo hesitates between the two, two questions (white fuzz underneath or oily spots; concentric target rings) adjust the order of the two leads, and the app suggests photographing the underside of the leaf.
 - **Viewfinder and pre-framing:** a smart viewfinder (`SmartCameraViewfinder`, `FrameQualityAnalyzer`) checks sharpness and plant share, and a leaf detector (`sillon_detector.tflite`, `LeafDetector`) frames the photo before analysis (`PhotoClassifier`, two-view reading). Inference engine: LiteRT.
 - **Biocontrol remedies:** Strictly organic biocontrol treatments (horsetail silica decoction to strengthen leaf cuticles, potassium bicarbonate for osmotic powdery mildew lysis, and copper strictly capped below 4 g/m²/year).
 
@@ -86,14 +91,16 @@ Built using Kotlin Multiplatform / Compose Multiplatform (`:shared`), an Android
 ```
 shared/src/commonMain/kotlin/fr/pilmil/sillon/
 ├── data/
-│   ├── DiseaseCatalog.kt         # Catalog of 21 garden diseases and pests
+│   ├── DiseaseCatalog.kt         # Catalog of 21 garden diseases and pests (sourced soil persistence)
+│   ├── HostPlausibility.kt       # Host plant / cause prior for the photo diagnosis
 │   ├── FrenchFrostCatalog.kt     # Climate normals for 105 territories (temperate + tropical)
 │   ├── GardenCodec.kt / Store    # Cross-platform serialization and local persistence
 │   └── VegetableCatalog.kt       # Scientific profiles for 74 garden crops
 ├── engine/
 │   ├── CompanionEngine.kt        # Relational graph & spatial allelopathy evaluator
 │   ├── DashboardPlanner.kt       # Weekly task planner
-│   ├── DiagnosticEngine.kt       # Rule-based differential diagnostic engine
+│   ├── DiagnosticEngine.kt       # Differential diagnosis, plant context and cause ordering
+│   ├── DiagnosticJournal.kt      # Problem journal, follow-up, damaged plants (pure logic)
 │   ├── FrostEngine.kt            # Dynamic phenology indexed to J_frost / season
 │   ├── GrowthEngine.kt           # Growth stages & days-to-harvest engine
 │   ├── LightEstimator.kt         # Light estimation for balcony & indoor growing
@@ -104,7 +111,7 @@ shared/src/commonMain/kotlin/fr/pilmil/sillon/
 app/src/main/java/fr/pilmil/sillon/
 ├── backup/                       # BackupPolicy & SillonBackupAgent
 ├── data/GardenRepository.kt      # .pilmil vault (AndroidBackupVault) & SAF/CSV exporters
-├── reminders/SowingReminders.kt  # WorkManager weekly reminders
+├── reminders/                    # SowingReminders (weekly) and FollowUpReminders (check again in N days), WorkManager
 └── vision/                       # LeafDetector, PhotoClassifier, FrameQualityAnalyzer (LiteRT)
 
 iosApp/                           # Xcode / SwiftUI iOS shell (SillonApp.swift)

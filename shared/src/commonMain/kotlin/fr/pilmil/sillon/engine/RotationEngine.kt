@@ -1,8 +1,11 @@
 package fr.pilmil.sillon.engine
 
+import fr.pilmil.sillon.data.DiseaseCatalog
 import fr.pilmil.sillon.data.VegetableCatalog
 import fr.pilmil.sillon.model.BotanicalFamily
 import fr.pilmil.sillon.model.CropHistoryEntry
+import fr.pilmil.sillon.model.DiagnosticJournalEntry
+import fr.pilmil.sillon.model.Disease
 import fr.pilmil.sillon.model.NutrientRequirement
 import fr.pilmil.sillon.model.Parcel
 import fr.pilmil.sillon.model.Vegetable
@@ -11,7 +14,22 @@ enum class RotationSeverity(val frenchLabel: String) {
     CONFLICT_ERROR("Conflit de rotation majeur (même famille)"),
     EXHAUSTION_WARNING("Avertissement : succession de cultures exigeantes"),
     BENEFICIAL("Succession agronomique bénéfique"),
+
+    /** Une maladie qui persiste dans la terre a été notée ici et la famille du candidat est concernée. */
+    SOIL_DISEASE("Maladie persistante notée ici"),
 }
+
+/**
+ * Avertissement pour un emplacement : [disease] a été notée en [notedYear] et ses [families] sont à éviter
+ * jusqu'en [untilYear] compris. [source] est la référence courte de la durée (le détail est dans la documentation).
+ */
+data class SoilDiseaseWarning(
+    val disease: Disease,
+    val notedYear: Int,
+    val families: List<BotanicalFamily>,
+    val untilYear: Int,
+    val source: String,
+)
 
 data class RotationCheckResult(
     val parcelId: String,
@@ -40,6 +58,7 @@ class RotationEngine(
         col: Int,
         targetYear: Int,
         history: List<CropHistoryEntry>,
+        journal: List<DiagnosticJournalEntry> = emptyList(),
     ): List<RotationCheckResult> {
         val results = mutableListOf<RotationCheckResult>()
 
@@ -113,8 +132,56 @@ class RotationEngine(
             }
         }
 
+        // 3. Maladies persistantes notées dans le journal de cet emplacement.
+        for (warning in soilWarnings(parcelId, row, col, targetYear, journal)) {
+            if (candidate.family !in warning.families) continue
+            results.add(
+                RotationCheckResult(
+                    parcelId = parcelId,
+                    row = row,
+                    col = col,
+                    candidate = candidate,
+                    targetYear = targetYear,
+                    conflictingEntry = null,
+                    yearsElapsed = targetYear - warning.notedYear,
+                    requiredPauseYears = warning.untilYear - warning.notedYear,
+                    severity = RotationSeverity.SOIL_DISEASE,
+                    message = "${warning.disease.name} noté ici en ${warning.notedYear} : " +
+                        "évitez les ${candidate.family.frenchName} jusqu'en ${warning.untilYear}.",
+                )
+            )
+        }
+
         return results
     }
+
+    /**
+     * Avertissements de l'emplacement pour l'année [targetYear], d'après les maladies notées au journal.
+     * Seules comptent les entrées dont la maladie est connue et porte une durée sourcée ([Disease.soilCarryover]) ;
+     * une cause restée incertaine n'en produit aucune. L'avertissement commence l'année suivant la note et dure
+     * [fr.pilmil.sillon.model.SoilCarryover.years] ans. Il ne dépend pas de l'issue du suivi : un plant guéri
+     * laisse la même terre. Si la maladie est notée plusieurs fois, la note la plus récente fait foi.
+     */
+    fun soilWarnings(
+        parcelId: String,
+        row: Int,
+        col: Int,
+        targetYear: Int,
+        journal: List<DiagnosticJournalEntry>,
+        diseaseById: (String) -> Disease? = DiseaseCatalog::getById,
+    ): List<SoilDiseaseWarning> =
+        journal
+            .filter { it.parcelId == parcelId && it.row == row && it.col == col }
+            .sortedByDescending { it.noticedOn }
+            .distinctBy { it.diseaseId }
+            .mapNotNull { entry ->
+                val disease = entry.diseaseId?.let(diseaseById) ?: return@mapNotNull null
+                val carryover = disease.soilCarryover ?: return@mapNotNull null
+                val notedYear = entry.noticedOn.year
+                val untilYear = notedYear + carryover.years
+                if (targetYear <= notedYear || targetYear > untilYear) return@mapNotNull null
+                SoilDiseaseWarning(disease, notedYear, carryover.families, untilYear, carryover.source)
+            }
 
     /**
      * Évalue l'ensemble des cases d'une parcelle pour une année donnée par rapport à l'historique.
@@ -124,6 +191,7 @@ class RotationEngine(
         targetYear: Int,
         history: List<CropHistoryEntry>,
         customCatalog: Map<String, Vegetable> = catalogMap,
+        journal: List<DiagnosticJournalEntry> = emptyList(),
     ): List<RotationCheckResult> {
         if (parcel.type.isContainerBased) return emptyList()
         val issues = mutableListOf<RotationCheckResult>()
@@ -139,6 +207,7 @@ class RotationEngine(
                 col = slot.col,
                 targetYear = targetYear,
                 history = history,
+                journal = journal,
             )
             issues.addAll(slotResults)
         }

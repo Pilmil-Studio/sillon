@@ -134,3 +134,34 @@ Script reproductible : [`tools/ml/train_sillon.py`](../tools/ml/train_sillon.py)
 - **Règle méthodologique** : ne **jamais** entraîner deux classes visuelles distinctes « manque d'eau » et « excès d'eau » dans le réseau de neurones, car toutes deux se manifestent par un flétrissement/jaunissement foliaire indiscernable sans connaître l'humidité du substrat.
 - **Ce qui est déjà fait côté application** : lorsque le modèle renvoie `PhotoVerdict.Unsure`, `PhotoDiagnosisCard` propose un triage en 2 clics (`SubstrateMoisture` + `AbioticSymptomHint` via `PhotoDiagnosis.resolveAbioticTriage`) qui oriente vers les fiches `manque_eau`, `exces_eau_racines`, `etiolement`, `moucherons_terreau` ou `tetranyques`.
 - **Prochaine étape côté modèle** : évaluer l'ajout d'une classe visuelle `etiolement` (semis filants à entre-nœuds allongés) et d'une classe groupée `fletrissement_abiotique` (`catalogId = null`, déclenchant automatiquement la question sur l'humidité du terreau dans l'interface).
+
+## 5. Contexte de la plante : a priori, départage mildiou / alternariose, évaluation
+
+### 5.1 A priori de plausibilité de l'hôte (diagnostic lancé depuis une plantation)
+- Quand la photo est analysée depuis un carré, `PhotoDiagnosis.applyHostPrior` multiplie la probabilité de chaque classe
+  qui a une fiche par `HostPlausibility.plausibility` : 1 si la plante est dans les `targetFamilies` de la fiche, si la fiche n'en
+  a pas, ou si la cause est à large spectre (oïdium, rouille, botrytis, pucerons, limaces) ; **0,05** sinon (jamais zéro). Puis le vecteur
+  est renormalisé. `sain`, `autre`, `hors_sujet` ne sont pas pondérées.
+- Sans contexte (médecin autonome), le comportement est inchangé. Le seuil de confiance (`0.65`) n'a pas été recalé : il a été
+  calibré sans a priori. Le plancher de 0,05 est un choix éditorial, pas une valeur ajustée sur des mesures.
+- L'effet réel n'est pas mesuré faute d'images de terrain dans le dépôt. `tools/ml/eval_host_prior.py` est écrit pour le faire (voir
+  `tools/ml/README.md`) ; aucun résultat n'est annoncé ici.
+
+### 5.2 Départage mildiou / alternariose par deux questions
+- Déclenchement : verdict `tache_feuille` (classe fusionnée, ses `group_members` donnent les deux pistes à parts égales) ou
+  mildiou et alternariose en deux premières pistes à moins de `0.15` d'écart.
+- Questions : duvet blanc grisâtre au revers ou taches d'aspect huileux (oriente vers le mildiou) ; taches brunes à anneaux
+  concentriques en cible (oriente vers l'alternariose). Réponses oui, non, je ne sais pas. L'appli conseille aussi de photographier
+  le revers de la feuille.
+- Mise à jour : le poids de la maladie visée par la question est multiplié par 3 pour « oui », divisé par 1,5 pour « non », inchangé
+  pour « je ne sais pas » ; les deux poids sont renormalisés sur leur masse initiale, donc les autres pistes ne bougent pas. La maladie visée
+  par chaque question est déduite des symptômes des fiches par `DiagnosticEngine`.
+- Les facteurs 3 et 1,5 sont des choix éditoriaux, non étalonnés sur des données ; ils ne servent qu'à ordonner deux pistes
+  proposées à l'utilisateur, qui garde les deux fiches.
+
+### 5.3 Piste : don de photos volontaire (non implémenté)
+À étudier, rien n'est codé. Après un diagnostic confirmé (« Ça va mieux » ou diagnostic validé), proposer une option explicite,
+désactivée par défaut, pour conserver la photo et l'envoyer soi-même : fichier exporté contenant la photo, la culture, le diagnostic
+confirmé et la date, sans position ni métadonnées EXIF, sans serveur. L'utilisateur choisit la licence (CC0 ou CC-BY) et consent
+explicitement. But : enrichir le jeu de terrain, surtout `mildiou`, `alternariose` et `sain`. Aujourd'hui la photo est analysée puis supprimée,
+et ne va jamais dans le journal.

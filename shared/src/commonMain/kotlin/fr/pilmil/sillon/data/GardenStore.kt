@@ -1,11 +1,14 @@
 package fr.pilmil.sillon.data
 
 import androidx.compose.runtime.Composable
+import fr.pilmil.sillon.engine.DiagnosticJournal
 import fr.pilmil.sillon.model.BotanicalFamily
 import fr.pilmil.sillon.model.CropHistoryEntry
+import fr.pilmil.sillon.model.FollowUpAnswer
 import fr.pilmil.sillon.model.FrostDate
 import fr.pilmil.sillon.model.Garden
 import fr.pilmil.sillon.model.GrowingEnvironment
+import fr.pilmil.sillon.model.JournalDraft
 import fr.pilmil.sillon.model.LightSource
 import fr.pilmil.sillon.model.LocalWeather
 import fr.pilmil.sillon.model.Orientation
@@ -163,7 +166,24 @@ class GardenStore(private val storage: PlatformGardenStorage) {
                 parcel.copy(slots = nextSlots)
             }
         }
-        current.copy(parcels = updatedParcels, history = nextHistory)
+        // Vider ou replanter la case clôt les problèmes ouverts de l'ancienne plante.
+        val journal = DiagnosticJournal.endForSlot(current.diagnosticJournal, parcelId, row, col, todayLocalDate())
+        current.copy(parcels = updatedParcels, history = nextHistory, diagnosticJournal = journal)
+    }
+
+    /** Note un problème sur la plante de la case (voir [DiagnosticJournal.add]). La photo n'est jamais conservée. */
+    fun addJournalEntry(draft: JournalDraft): GardenUpdate = mutate { current ->
+        DiagnosticJournal.add(current, draft, todayLocalDate())
+    }
+
+    /** Programme la revérification dans [days] jours, ou la retire avec null. */
+    fun setJournalFollowUp(entryId: String, days: Int?): GardenUpdate = mutate { current ->
+        current.copy(diagnosticJournal = DiagnosticJournal.setFollowUp(current.diagnosticJournal, entryId, days, todayLocalDate()))
+    }
+
+    /** Réponse à « Ça va mieux ? » : clôt l'entrée (oui, perdu) ou la prolonge (non). */
+    fun answerJournalEntry(entryId: String, answer: FollowUpAnswer): GardenUpdate = mutate { current ->
+        current.copy(diagnosticJournal = DiagnosticJournal.answer(current.diagnosticJournal, entryId, answer, todayLocalDate()))
     }
 
     fun addParcel(
@@ -205,7 +225,14 @@ class GardenStore(private val storage: PlatformGardenStorage) {
 
     fun deleteParcel(parcelId: String): GardenUpdate = mutate { current ->
         val remaining = current.parcels.filterNot { it.id == parcelId }
-        current.copy(parcels = remaining.ifEmpty { current.parcels })
+        if (remaining.isEmpty()) {
+            current.copy(parcels = current.parcels)
+        } else {
+            current.copy(
+                parcels = remaining,
+                diagnosticJournal = DiagnosticJournal.forgetParcel(current.diagnosticJournal, parcelId),
+            )
+        }
     }
 
     fun updateFrostDate(month: Int, day: Int): GardenUpdate = mutate { current ->

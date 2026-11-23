@@ -35,9 +35,12 @@ internal class PlantTone(
     val night: Float,
     private val fog: Color = Color.Transparent,
     private val fogAmount: Float = 0f,
+    /** Part (0 à 1) de teinte terne appliquée à une plante qui a un problème en cours : discret, jamais alarmant. */
+    val dull: Float = 0f,
 ) {
     fun c(color: Color): Color {
         var r = color
+        if (dull > 0f) r = lerp(r, DullLeaf, dull)
         if (night > 0f) r = lerp(r, NightCast, 0.34f * night)
         if (fogAmount > 0f) r = lerp(r, fog, fogAmount)
         return r
@@ -50,6 +53,7 @@ internal class PlantTone(
 }
 
 private val NightCast = Color(0xFF16253A)
+private val DullLeaf = Color(0xFF9C9468)
 private val InkShadow = Color(0xFF16200F)
 private const val TAU = (2.0 * PI).toFloat()
 

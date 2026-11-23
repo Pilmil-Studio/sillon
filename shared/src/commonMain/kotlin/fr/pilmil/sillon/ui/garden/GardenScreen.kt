@@ -41,6 +41,7 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Eco
 import androidx.compose.material.icons.filled.GridOn
+import androidx.compose.material.icons.filled.Healing
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
@@ -54,6 +55,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import fr.pilmil.sillon.ui.components.SillonOutlinedButton
 import fr.pilmil.sillon.ui.evidenceLabelRes
@@ -80,6 +82,14 @@ import fr.pilmil.sillon.engine.GrowthEngine
 import fr.pilmil.sillon.engine.GrowthStage
 import fr.pilmil.sillon.engine.RotationEngine
 import fr.pilmil.sillon.engine.RotationSeverity
+import fr.pilmil.sillon.engine.DiagnosticJournal
+import fr.pilmil.sillon.model.Climate
+import fr.pilmil.sillon.model.DiagnosticJournalEntry
+import fr.pilmil.sillon.model.FollowUpAnswer
+import fr.pilmil.sillon.model.JournalStatus
+import fr.pilmil.sillon.data.DiseaseCatalog
+import fr.pilmil.sillon.data.VegetableCatalog
+import fr.pilmil.sillon.ui.formatDayMonth
 import fr.pilmil.sillon.model.Garden
 import fr.pilmil.sillon.model.GrowingEnvironment
 import fr.pilmil.sillon.model.Parcel
@@ -119,6 +129,10 @@ fun GardenScreen(
     initialPerspective: Boolean = true,
     departmentCode: String? = null,
     skyClock: SkyClock? = null,
+    onReportProblem: (parcelId: String, row: Int, col: Int) -> Unit = { _, _, _ -> },
+    onAnswerFollowUp: (entryId: String, answer: FollowUpAnswer) -> Unit = { _, _ -> },
+    focus: GardenFocus? = null,
+    onFocusConsumed: () -> Unit = {},
 ) {
     var selectedParcelIndex by remember { mutableStateOf(0) }
     var selectedSlotCoord by remember { mutableStateOf<Pair<Int, Int>?>(null) }
@@ -130,6 +144,18 @@ fun GardenScreen(
     var showAddParcelDialog by remember { mutableStateOf(false) }
 
     val activeParcel = garden.parcels.getOrNull(selectedParcelIndex) ?: garden.parcels.firstOrNull()
+
+    // Arrivée depuis un rappel ou depuis l'accueil : on ouvre la case concernée.
+    LaunchedEffect(focus) {
+        val target = focus ?: return@LaunchedEffect
+        val index = garden.parcels.indexOfFirst { it.id == target.parcelId }
+        if (index >= 0) {
+            selectedParcelIndex = index
+            highlightedCell = target.row to target.col
+            selectedSlotCoord = target.row to target.col
+        }
+        onFocusConsumed()
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -268,11 +294,13 @@ fun GardenScreen(
                             modifier = Modifier.clip(RoundedCornerShape(20.dp)),
                             skyPlace = skyPlace,
                             skyClock = skyClock,
+                            journal = garden.diagnosticJournal,
                         )
                     } else {
                         ParcelGridView(
                             parcel = garden.parcels.getOrNull(view.parcelIndex) ?: activeParcel,
                             vegetables = vegetables,
+                            journal = garden.diagnosticJournal,
                             onSlotClick = { r, c ->
                                 highlightedCell = Pair(r, c)
                                 selectedSlotCoord = Pair(r, c)
@@ -388,6 +416,27 @@ fun GardenScreen(
                 if (currentVeg != null) {
                     Spacer(modifier = Modifier.height(12.dp))
                     SillonOutlinedButton(
+                        text = stringResource(Res.string.garden_slot_problem_button),
+                        icon = Icons.Filled.Healing,
+                        onClick = {
+                            onReportProblem(activeParcel.id, row, col)
+                            selectedSlotCoord = null
+                        },
+                    )
+                }
+
+                SlotJournal(
+                    garden = garden,
+                    parcelId = activeParcel.id,
+                    row = row,
+                    col = col,
+                    today = today,
+                    onAnswer = onAnswerFollowUp,
+                )
+
+                if (currentVeg != null) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    SillonOutlinedButton(
                         text = stringResource(Res.string.garden_slot_clear),
                         icon = Icons.Filled.Clear,
                         onClick = {
@@ -430,8 +479,9 @@ fun GardenScreen(
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     items(vegetables) { veg ->
-                        val rotationIssues = remember(veg.id, slotHistory, today.year) {
-                            rotationEngine.checkRotation(veg, activeParcel.id, row, col, today.year, slotHistory)
+                        val rotationIssues = remember(veg.id, slotHistory, today.year, garden.diagnosticJournal) {
+                            rotationEngine.checkRotation(veg, activeParcel.id, row, col, today.year, slotHistory, garden.diagnosticJournal)
+                                .sortedBy { if (it.severity == RotationSeverity.SOIL_DISEASE) 0 else 1 }
                         }
                         Surface(
                             modifier = Modifier
@@ -488,9 +538,14 @@ fun GardenScreen(
                                             RotationSeverity.CONFLICT_ERROR -> SillonPalette.AlertAmber
                                             RotationSeverity.EXHAUSTION_WARNING -> MaterialTheme.colorScheme.secondary
                                             RotationSeverity.BENEFICIAL -> MaterialTheme.colorScheme.primary
+                                            RotationSeverity.SOIL_DISEASE -> SillonPalette.AlertAmber
                                         }
                                         Text(
-                                            text = issue.severity.frenchLabel,
+                                            text = if (issue.severity == RotationSeverity.SOIL_DISEASE) {
+                                                stringResource(Res.string.rotation_soil_label)
+                                            } else {
+                                                issue.severity.frenchLabel
+                                            },
                                             style = MaterialTheme.typography.bodySmall,
                                             color = issueColor,
                                             fontWeight = FontWeight.SemiBold,
@@ -710,6 +765,7 @@ fun GardenScreen(
 private fun ParcelGridView(
     parcel: Parcel,
     vegetables: List<Vegetable>,
+    journal: List<DiagnosticJournalEntry>,
     onSlotClick: (row: Int, col: Int) -> Unit,
 ) {
     val today = remember { todayLocalDate() }
@@ -740,8 +796,16 @@ private fun ParcelGridView(
                         }
                         val neighborNote = if (veg != null) neighborSpokenNoteRes(veg, neighborVegs)?.let { stringResource(it) } else null
 
+                        val openProblem = journal.firstOrNull {
+                            it.isOpen && it.parcelId == parcel.id && it.row == r && it.col == c && it.concerns(slot)
+                        }
+                        val problemLabel = openProblem?.let { entry ->
+                            entry.diseaseId?.let { DiseaseCatalog.getById(it)?.name } ?: stringResource(Res.string.journal_cause_uncertain)
+                        }
+
                         SlotCell(
                             vegetable = veg,
+                            problemLabel = problemLabel,
                             growth = slotGrowth(slot, veg, today),
                             hasGoodCompanion = hasGoodCompanion,
                             hasBadCompanion = hasBadCompanion,
@@ -761,6 +825,7 @@ private fun ParcelGridView(
 @Composable
 private fun SlotCell(
     vegetable: Vegetable?,
+    problemLabel: String?,
     growth: Growth?,
     hasGoodCompanion: Boolean,
     hasBadCompanion: Boolean,
@@ -774,6 +839,7 @@ private fun SlotCell(
         growth != null -> "${vegetable.name}. ${growth.summary()}"
         else -> vegetable.name
     }.let { base -> if (neighborNote != null) "$base. $neighborNote" else base }
+        .let { base -> if (problemLabel != null) "$base. ${stringResource(Res.string.garden_slot_problem_open, problemLabel)}" else base }
     Surface(
         modifier = modifier
             .clickable(onClickLabel = stringResource(Res.string.garden_slot_open), onClick = onClick)
@@ -814,6 +880,16 @@ private fun SlotCell(
                         .size(8.dp)
                         .clip(CircleShape)
                         .background(SillonTheme.colors.alert),
+                )
+            }
+
+            // Marque discrète d'un problème en cours ; le texte de la case le dit aussi, l'icône ne porte rien seule.
+            if (problemLabel != null) {
+                Icon(
+                    imageVector = Icons.Filled.Healing,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
+                    modifier = Modifier.align(Alignment.TopStart).size(12.dp),
                 )
             }
 
@@ -1017,4 +1093,133 @@ private fun AnimatedContentTransitionScope<GardenViewKey>.gardenViewTransition(r
         ) togetherWith (
         fadeOut(tween(VIEW_SWITCH_MS)) + slideOutHorizontally(tween(VIEW_SWITCH_MS)) { -sign * it / 10 }
         ) using SizeTransform(clip = true)
+}
+
+/** Case à ouvrir en arrivant sur le potager (depuis l'accueil ou un rappel). */
+data class GardenFocus(val parcelId: String, val row: Int, val col: Int)
+
+/**
+ * Journal d'un emplacement : avertissement de rotation lié aux maladies persistantes, puis les problèmes notés,
+ * du plus récent au plus ancien. Un problème ouvert propose « Ça va mieux ? », sans insistance : la question
+ * reste là, rien ne relance la personne.
+ */
+@Composable
+private fun SlotJournal(
+    garden: Garden,
+    parcelId: String,
+    row: Int,
+    col: Int,
+    today: LocalDate,
+    onAnswer: (entryId: String, answer: FollowUpAnswer) -> Unit,
+) {
+    val warnings = remember(garden.diagnosticJournal, parcelId, row, col, today.year) {
+        RotationEngine().soilWarnings(parcelId, row, col, today.year, garden.diagnosticJournal)
+    }
+    val entries = remember(garden.diagnosticJournal, parcelId, row, col) {
+        DiagnosticJournal.forSlot(garden.diagnosticJournal, parcelId, row, col)
+    }
+    warnings.forEach { warning ->
+        val examples = VegetableCatalog.ALL_VEGETABLES
+            .filter { it.family in warning.families && it.climates.contains(Climate.TEMPERATE) }
+            .take(3)
+            .joinToString(", ") { it.name.lowercase() }
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            text = stringResource(
+                Res.string.rotation_soil_warning,
+                warning.disease.name,
+                warning.notedYear,
+                warning.families.joinToString(", ") { it.frenchLabel },
+                examples,
+                warning.untilYear,
+            ),
+            style = MaterialTheme.typography.bodySmall,
+            color = SillonPalette.AlertAmber,
+            fontWeight = FontWeight.SemiBold,
+        )
+    }
+    if (entries.isEmpty()) return
+    Spacer(modifier = Modifier.height(16.dp))
+    Text(
+        text = stringResource(Res.string.journal_section_title),
+        style = MaterialTheme.typography.titleSmall,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onSurface,
+    )
+    entries.take(MAX_JOURNAL_SHOWN).forEach { entry ->
+        Spacer(modifier = Modifier.height(8.dp))
+        JournalEntryCard(entry = entry, today = today, onAnswer = onAnswer)
+    }
+}
+
+private const val MAX_JOURNAL_SHOWN = 5
+
+@Composable
+private fun JournalEntryCard(
+    entry: DiagnosticJournalEntry,
+    today: LocalDate,
+    onAnswer: (entryId: String, answer: FollowUpAnswer) -> Unit,
+) {
+    val cause = entry.diseaseId?.let { DiseaseCatalog.getById(it)?.name } ?: stringResource(Res.string.journal_cause_uncertain)
+    val status = stringResource(
+        when (entry.status) {
+            JournalStatus.OPEN -> Res.string.journal_status_open
+            JournalStatus.BETTER -> Res.string.journal_status_better
+            JournalStatus.LOST -> Res.string.journal_status_lost
+            JournalStatus.ENDED -> Res.string.journal_status_ended
+        },
+    )
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(10.dp),
+        color = MaterialTheme.colorScheme.background,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+    ) {
+        Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Text(
+                text = stringResource(
+                    Res.string.journal_entry_line,
+                    cause,
+                    VegetableCatalog.getById(entry.vegetableId)?.name ?: entry.vegetableId,
+                    formatDayMonth(entry.noticedOn),
+                ),
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+            Text(text = status, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            entry.action?.let {
+                Text(
+                    text = stringResource(Res.string.journal_action_line, it),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            if (entry.isOpen) {
+                entry.followUpOn?.let { due ->
+                    Text(
+                        text = if (due <= today) {
+                            stringResource(Res.string.journal_followup_due)
+                        } else {
+                            stringResource(Res.string.journal_followup_on, formatDayMonth(due))
+                        },
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = stringResource(Res.string.journal_ask),
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground,
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.fillMaxWidth()) {
+                    TextButton(onClick = { onAnswer(entry.id, FollowUpAnswer.BETTER) }) { Text(stringResource(Res.string.journal_yes)) }
+                    TextButton(onClick = { onAnswer(entry.id, FollowUpAnswer.NOT_BETTER) }) { Text(stringResource(Res.string.journal_no)) }
+                    TextButton(onClick = { onAnswer(entry.id, FollowUpAnswer.LOST) }) { Text(stringResource(Res.string.journal_lost)) }
+                }
+            }
+        }
+    }
 }

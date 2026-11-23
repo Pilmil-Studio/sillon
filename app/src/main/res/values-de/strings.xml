@@ -22,4 +22,8 @@
     <string name="frame_tip_closer">Näher an das Blatt herangehen</string>
     <string name="frame_tip_center">Mittlere Qualität: Blatt zentrieren</string>
     <string name="frame_tip_optimal">Bildausschnitt gut: bereit zur Analyse</string>
+    <string name="followup_channel_name">Nachkontrolle von Problemen</string>
+    <string name="followup_channel_desc">Eine Erinnerung, eine Pflanze am gewählten Tag erneut zu prüfen.</string>
+    <string name="followup_title">Noch einmal nachsehen</string>
+    <string name="followup_text">%1$s: geht es besser?</string>
 </resources>

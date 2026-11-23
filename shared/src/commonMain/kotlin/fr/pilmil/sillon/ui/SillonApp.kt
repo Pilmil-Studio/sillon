@@ -46,7 +46,11 @@ import fr.pilmil.sillon.data.VegetableCatalog
 import fr.pilmil.sillon.data.rememberGardenStore
 import fr.pilmil.sillon.data.rememberSillonPrefs
 import fr.pilmil.sillon.engine.DashboardPlanner
+import fr.pilmil.sillon.engine.DiagnosticContext
+import fr.pilmil.sillon.engine.DiagnosticJournal
 import fr.pilmil.sillon.engine.FrostEngine
+import fr.pilmil.sillon.model.BotanicalFamily
+import fr.pilmil.sillon.model.Climate
 import fr.pilmil.sillon.model.Garden
 import fr.pilmil.sillon.model.plusDays
 import fr.pilmil.sillon.model.todayLocalDate
@@ -55,6 +59,7 @@ import fr.pilmil.sillon.ui.catalog.CatalogScreen
 import fr.pilmil.sillon.ui.dashboard.DashboardScreen
 import fr.pilmil.sillon.ui.dashboard.ForecastHorizon
 import fr.pilmil.sillon.ui.doctor.DoctorScreen
+import fr.pilmil.sillon.ui.garden.GardenFocus
 import fr.pilmil.sillon.ui.garden.GardenScreen
 import fr.pilmil.sillon.ui.onboarding.DepartmentDialog
 import fr.pilmil.sillon.ui.onboarding.OnboardingScreen
@@ -83,8 +88,10 @@ enum class SillonScreen(val title: StringResource, val icon: ImageVector) {
 fun SillonApp(
     externalGarden: Garden? = null,
     onGardenReplaced: (Garden) -> Unit = {},
-    photoDiagnosisContent: (@Composable (onOpenDisease: (String) -> Unit, onOpenKey: () -> Unit) -> Unit)? = null,
+    photoDiagnosisContent: (@Composable (onOpenDisease: (String) -> Unit, onOpenKey: () -> Unit, plantFamily: BotanicalFamily?) -> Unit)? = null,
     onApplyReminders: (enabled: Boolean, garden: Garden) -> Unit = { _, _ -> },
+    /** Recale les rappels « Revérifier » sur les entrées ouvertes du journal (appelée à chaque changement du journal). */
+    onSyncFollowUps: (Garden) -> Unit = {},
     cloudBackupAvailable: Boolean = false,
     cloudBackupPossible: Boolean = false,
     cloudBackupOn: Boolean = false,
@@ -109,6 +116,9 @@ fun SillonApp(
     var smartViewfinderOn by remember { mutableStateOf(prefs.smartViewfinderEnabled) }
     var pickingDepartment by remember { mutableStateOf(false) }
     var loadProblem by remember { mutableStateOf<GardenLoad?>(null) }
+    // Plante dont on diagnostique le problème (null : écran docteur autonome) et case à ouvrir au retour au potager.
+    var doctorContext by remember { mutableStateOf<DiagnosticContext?>(null) }
+    var gardenFocus by remember { mutableStateOf<GardenFocus?>(null) }
 
     val showIntroHints = remember { prefs.dashboardVisits < 3 }
 
@@ -160,6 +170,23 @@ fun SillonApp(
                 snackbarHostState.showSnackbar(getString(Res.string.snack_save_failed))
             }
         }
+    }
+
+    // Les rappels suivent le journal : au chargement, après chaque modification et après une importation.
+    LaunchedEffect(loadedGarden?.diagnosticJournal) {
+        loadedGarden?.let(onSyncFollowUps)
+    }
+
+    val followUpPermissionRequester = rememberNotificationPermissionRequester { granted ->
+        if (!granted) {
+            scope.launch { snackbarHostState.showSnackbar(getString(Res.string.followup_notifications_off)) }
+        }
+    }
+
+    fun navigate(screen: SillonScreen) {
+        // Un changement d'onglet quitte le diagnostic d'une plante : l'onglet Docteur redevient l'outil autonome.
+        if (screen != currentScreen) doctorContext = null
+        currentScreen = screen
     }
 
     fun chooseDepartment(code: String?) {
@@ -232,7 +259,14 @@ fun SillonApp(
     val customFrostActive = garden.useCustomFrost && garden.customFrostDate != null
 
     PlatformBackHandler(enabled = currentScreen != SillonScreen.DASHBOARD) {
-        currentScreen = SillonScreen.DASHBOARD
+        // Depuis le diagnostic d'une plante, « retour » ramène au potager ; sinon, à l'accueil.
+        if (currentScreen == SillonScreen.DOCTOR && doctorContext != null) {
+            doctorContext = null
+            currentScreen = SillonScreen.GARDEN
+        } else {
+            doctorContext = null
+            currentScreen = SillonScreen.DASHBOARD
+        }
     }
 
     val diseases = DiseaseCatalog.ALL_DISEASES
@@ -244,7 +278,7 @@ fun SillonApp(
         bottomBar = {
             SillonBottomNavigation(
                 currentScreen = currentScreen,
-                onSelectScreen = { currentScreen = it },
+                onSelectScreen = { navigate(it) },
             )
         },
     ) { innerPadding ->
@@ -300,6 +334,7 @@ fun SillonApp(
                             "${if (plantedAdvice.isNotEmpty()) tipOnPlots else tipLandmark} · ${it.name}" to it.advice
                         }
                     }
+                    val followUps = remember(garden, today) { DiagnosticJournal.due(garden, today) }
                     DashboardScreen(
                         horizons = horizons,
                         placeLabel = if (customFrostActive) {
@@ -310,8 +345,13 @@ fun SillonApp(
                         tip = tip,
                         showIntroHints = showIntroHints,
                         activeGardenMarker = activeGardenMarker,
-                        onNavigateToGarden = { currentScreen = SillonScreen.GARDEN },
-                        onNavigateToCatalog = { currentScreen = SillonScreen.CATALOG },
+                        followUps = followUps,
+                        onOpenFollowUp = { entry ->
+                            gardenFocus = GardenFocus(entry.parcelId, entry.row, entry.col)
+                            navigate(SillonScreen.GARDEN)
+                        },
+                        onNavigateToGarden = { navigate(SillonScreen.GARDEN) },
+                        onNavigateToCatalog = { navigate(SillonScreen.CATALOG) },
                         onOpenSettings = { pickingDepartment = true },
                     )
                 }
@@ -332,6 +372,26 @@ fun SillonApp(
                     onDeleteParcel = { pId ->
                         update { store.deleteParcel(pId) }
                     },
+                    onReportProblem = { pId, r, c ->
+                        val parcel = garden.parcels.firstOrNull { it.id == pId }
+                        val slot = parcel?.getSlot(r, c)
+                        val vegetable = slot?.vegetableId?.let(VegetableCatalog::getById)
+                        if (parcel != null && slot != null && vegetable != null) {
+                            doctorContext = DiagnosticContext.from(
+                                parcel = parcel,
+                                slot = slot,
+                                vegetable = vegetable,
+                                today = todayLocalDate(),
+                                temperateClimate = garden.climateFor(FrenchFrostCatalog.getClimate(departmentCode)) == Climate.TEMPERATE,
+                            )
+                            currentScreen = SillonScreen.DOCTOR
+                        }
+                    },
+                    onAnswerFollowUp = { entryId, answer ->
+                        update { store.answerJournalEntry(entryId, answer) }
+                    },
+                    focus = gardenFocus,
+                    onFocusConsumed = { gardenFocus = null },
                 )
 
                 SillonScreen.CATALOG -> CatalogScreen(
@@ -341,6 +401,19 @@ fun SillonApp(
                 SillonScreen.DOCTOR -> DoctorScreen(
                     diseases = diseases,
                     photoDiagnosisContent = photoDiagnosisContent,
+                    context = doctorContext,
+                    onBackToGarden = {
+                        // Retour au potager, sans rouvrir la case : la personne reprend où elle en était.
+                        if (doctorContext != null) {
+                            doctorContext = null
+                            currentScreen = SillonScreen.GARDEN
+                        }
+                    },
+                    onNoteProblem = { draft -> update { store.addJournalEntry(draft) } },
+                    onFollowUp = { entryId, days ->
+                        update { store.setJournalFollowUp(entryId, days) }
+                        if (days != null) followUpPermissionRequester()
+                    },
                 )
 
                 SillonScreen.SETTINGS -> SettingsScreen(

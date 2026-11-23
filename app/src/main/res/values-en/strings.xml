@@ -22,4 +22,8 @@
     <string name="frame_tip_closer">Move closer to the leaf</string>
     <string name="frame_tip_center">Average quality: center the leaf</string>
     <string name="frame_tip_optimal">Framing is good: ready to analyze!</string>
+    <string name="followup_channel_name">Problem follow-up</string>
+    <string name="followup_channel_desc">A reminder to check a plant again, on the date you chose.</string>
+    <string name="followup_title">Time for a second look</string>
+    <string name="followup_text">%1$s: is it getting better?</string>
 </resources>

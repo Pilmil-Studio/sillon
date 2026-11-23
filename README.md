@@ -55,11 +55,16 @@ La sauvegarde dans le compte Google est une option, désactivée par défaut. El
   3. *Année 3 :* Légumineuses améliorantes fixatrices d'azote atmosphérique par symbiose rhizobienne (Fabacées).
   4. *Année 4 :* Couverts vivants, engrais verts régénérateurs (phacélie, moutarde, trèfle) et repos structuré du sol.
 - **Prévention sanitaire tellurique :** Détection des récurrences d'une même famille sur un délai inférieur à la pause requise (3 à 5 ans) pour briser le cycle des sclérotes, nématodes et champignons terricoles (*Plasmodiophora*, *Pythium*, *Rhizoctonia*).
+- **Maladies notées au potager :** si un mildiou ou une alternariose a été noté dans un carré, l'appli prévient les années suivantes (par exemple « Mildiou noté ici en 2026 : évitez les Solanacées jusqu'en 2029 »). Les durées retenues (3 ans pour le mildiou, 2 ans pour l'alternariose) sont les plus prudentes des sources citées dans [`docs/scientific-foundations.md`](docs/scientific-foundations.md) (section 4.3) ; pour les autres maladies la durée n'est pas sourcée et aucun avertissement n'est affiché.
 
 ### 5. Guide de santé végétale & Edge Vision 100 % hors-ligne (`DiagnosticEngine`)
 - **Diagnostic différentiel dichotomique :** Analyse pas-à-pas des symptômes selon les organes touchés (feuille, tige, collet, fruit, racine) sur 21 maladies et ravageurs courants.
 - **Diagnostic photo sur l'appareil (aide indicative, en amélioration continue) :** la photo est analysée sur le téléphone, rien n'est envoyé. Le modèle (`sillon_disease.tflite`, 3,2 Mo, images de 288 × 288 px) distingue 13 classes : feuille saine, hors sujet, « autre » et 10 maladies ou ravageurs (mildiou, oïdium, alternariose, rouille, botrytis, pucerons, altises, limaces, piéride du chou, doryphore). Sous un seuil de confiance de 65 %, l'appli répond qu'elle ne reconnaît rien avec assez de certitude plutôt que de deviner. Mildiou et alternariose se ressemblent : l'appli les présente ensemble comme « tache foliaire » et renvoie vers les deux fiches.
 - **Précision mesurée :** sur 1 182 photos de terrain mises de côté (non utilisées à l'entraînement), le modèle donne la bonne classe dans 86 % des cas (intervalle de confiance à 95 % : 84 à 88 %). Au seuil de 65 %, l'appli répond pour environ 86 % des photos, et 93 % de ces réponses sont justes. C'est plus faible pour mildiou et alternariose (précision d'environ 49 % et 40 %). Ces chiffres viennent de `sillon_disease.json` et ne garantissent rien sur vos propres photos : c'est une aide, pas un diagnostic certain, à recouper avec la clé de diagnostic de l'écran. Le modèle est entraîné de nouveau régulièrement (pipeline dans [`tools/ml`](tools/ml/README.md)).
+- **Le diagnostic part du potager et y revient :** le bouton « Il a un problème » d'un plant ouvre le diagnostic avec la plante, sa famille, sa date de semis ou de plantation et la saison. Ce contexte réordonne les causes (le doryphore d'abord sur une solanacée, la piéride sur un chou) sans en cacher aucune : « Autres causes » reste à un geste. Le médecin autonome fonctionne comme avant. Depuis la photo, la plante pondère aussi les probabilités du modèle (plancher de 5 %, jamais d'exclusion).
+- **Journal du carré :** en fin de diagnostic, « Retenir cette cause et la noter dans le journal » enregistre la cause (ou « incertain »), la date, la plante et une courte action facultative. La photo n'est jamais conservée. Les entrées apparaissent dans l'historique de l'emplacement. L'appli propose « Revérifier dans N jours » (durée par défaut selon le problème, modifiable), avec une notification locale si vous l'acceptez, puis demande « Ça va mieux ? Oui / Non / Le plant est perdu ». Les données du journal restent sur l'appareil (schéma de sauvegarde 3, les anciennes sauvegardes s'ouvrent avec un journal vide).
+- **Un plant malade se voit :** tant qu'un problème est ouvert, le plant est discrètement abîmé dans la scène du potager (feuille tachée, teinte ternie, description pour TalkBack) et redevient normal quand vous répondez « Ça va mieux ». Aucune pénalité ni culpabilisation.
+- **Départager mildiou et alternariose :** quand la photo hésite entre les deux, deux questions (duvet blanc au revers ou taches huileuses ; anneaux concentriques en cible) ajustent l'ordre des deux pistes, et l'appli conseille de photographier le revers de la feuille.
 - **Viseur et pré-cadrage :** un viseur intelligent (`SmartCameraViewfinder`, `FrameQualityAnalyzer`) contrôle netteté et part de végétal, et un détecteur de feuille (`sillon_detector.tflite`, `LeafDetector`) cadre la photo avant analyse (`PhotoClassifier`, lecture sur deux vues). Moteur d'inférence : LiteRT.
 - **Remèdes de biocontrôle :** Préconisations strictes en biocontrôle respectant le cahier des charges de l'Agriculture Biologique (décoction de prêle pour sa silice renforçant la cuticule, bicarbonate de potassium à action osmotique contre l'oïdium, cuivre raisonné plafonné à moins de 4 g/m²/an).
 
@@ -86,14 +91,16 @@ Le projet s'appuie sur Kotlin Multiplatform / Compose Multiplatform (`:shared`),
 ```
 shared/src/commonMain/kotlin/fr/pilmil/sillon/
 ├── data/
-│   ├── DiseaseCatalog.kt         # Base des 21 maladies et ravageurs
+│   ├── DiseaseCatalog.kt         # Base des 21 maladies et ravageurs (persistance dans le sol sourcée)
+│   ├── HostPlausibility.kt       # A priori plante hôte / cause pour le diagnostic photo
 │   ├── FrenchFrostCatalog.kt     # Normales climatiques des 105 territoires (tempéré + tropical)
 │   ├── GardenCodec.kt / Store    # Sérialisation et persistance locale multiplateforme
 │   └── VegetableCatalog.kt       # Référentiel des 74 espèces maraîchères et compagnes
 ├── engine/
 │   ├── CompanionEngine.kt        # Graphe relationnel & calcul spatial d'allélopathie
 │   ├── DashboardPlanner.kt       # Planification hebdomadaire des travaux
-│   ├── DiagnosticEngine.kt       # Moteur d'inférence de diagnostic différentiel
+│   ├── DiagnosticEngine.kt       # Diagnostic différentiel, contexte de la plante et ordre des causes
+│   ├── DiagnosticJournal.kt      # Journal des problèmes, suivi, plants abîmés (logique pure)
 │   ├── FrostEngine.kt            # Phénologie dynamique indexée sur J_gel / saison
 │   ├── GrowthEngine.kt           # Stades de croissance et délai avant récolte
 │   ├── LightEstimator.kt         # Estimation d'ensoleillement (balcon / intérieur)
@@ -104,7 +111,7 @@ shared/src/commonMain/kotlin/fr/pilmil/sillon/
 app/src/main/java/fr/pilmil/sillon/
 ├── backup/                       # BackupPolicy & SillonBackupAgent
 ├── data/GardenRepository.kt      # Coffre .pilmil (AndroidBackupVault) & exports SAF/CSV
-├── reminders/SowingReminders.kt  # Rappels hebdomadaires WorkManager
+├── reminders/                    # SowingReminders (hebdomadaire) et FollowUpReminders (revérifier dans N jours), WorkManager
 └── vision/                       # LeafDetector, PhotoClassifier, FrameQualityAnalyzer (LiteRT)
 
 iosApp/                           # Coque Xcode / SwiftUI iOS (SillonApp.swift)

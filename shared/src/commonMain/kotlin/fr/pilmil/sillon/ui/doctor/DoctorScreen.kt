@@ -27,6 +27,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Yard
 import androidx.compose.material.icons.filled.Biotech
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Check
@@ -41,6 +42,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -55,32 +57,56 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fr.pilmil.sillon.engine.DiagnosticContext
+import fr.pilmil.sillon.engine.DiagnosticEngine
+import fr.pilmil.sillon.engine.Season
+import fr.pilmil.sillon.model.BotanicalFamily
 import fr.pilmil.sillon.model.Disease
+import fr.pilmil.sillon.model.JournalDraft
 import fr.pilmil.sillon.model.PlantOrgan
 import fr.pilmil.sillon.shared.resources.*
 import fr.pilmil.sillon.ui.components.SillonBadge
+import fr.pilmil.sillon.ui.components.SillonButton
 import fr.pilmil.sillon.ui.components.SillonCard
+import fr.pilmil.sillon.ui.components.SillonOutlinedButton
 import fr.pilmil.sillon.ui.theme.SillonTheme
+import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * Écran docteur. Sans [context], c'est l'outil autonome : toutes les causes de l'organe choisi, comme avant.
+ * Avec un [context] (on arrive d'une plantation), les causes sont rangées d'après la plante : les plus probables
+ * d'abord, les autres restent à un toucher. Choisir une cause propose de la noter dans le journal du carré.
+ */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DoctorScreen(
     diseases: List<Disease>,
     onSelectDisease: (Disease) -> Unit = {},
-    photoDiagnosisContent: (@Composable (onOpenDisease: (String) -> Unit, onOpenKey: () -> Unit) -> Unit)? = null,
+    photoDiagnosisContent: (@Composable (onOpenDisease: (String) -> Unit, onOpenKey: () -> Unit, plantFamily: BotanicalFamily?) -> Unit)? = null,
+    context: DiagnosticContext? = null,
+    onBackToGarden: () -> Unit = {},
+    onNoteProblem: (JournalDraft) -> Unit = {},
+    onFollowUp: (entryId: String, days: Int?) -> Unit = { _, _ -> },
 ) {
     var selectedOrgan by remember { mutableStateOf<PlantOrgan?>(null) }
     var selectedDiseaseId by remember { mutableStateOf<String?>(null) }
+    var showOthers by remember { mutableStateOf(false) }
+    // Cause en cours de notation (null : aucune fenêtre ouverte).
+    var noting by remember { mutableStateOf<NoteTarget?>(null) }
 
-    val filteredDiseases = remember(diseases, selectedOrgan) {
-        if (selectedOrgan == null) diseases
-        else diseases.filter { it.affectedOrgans.contains(selectedOrgan) }
+    val ranked = remember(diseases, selectedOrgan, context) {
+        DiagnosticEngine(diseases).rankCauses(context, selectedOrgan, diseases)
     }
+    val others = if (showOthers) ranked.others else emptyList()
 
     val listState = rememberLazyListState()
-    val photoAvailable = photoDiagnosisContent != null
     val scope = rememberCoroutineScope()
+    val contextItems = if (context != null) 1 else 0
+    val photoItems = if (photoDiagnosisContent != null) 1 else 0
+    // En-tête, carte photo, sélecteur d'organe et titre : éléments qui précèdent la liste des causes.
+    val keyStartIndex = contextItems + 1 + photoItems
+    val listOffset = keyStartIndex + 2
 
     LazyColumn(
         state = listState,
@@ -91,6 +117,11 @@ fun DoctorScreen(
         contentPadding = PaddingValues(top = 20.dp, bottom = 100.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
+        // Contexte de la plante quand on arrive du potager
+        if (context != null) item {
+            ContextCard(context = context, onBack = onBackToGarden)
+        }
+
         // En-tête
         item {
             Column {
@@ -116,11 +147,23 @@ fun DoctorScreen(
                     // Ouvre la fiche dans la liste complète, puis y fait défiler l'écran.
                     selectedOrgan = null
                     selectedDiseaseId = id
-                    val index = diseases.indexOfFirst { it.id == id }
-                    if (index >= 0) scope.launch { listState.animateScrollToItem(DISEASE_LIST_OFFSET + index) }
+                    val full = DiagnosticEngine(diseases).rankCauses(context, null, diseases)
+                    val inLikely = full.likely.indexOfFirst { it.id == id }
+                    val inOthers = full.others.indexOfFirst { it.id == id }
+                    val index = when {
+                        inLikely >= 0 -> listOffset + inLikely
+                        inOthers >= 0 -> {
+                            showOthers = true
+                            // Les autres causes viennent après les probables et leur titre.
+                            listOffset + full.likely.size + 1 + inOthers
+                        }
+                        else -> -1
+                    }
+                    if (index >= 0) scope.launch { listState.animateScrollToItem(index) }
                 },
                 // Amène le sélecteur d'organe, premier pas de la clé de diagnostic.
-                { scope.launch { listState.animateScrollToItem(KEY_START_INDEX) } },
+                { scope.launch { listState.animateScrollToItem(keyStartIndex) } },
+                context?.family,
             )
         }
 
@@ -174,7 +217,11 @@ fun DoctorScreen(
         // Titre liste affections
         item {
             Text(
-                text = stringResource(Res.string.doctor_step_diagnoses, filteredDiseases.size),
+                text = if (context != null) {
+                    stringResource(Res.string.doctor_likely_title, ranked.likely.size)
+                } else {
+                    stringResource(Res.string.doctor_step_diagnoses, ranked.likely.size)
+                },
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold,
@@ -182,7 +229,7 @@ fun DoctorScreen(
         }
 
         // Liste des maladies identifiées
-        items(filteredDiseases, key = { it.id }) { disease ->
+        items(ranked.likely, key = { it.id }) { disease ->
             val isExpanded = selectedDiseaseId == disease.id
             DiseaseCard(
                 disease = disease,
@@ -190,9 +237,120 @@ fun DoctorScreen(
                 onToggleExpand = {
                     selectedDiseaseId = if (isExpanded) null else disease.id
                 },
+                onNote = if (context != null) ({ noting = NoteTarget(disease) }) else null,
+            )
+        }
+
+        // Autres causes : moins fréquentes sur cette plante, mais jamais cachées pour de bon.
+        if (context != null && ranked.others.isNotEmpty()) item(key = "others-header") {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    text = stringResource(Res.string.doctor_others_title, ranked.others.size),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f),
+                )
+                TextButton(onClick = { showOthers = !showOthers }) {
+                    Text(stringResource(if (showOthers) Res.string.doctor_others_hide else Res.string.doctor_others_show))
+                }
+            }
+        }
+        items(others, key = { "other-" + it.id }) { disease ->
+            val isExpanded = selectedDiseaseId == disease.id
+            DiseaseCard(
+                disease = disease,
+                isExpanded = isExpanded,
+                onToggleExpand = {
+                    selectedDiseaseId = if (isExpanded) null else disease.id
+                },
+                onNote = if (context != null) ({ noting = NoteTarget(disease) }) else null,
+            )
+        }
+
+        if (context != null) item(key = "uncertain") {
+            SillonOutlinedButton(
+                text = stringResource(Res.string.doctor_note_uncertain),
+                icon = Icons.Filled.Search,
+                onClick = { noting = NoteTarget(null) },
             )
         }
     }
+
+    val target = noting
+    if (context != null && target != null) {
+        JournalNoteDialog(
+            context = context,
+            disease = target.disease,
+            onNote = onNoteProblem,
+            onFollowUp = onFollowUp,
+            onDone = {
+                noting = null
+                onBackToGarden()
+            },
+            onCancel = { noting = null },
+        )
+    }
+}
+
+/** Ce que la personne note : une cause du catalogue, ou null pour « cause incertaine ». */
+private class NoteTarget(val disease: Disease?)
+
+/** Carte de contexte : la plante, l'emplacement, la mise en place et la saison, avec le retour au potager. */
+@Composable
+private fun ContextCard(context: DiagnosticContext, onBack: () -> Unit) {
+    SillonCard(backgroundColor = MaterialTheme.colorScheme.primaryContainer, borderColor = MaterialTheme.colorScheme.primary) {
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Text(
+                text = stringResource(Res.string.doctor_context_title),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+            )
+            Text(
+                text = stringResource(Res.string.doctor_context_plant, context.vegetable.name, context.family.frenchLabel),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+            )
+            Text(
+                text = context.parcelName + " · " + stringResource(Res.string.garden_slot_title, context.row + 1, context.col + 1),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+            )
+            val days = context.daysSincePlanting
+            val planted = when {
+                days == null -> null
+                days == 0 -> stringResource(Res.string.doctor_context_planted_today)
+                else -> pluralStringResource(Res.plurals.doctor_context_planted, days, days)
+            }
+            val season = context.season?.let { stringResource(seasonRes(it)) }
+            val line = listOfNotNull(planted, season).joinToString(" · ")
+            if (line.isNotEmpty()) {
+                Text(
+                    text = line,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                )
+            }
+            Spacer(modifier = Modifier.height(4.dp))
+            SillonOutlinedButton(
+                text = stringResource(Res.string.doctor_context_back),
+                icon = Icons.Filled.Yard,
+                onClick = onBack,
+            )
+        }
+    }
+}
+
+private fun seasonRes(season: Season) = when (season) {
+    Season.SPRING -> Res.string.doctor_context_season_spring
+    Season.SUMMER -> Res.string.doctor_context_season_summer
+    Season.AUTUMN -> Res.string.doctor_context_season_autumn
+    Season.WINTER -> Res.string.doctor_context_season_winter
 }
 
 @Composable
@@ -200,6 +358,7 @@ private fun DiseaseCard(
     disease: Disease,
     isExpanded: Boolean,
     onToggleExpand: () -> Unit,
+    onNote: (() -> Unit)? = null,
 ) {
     SillonCard(
         backgroundColor = MaterialTheme.colorScheme.surface,
@@ -323,6 +482,16 @@ private fun DiseaseCard(
                         }
                     }
 
+                    // Noter la cause dans le journal du carré, quand on vient d'une plantation
+                    if (onNote != null) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                        SillonButton(
+                            text = stringResource(Res.string.doctor_note_action),
+                            icon = Icons.Filled.Check,
+                            onClick = onNote,
+                        )
+                    }
+
                     // Prévention
                     if (disease.preventiveMeasures.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(10.dp))
@@ -347,9 +516,3 @@ private fun DiseaseCard(
         }
     }
 }
-
-/** Nombre d'éléments avant la liste des maladies quand la photo est proposée : en-tête, photo, organe, titre. */
-private const val DISEASE_LIST_OFFSET = 4
-
-/** Position du sélecteur d'organe dans la liste (après l'en-tête et la carte photo). */
-private const val KEY_START_INDEX = 2

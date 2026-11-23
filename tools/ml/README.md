@@ -179,6 +179,29 @@ PlantVillage est photographié en labo et donne des scores trompeurs. Chaque ent
 - Pour un modèle fusionné, le rappel de mildiou/alternariose est un rappel de groupe, plus facile à atteindre : le notebook le
   confronte au rappel exact de la baseline et affiche aussi le rappel de groupe de la baseline.
 
+### Mesurer l'a priori « plante » (`eval_host_prior.py`)
+
+Quand le diagnostic part d'une plantation, l'appli multiplie les probabilités du modèle par la plausibilité de la
+plante hôte (doryphore : solanacées ; piéride : brassicacées ; oïdium, rouille, botrytis, pucerons, limaces : large
+spectre), avec un plancher de 0,05 et une renormalisation. Les classes `sain`, `autre` et `hors_sujet` ne sont pas
+touchées. Le tableau vient de `DiseaseCatalog.kt` (`targetFamilies`) et de `HostPlausibility.kt`, que le script relit.
+
+`eval_host_prior.py` rejoue ce calcul sur les photos de **test de terrain dont la culture est connue** et compare, avec et
+sans a priori : exactitude, couverture et précision au seuil du modèle, au total et par classe (intervalles de Wilson,
+avertissement sous 60 photos). Aucun chiffre n'est fourni avec le dépôt : les images de terrain n'y sont pas, et rien n'a été
+mesuré. Le seuil (`0.65`) est lu dans `sillon_disease.json` et n'est jamais modifié par le script.
+
+```bash
+python eval_host_prior.py --self-test        # sans images : table et calcul sur vecteurs jouets, aucune performance
+python eval_host_prior.py --plantdoc PlantDoc --classed dataset_raw --out rapport_a_priori.json --cache probas.npz
+```
+
+Culture connue : nom de dossier pour PlantDoc et PlantVillage ; pour iNaturalist, colonne `host_taxon` de
+`ATTRIBUTIONS.csv` si elle existe, sinon `source_taxon` quand c'est une plante cultivée. Les photos de ravageurs dont la plante
+n'est pas notée sont écartées et comptées, jamais devinées. Nécessite `tensorflow` ou `tflite_runtime` et `pillow`.
+L'inférence ne passe pas par `sillon_detector.tflite` : comparez les deux colonnes entre elles, pas aux chiffres de l'appli.
+Si l'a priori change nettement la précision au seuil, recaler le seuil serait une décision séparée, prise sur ces chiffres.
+
 ## Ce que l'appli doit adapter
 
 Compatible sans changement : taille d'entrée autre que 224 (`PhotoClassifier` lit `input.width/height` dans le JSON, recadre au

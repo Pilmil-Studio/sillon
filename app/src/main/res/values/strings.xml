@@ -24,4 +24,8 @@
     <string name="frame_tip_closer">Rapprochez-vous de la feuille</string>
     <string name="frame_tip_center">Qualité moyenne : centrez la feuille</string>
     <string name="frame_tip_optimal">Cadre optimal : analyse prête !</string>
+    <string name="followup_channel_name">Suivi des problèmes</string>
+    <string name="followup_channel_desc">Un rappel pour revérifier une plante, à la date que vous avez choisie.</string>
+    <string name="followup_title">Revérifier au potager</string>
+    <string name="followup_text">%1$s : ça va mieux ?</string>
 </resources>
