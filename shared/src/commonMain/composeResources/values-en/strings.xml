@@ -365,6 +365,14 @@
     <string name="rotation_soil_warning">%1$s noted here in %2$d: avoid %3$s (%4$s) until %5$d.</string>
     <string name="rotation_soil_label">Persistent disease noted here</string>
     <string name="dashboard_followup_line">%1$s · %2$s</string>
+    <string name="photo_triage_title">Late blight or early blight? Two questions to tell them apart</string>
+    <string name="photo_triage_white">Do you see whitish fuzz on the underside of the leaf, or oily-looking spots?</string>
+    <string name="photo_triage_rings">Do the brown spots form concentric rings, like a target?</string>
+    <string name="photo_triage_tip">Tip: also photograph the underside of the leaf, where the fuzz shows best.</string>
+    <string name="photo_triage_result">With your answers, the most likely lead is: %1$s (check it against the sheet).</string>
+    <string name="answer_yes">Yes</string>
+    <string name="answer_no">No</string>
+    <string name="answer_unknown">I don’t know</string>
     <plurals name="doctor_context_planted">
         <item quantity="one">Planted %1$d day ago</item>
         <item quantity="other">Planted %1$d days ago</item>

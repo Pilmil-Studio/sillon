@@ -365,6 +365,14 @@
     <string name="rotation_soil_warning">%1$s hier genoteerd in %2$d: vermijd %3$s (%4$s) tot en met %5$d.</string>
     <string name="rotation_soil_label">Hier genoteerde hardnekkige ziekte</string>
     <string name="dashboard_followup_line">%1$s · %2$s</string>
+    <string name="photo_triage_title">Aardappelziekte of vroege aardappelziekte? Twee vragen om ze te onderscheiden</string>
+    <string name="photo_triage_white">Ziet u wittig schimmel aan de onderkant van het blad, of vlekken die er olieachtig uitzien?</string>
+    <string name="photo_triage_rings">Vormen de bruine vlekken concentrische ringen, als een schietschijf?</string>
+    <string name="photo_triage_tip">Tip: fotografeer ook de onderkant van het blad, daar is de schimmel het best te zien.</string>
+    <string name="photo_triage_result">Met uw antwoorden is de meest waarschijnlijke aanwijzing: %1$s (controleer dit met de fiche).</string>
+    <string name="answer_yes">Ja</string>
+    <string name="answer_no">Nee</string>
+    <string name="answer_unknown">Ik weet het niet</string>
     <plurals name="doctor_context_planted">
         <item quantity="one">%1$d dag geleden geplant</item>
         <item quantity="other">%1$d dagen geleden geplant</item>

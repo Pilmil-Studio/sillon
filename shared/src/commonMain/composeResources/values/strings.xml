@@ -367,6 +367,14 @@
     <string name="rotation_soil_warning">%1$s noté ici en %2$d : évitez les %3$s (%4$s) jusqu’en %5$d.</string>
     <string name="rotation_soil_label">Maladie persistante notée ici</string>
     <string name="dashboard_followup_line">%1$s · %2$s</string>
+    <string name="photo_triage_title">Mildiou ou alternariose ? Deux questions pour départager</string>
+    <string name="photo_triage_white">Voyez-vous un duvet blanchâtre au revers de la feuille, ou des taches d’aspect huileux ?</string>
+    <string name="photo_triage_rings">Les taches brunes forment-elles des cercles concentriques, comme une cible ?</string>
+    <string name="photo_triage_tip">Astuce : photographiez aussi le revers de la feuille, le duvet y est plus visible.</string>
+    <string name="photo_triage_result">Avec vos réponses, la piste la plus probable est : %1$s (à confirmer avec la fiche).</string>
+    <string name="answer_yes">Oui</string>
+    <string name="answer_no">Non</string>
+    <string name="answer_unknown">Je ne sais pas</string>
     <plurals name="doctor_context_planted">
         <item quantity="one">Mise en place il y a %1$d jour</item>
         <item quantity="other">Mise en place il y a %1$d jours</item>

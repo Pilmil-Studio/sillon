@@ -367,6 +367,14 @@
     <string name="rotation_soil_warning">%1$s anotado aquí en %2$d: evite %3$s (%4$s) hasta %5$d.</string>
     <string name="rotation_soil_label">Enfermedad persistente anotada aquí</string>
     <string name="dashboard_followup_line">%1$s · %2$s</string>
+    <string name="photo_triage_title">¿Mildiu o alternariosis? Dos preguntas para distinguirlos</string>
+    <string name="photo_triage_white">¿Ve un moho blanquecino en el envés de la hoja o manchas de aspecto aceitoso?</string>
+    <string name="photo_triage_rings">¿Las manchas marrones forman círculos concéntricos, como una diana?</string>
+    <string name="photo_triage_tip">Consejo: fotografíe también el envés de la hoja, donde el moho se ve mejor.</string>
+    <string name="photo_triage_result">Con sus respuestas, la pista más probable es: %1$s (confírmela con la ficha).</string>
+    <string name="answer_yes">Sí</string>
+    <string name="answer_no">No</string>
+    <string name="answer_unknown">No lo sé</string>
     <plurals name="doctor_context_planted">
         <item quantity="one">Plantada hace %1$d día</item>
         <item quantity="other">Plantada hace %1$d días</item>

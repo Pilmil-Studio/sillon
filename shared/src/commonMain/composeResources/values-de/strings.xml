@@ -365,6 +365,14 @@
     <string name="rotation_soil_warning">%1$s hier %2$d notiert: Vermeiden Sie %3$s (%4$s) bis %5$d.</string>
     <string name="rotation_soil_label">Hier notierte, bodenbürtige Krankheit</string>
     <string name="dashboard_followup_line">%1$s · %2$s</string>
+    <string name="photo_triage_title">Kraut- und Braunfäule oder Dürrfleckenkrankheit? Zwei Fragen zur Unterscheidung</string>
+    <string name="photo_triage_white">Sehen Sie einen weißlichen Belag auf der Blattunterseite oder ölig wirkende Flecken?</string>
+    <string name="photo_triage_rings">Bilden die braunen Flecken konzentrische Ringe wie eine Zielscheibe?</string>
+    <string name="photo_triage_tip">Tipp: Fotografieren Sie auch die Blattunterseite, dort ist der Belag besser zu sehen.</string>
+    <string name="photo_triage_result">Mit Ihren Antworten ist der wahrscheinlichste Hinweis: %1$s (mit dem Datenblatt prüfen).</string>
+    <string name="answer_yes">Ja</string>
+    <string name="answer_no">Nein</string>
+    <string name="answer_unknown">Ich weiß nicht</string>
     <plurals name="doctor_context_planted">
         <item quantity="one">Vor %1$d Tag gepflanzt</item>
         <item quantity="other">Vor %1$d Tagen gepflanzt</item>

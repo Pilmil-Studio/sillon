@@ -367,6 +367,14 @@
     <string name="rotation_soil_warning">%1$s annotato qui nel %2$d: evita %3$s (%4$s) fino al %5$d.</string>
     <string name="rotation_soil_label">Malattia persistente annotata qui</string>
     <string name="dashboard_followup_line">%1$s · %2$s</string>
+    <string name="photo_triage_title">Peronospora o alternaria? Due domande per distinguerle</string>
+    <string name="photo_triage_white">Vedi una muffa biancastra sul rovescio della foglia o macchie dall’aspetto oleoso?</string>
+    <string name="photo_triage_rings">Le macchie brune formano cerchi concentrici, come un bersaglio?</string>
+    <string name="photo_triage_tip">Suggerimento: fotografa anche il rovescio della foglia, dove la muffa si vede meglio.</string>
+    <string name="photo_triage_result">Con le tue risposte, la pista più probabile è: %1$s (verificala con la scheda).</string>
+    <string name="answer_yes">Sì</string>
+    <string name="answer_no">No</string>
+    <string name="answer_unknown">Non lo so</string>
     <plurals name="doctor_context_planted">
         <item quantity="one">Piantata %1$d giorno fa</item>
         <item quantity="other">Piantata %1$d giorni fa</item>
