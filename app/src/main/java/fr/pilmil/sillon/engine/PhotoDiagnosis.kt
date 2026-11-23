@@ -1,5 +1,8 @@
 package fr.pilmil.sillon.engine
 
+import fr.pilmil.sillon.data.HostPlausibility
+import fr.pilmil.sillon.model.BotanicalFamily
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
@@ -19,7 +22,12 @@ data class PhotoModelSpec(
     data class Input(val width: Int, val height: Int, val channels: Int = 3, val order: String = "RGB")
 
     @Serializable
-    data class ModelClass(val label: String, val catalogId: String? = null)
+    data class ModelClass(
+        val label: String,
+        val catalogId: String? = null,
+        /** Modèle fusionné : classes de base regroupées (ex. mildiou et alternariose dans « tache_feuille »). */
+        @SerialName("group_members") val groupMembers: List<String>? = null,
+    )
 
     companion object {
         private val json = Json { ignoreUnknownKeys = true }
@@ -92,13 +100,40 @@ object PhotoDiagnosis {
         else -> ConfidenceTier.UNSURE
     }
 
-    /** Probabilités du modèle -> verdict, avec le seuil calibré sur des photos de terrain. */
-    fun interpret(probabilities: FloatArray, spec: PhotoModelSpec): PhotoVerdict {
+    /**
+     * A priori de la plante : quand le diagnostic part d'une plantation, chaque probabilité d'une maladie ou
+     * d'un ravageur est multipliée par la plausibilité de cet hôte ([HostPlausibility], jamais nulle), puis le
+     * vecteur est renormalisé. Les classes sans fiche (sain, autre, hors_sujet, groupes fusionnés) ne sont pas
+     * pondérées. Sans [family] (écran docteur autonome), les probabilités sont rendues telles quelles.
+     */
+    fun applyHostPrior(probabilities: FloatArray, spec: PhotoModelSpec, family: BotanicalFamily?): FloatArray {
         require(probabilities.size == spec.classes.size) { "le modèle et sa description ne correspondent pas" }
+        if (family == null) return probabilities
+        val weighted = FloatArray(probabilities.size) { i ->
+            val id = spec.classes[i].catalogId
+            val weight = if (id == null || spec.classes[i].label == HEALTHY_LABEL) 1f else HostPlausibility.plausibility(id, family)
+            probabilities[i] * weight
+        }
+        val total = weighted.sum()
+        if (total <= 0f) return probabilities
+        return FloatArray(weighted.size) { weighted[it] / total }
+    }
+
+    /**
+     * Probabilités du modèle -> verdict, avec le seuil calibré sur des photos de terrain. Le seuil n'est pas
+     * recalibré pour l'a priori de [family] : il reste celui du modèle (voir specs/modele-diagnostic-ia.md).
+     */
+    fun interpret(rawProbabilities: FloatArray, spec: PhotoModelSpec, family: BotanicalFamily? = null): PhotoVerdict {
+        require(rawProbabilities.size == spec.classes.size) { "le modèle et sa description ne correspondent pas" }
+        val probabilities = applyHostPrior(rawProbabilities, spec, family)
         val ranked = probabilities.indices.sortedByDescending { probabilities[it] }
         val best = ranked.first()
         val confidence = probabilities[best]
         val bestClass = spec.classes[best]
+        // Classe fusionnée : jamais un verdict unique, les fiches du groupe sont proposées ensemble.
+        bestClass.groupMembers?.takeIf { it.isNotEmpty() }?.let { members ->
+            return PhotoVerdict.Unsure(members.map { it to confidence / members.size })
+        }
         if (confidence >= spec.threshold) {
             if (bestClass.label == HEALTHY_LABEL) return PhotoVerdict.Healthy(confidence)
             bestClass.catalogId?.let { return PhotoVerdict.Disease(it, confidence) }
