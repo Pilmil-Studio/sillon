@@ -4,7 +4,12 @@ import fr.pilmil.sillon.data.DiseaseCatalog
 import fr.pilmil.sillon.model.BotanicalFamily
 import fr.pilmil.sillon.model.Disease
 import fr.pilmil.sillon.model.PlantOrgan
+import fr.pilmil.sillon.model.Parcel
+import fr.pilmil.sillon.model.ParcelSlot
 import fr.pilmil.sillon.model.Vegetable
+import fr.pilmil.sillon.model.daysBetween
+import fr.pilmil.sillon.model.epochMillisToLocalDate
+import kotlinx.datetime.LocalDate
 import kotlin.math.min
 
 data class DiagnosticMatch(
@@ -17,6 +22,81 @@ data class DiagnosticMatch(
     val organicRemedies: List<String>,
     val preventiveMeasures: List<String>,
 )
+
+/** Saison météorologique de l'hémisphère nord, pour situer une plantation. */
+enum class Season {
+    SPRING,
+    SUMMER,
+    AUTUMN,
+    WINTER,
+    ;
+
+    companion object {
+        fun of(date: LocalDate): Season = when (date.monthNumber) {
+            3, 4, 5 -> SPRING
+            6, 7, 8 -> SUMMER
+            9, 10, 11 -> AUTUMN
+            else -> WINTER
+        }
+    }
+}
+
+/**
+ * Ce que l'on sait de la plante quand le diagnostic part du potager : légume, famille, date de mise en place,
+ * stade, saison et emplacement. [season] est null hors climat tempéré, où les saisons ne se découpent pas ainsi.
+ */
+data class DiagnosticContext(
+    val parcelId: String,
+    val parcelName: String,
+    val row: Int,
+    val col: Int,
+    val vegetable: Vegetable,
+    val plantedOn: LocalDate?,
+    val today: LocalDate,
+    val season: Season?,
+    val growthStage: GrowthStage?,
+) {
+    val family: BotanicalFamily get() = vegetable.family
+
+    val daysSincePlanting: Int?
+        get() = plantedOn?.let { daysBetween(it, today).toInt().coerceAtLeast(0) }
+
+    companion object {
+        fun from(
+            parcel: Parcel,
+            slot: ParcelSlot,
+            vegetable: Vegetable,
+            today: LocalDate,
+            temperateClimate: Boolean = true,
+        ): DiagnosticContext {
+            val planted = slot.plantedDate?.let(::epochMillisToLocalDate)
+            val stage = planted?.let {
+                GrowthEngine.growth(
+                    daysBetween(it, today).toInt(),
+                    vegetable.daysToHarvest,
+                    vegetable.harvestDurationWeeks,
+                ).stage
+            }
+            return DiagnosticContext(
+                parcelId = parcel.id,
+                parcelName = parcel.name,
+                row = slot.row,
+                col = slot.col,
+                vegetable = vegetable,
+                plantedOn = planted,
+                today = today,
+                season = if (temperateClimate) Season.of(today) else null,
+                growthStage = stage,
+            )
+        }
+    }
+}
+
+/**
+ * Causes classées pour une plante. [others] ne contient que des causes moins fréquentes sur cette plante :
+ * elles restent toutes consultables, rien n'est supprimé.
+ */
+data class RankedCauses(val likely: List<Disease>, val others: List<Disease>)
 
 class DiagnosticEngine(
     private val diseases: List<Disease> = DiseaseCatalog.ALL_DISEASES,
@@ -127,6 +207,37 @@ class DiagnosticEngine(
         }
 
         return matches.sortedByDescending { it.score }
+    }
+
+    /**
+     * Range les causes d'après la plante concernée. Sans [context] (écran docteur autonome), toutes les causes
+     * de l'organe choisi sont probables, comme avant. Avec un contexte :
+     * - une cause réservée à d'autres familles (doryphore, piéride...) passe dans [RankedCauses.others] ;
+     * - la fonte des semis n'est probable que sur un semis ou un jeune plant ;
+     * - les causes qui visent précisément la famille de la plante passent avant les causes à large spectre.
+     * L'ordre du catalogue est conservé à égalité.
+     */
+    fun rankCauses(
+        context: DiagnosticContext?,
+        organ: PlantOrgan? = null,
+        catalog: List<Disease> = diseases,
+    ): RankedCauses {
+        val byOrgan = if (organ == null) catalog else catalog.filter { organ in it.affectedOrgans }
+        if (context == null) return RankedCauses(likely = byOrgan, others = emptyList())
+        val (likely, others) = byOrgan.partition { isLikelyFor(it, context) }
+        return RankedCauses(
+            likely = likely.sortedBy { if (context.family in it.targetFamilies) 0 else 1 },
+            others = others,
+        )
+    }
+
+    private fun isLikelyFor(disease: Disease, context: DiagnosticContext): Boolean {
+        if (disease.targetFamilies.isNotEmpty() && context.family !in disease.targetFamilies) return false
+        val stage = context.growthStage
+        if (disease.seedlingStageOnly && stage != null && stage != GrowthStage.SETTLING && stage != GrowthStage.YOUNG) {
+            return false
+        }
+        return true
     }
 
     /**

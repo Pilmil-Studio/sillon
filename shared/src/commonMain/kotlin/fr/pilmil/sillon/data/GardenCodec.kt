@@ -1,5 +1,6 @@
 package fr.pilmil.sillon.data
 
+import fr.pilmil.sillon.engine.DiagnosticJournal
 import fr.pilmil.sillon.model.FrostDate
 import fr.pilmil.sillon.model.Garden
 import kotlinx.datetime.Clock
@@ -26,8 +27,10 @@ object GardenCodec {
     /**
      * Version du format du fichier. Les fichiers sans champ `schemaVersion` sont en version 1.
      * La version 2 ajoute `customFrostDate` et `useCustomFrost` (dates de gelée saisies hors France).
+     * La version 3 ajoute `diagnosticJournal` (problèmes notés sur les plantes).
      */
-    const val SCHEMA_VERSION = 2
+    const val SCHEMA_VERSION = 3
+    const val MAX_JOURNAL_ENTRIES = 1000
     const val MAX_PARCELS = 100
     const val MAX_SIDE = 50
     const val MAX_FILE_CHARS = 5_000_000
@@ -59,6 +62,8 @@ object GardenCodec {
 
     /**
      * Point d'accroche des migrations : amène un document de la version [from] à [SCHEMA_VERSION].
+     * Version 2 -> 3 : `diagnosticJournal` n'existe pas, la lecture part d'un journal vide (valeur par défaut) ;
+     * le champ est écarté d'un fichier plus ancien pour qu'il ne puisse pas en porter. Aucune autre donnée n'est touchée.
      * Version 1 -> 2 : les champs de dates saisies n'existent pas, la lecture est en mode département ;
      * ils sont écartés pour qu'un fichier v1 ne puisse jamais en porter. Le fichier n'est pas réécrit à la lecture.
      *
@@ -67,9 +72,10 @@ object GardenCodec {
      * `.pilmil` enregistrés avant la fusion de deux fiches continuent de s'ouvrir. L'opération ne change
      * rien à un fichier déjà à jour, donc elle ne porte pas de numéro de version propre.
      */
-    private fun migrate(root: JsonObject, from: Int): JsonObject {
+    internal fun migrate(root: JsonObject, from: Int): JsonObject {
         val dated = if (from < 2) JsonObject(root - setOf("customFrostDate", "useCustomFrost")) else root
-        return renameLegacyVegetableIds(dated) as JsonObject
+        val journaled = if (from < 3) JsonObject(dated - "diagnosticJournal") else dated
+        return renameLegacyVegetableIds(journaled) as JsonObject
     }
 
     /** Remplace toute valeur de champ `vegetableId` (cases et historique de cultures) par l'identifiant courant. */
@@ -111,6 +117,7 @@ object GardenCodec {
         garden.growLightHoursPerDay?.let { hours ->
             if (hours !in 1..24) refuse("durée d'éclairage invalide ($hours h/j, doit être entre 1 et 24).")
         }
+        validateJournal(garden, ::refuse)
         garden.parcels.forEach { parcel ->
             if (parcel.rows !in 1..MAX_SIDE || parcel.cols !in 1..MAX_SIDE) {
                 refuse("la parcelle « ${parcel.name} » doit avoir entre 1 et $MAX_SIDE lignes et colonnes (reçu : ${parcel.rows} × ${parcel.cols}).")
@@ -131,6 +138,21 @@ object GardenCodec {
                     if (date < MIN_DATE || date > now + DAY_MS) refuse("date de plantation invalide dans « ${parcel.name} ».")
                 }
             }
+        }
+    }
+
+    private fun validateJournal(garden: Garden, refuse: (String) -> Nothing) {
+        val journal = garden.diagnosticJournal
+        if (journal.size > MAX_JOURNAL_ENTRIES) refuse("plus de $MAX_JOURNAL_ENTRIES entrées dans le journal.")
+        if (journal.map { it.id }.toSet().size != journal.size) refuse("deux entrées du journal portent le même identifiant.")
+        journal.forEach { entry ->
+            if (entry.row < 0 || entry.col < 0) refuse("une entrée du journal a un emplacement invalide.")
+            if (VegetableCatalog.getById(entry.vegetableId) == null) refuse("plante inconnue « ${entry.vegetableId} » dans le journal.")
+            entry.diseaseId?.let { id ->
+                if (DiseaseCatalog.getById(id) == null) refuse("problème inconnu « $id » dans le journal.")
+            }
+            if ((entry.action?.length ?: 0) > DiagnosticJournal.MAX_ACTION_CHARS) refuse("une action du journal est trop longue.")
+            if (entry.followUpDays?.let { it !in 1..60 } == true) refuse("intervalle de revérification invalide dans le journal.")
         }
     }
 }
