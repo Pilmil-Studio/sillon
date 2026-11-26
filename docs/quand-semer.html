@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quand semer ? Le calendrier du potager selon votre département : Sillon</title>
+<meta name="description" content="Tomates, courgettes, haricots, carottes : quand semer et planter selon la date des dernières gelées de votre département. Calendrier gratuit, calculé par Sillon.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Quand semer ? Le calendrier du potager selon votre département">
+<meta property="og:description" content="Tomates, courgettes, haricots, carottes : quand semer et planter selon la date des dernières gelées de votre département. Calendrier gratuit, calculé par Sillon.">
+<meta property="og:url" content="https://pilmil-studio.github.io/sillon/quand-semer.html">
+<meta property="og:image" content="https://pilmil-studio.github.io/sillon/marketing/out/fr/social.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232F6B4F'/%3E%3Cpath d='M18 46c0-16 10-26 28-28 0 18-10 28-26 28z' fill='%23F7F5EF'/%3E%3C/svg%3E">
+<style>
+:root { --bg:#F7F5EF; --fg:#1B2A22; --muted:#55645B; --line:#DAD8CC; --accent:#2F6B4F; --accent-solid:#2F6B4F; --warm:#C8742A; --on-accent:#fff;
+  --panel: color-mix(in srgb,#000 3%,transparent); --serif:'Iowan Old Style','Palatino Linotype',Georgia,serif; --sans:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif; color-scheme:light; }
+@media (prefers-color-scheme: dark) { :root { --bg:#111815; --fg:#EEF2EC; --muted:#A5B3A9; --line:#2B3831; --accent:#7FC29C; --accent-solid:#2F6B4F; --warm:#E39A55; --panel:color-mix(in srgb,#fff 5%,transparent); color-scheme:dark; } }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0; background-color:var(--bg);
+  background-image: radial-gradient(48rem 34rem at 92% -6%, color-mix(in srgb,var(--accent-solid) 26%,transparent), transparent 62%),
+    radial-gradient(44rem 32rem at -8% 24%, color-mix(in srgb,var(--warm) 16%,transparent), transparent 62%),
+    radial-gradient(46rem 34rem at 100% 64%, color-mix(in srgb,var(--accent-solid) 14%,transparent), transparent 62%),
+    radial-gradient(44rem 30rem at 0% 96%, color-mix(in srgb,var(--warm) 12%,transparent), transparent 62%);
+  background-repeat:no-repeat; color:var(--fg); font-family:var(--sans); font-size:18px; line-height:1.6; }
+a { color:inherit; }
+:focus-visible { outline:3px solid var(--accent); outline-offset:3px; border-radius:6px; }
+.wrap { max-width:1060px; margin:0 auto; padding-inline:20px; }
+.top { display:flex; align-items:center; justify-content:space-between; gap:16px; padding-block:18px; flex-wrap:wrap; }
+.brand { font-family:var(--serif); font-weight:700; font-size:1.5rem; text-decoration:none; }
+.nav { display:flex; gap:18px; flex-wrap:wrap; font-size:.95rem; color:var(--muted); }
+.nav a { text-decoration:none; } .nav a:hover { color:var(--fg); text-decoration:underline; }
+.hero { display:grid; gap:32px; padding-block:28px 44px; align-items:center; }
+.kicker { font-size:.8rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:0 0 14px; }
+h1,h2,h3 { font-family:var(--serif); }
+h1 { font-size:clamp(2.3rem,7vw,4rem); line-height:1.04; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+.lead { color:var(--muted); font-size:1.15rem; max-width:34em; margin:20px 0 0; }
+.cta { display:flex; gap:12px; flex-wrap:wrap; margin-top:28px; }
+.btn { display:inline-flex; padding:13px 22px; border-radius:999px; font-weight:700; text-decoration:none; border:1.5px solid var(--line); }
+.btn.primary { background:linear-gradient(120deg,var(--accent-solid),color-mix(in srgb,var(--accent-solid) 70%,#0c2a1c)); border-color:transparent; color:var(--on-accent); }
+.btn:hover { border-color:var(--fg); } .btn.primary:hover { filter:brightness(1.1); }
+.shot { justify-self:center; } .shot img { display:block; width:min(300px,70vw); height:auto; border-radius:28px; box-shadow:0 30px 70px -20px rgba(0,0,0,.45); }
+@media (min-width:860px) { .hero { grid-template-columns:1.15fr .85fr; } .shot { justify-self:end; } }
+section { padding-block:34px; }
+h2 { font-size:clamp(1.6rem,4vw,2.3rem); line-height:1.1; margin:0 0 8px; text-wrap:balance; }
+.sub { color:var(--muted); margin:0 0 24px; max-width:38em; }
+.cards { display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); }
+.card { padding:22px; border-radius:20px; border:1px solid var(--line); background:linear-gradient(150deg,color-mix(in srgb,var(--accent-solid) 12%,var(--bg)),var(--panel)); min-width:0; }
+.card h3 { margin:0 0 8px; font-size:1.2rem; } .card p { margin:0; color:var(--muted); font-size:.98rem; line-height:1.5; }
+.gallery { display:flex; gap:16px; overflow-x:auto; padding:4px 20px 18px; margin-inline:-20px; scroll-snap-type:x proximity; }
+.gallery img { flex:0 0 auto; width:210px; height:auto; border-radius:20px; scroll-snap-align:start; border:1px solid var(--line); display:block; }
+.rules { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); border-top:1px solid var(--line); list-style:none; padding:0; margin:0; }
+.rules li { padding:16px 16px 16px 0; border-bottom:1px solid var(--line); min-width:0; }
+.rules strong { display:block; font-size:1.08rem; } .rules span { color:var(--muted); font-size:.95rem; }
+.doc { max-width:46em; padding-block:24px 40px; } .doc h1 { font-size:clamp(2rem,5vw,2.8rem); margin-bottom:8px; }
+.doc h2 { font-size:1.4rem; margin:34px 0 8px; } .doc p,.doc li { color:var(--muted); } .doc strong { color:var(--fg); } .doc li { margin-bottom:6px; }
+.foot { border-top:1px solid var(--line); padding-block:30px 46px; color:var(--muted); font-size:.95rem; display:grid; gap:10px; } .foot p { margin:0; } .foot a { color:var(--fg); }
+@media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+
+.doc { max-width:52em; }
+.doc .lead { margin-top:12px; }
+.tool { margin:26px 0 8px; padding:22px; border-radius:22px; border:1px solid var(--line); background:linear-gradient(150deg,color-mix(in srgb,var(--accent-solid) 12%,var(--bg)),var(--panel)); }
+.tool label { display:block; font-weight:700; margin-bottom:8px; color:var(--fg); }
+.tool select { width:100%; max-width:26em; font:inherit; padding:11px 14px; border-radius:12px; border:1.5px solid var(--line); background:var(--bg); color:var(--fg); }
+.anchor { margin:16px 0 0; color:var(--fg); font-size:1.05rem; }
+.anchor strong { color:var(--accent); }
+.months { margin-top:18px; display:grid; gap:18px; }
+.month { padding:0; }
+.month h3 { margin:0 0 6px; font-size:1.15rem; text-transform:capitalize; }
+.task { display:grid; grid-template-columns:9em 1fr; gap:4px 14px; padding:9px 0; border-top:1px solid var(--line); font-size:.98rem; line-height:1.45; }
+.task .when { color:var(--fg); font-weight:700; font-variant-numeric:tabular-nums; }
+.task .what { color:var(--muted); display:grid; gap:3px; } .task .what b { color:var(--fg); font-weight:700; }
+.task.now { background:color-mix(in srgb,var(--warm) 14%,transparent); border-radius:10px; padding-inline:10px; margin-inline:-10px; border-top-color:transparent; }
+.tag { display:block; margin-left:0 !important; font-size:.72rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--warm); margin-left:6px; }
+.steps { list-style:none; padding:0; margin:14px 0 0; border-top:1px solid var(--line); }
+.steps li { display:grid; grid-template-columns:8.5em 1fr; gap:4px 14px; padding:10px 0; border-bottom:1px solid var(--line); margin:0; }
+.steps .w { color:var(--fg); font-weight:700; }
+.steps .frost { color:var(--accent); font-weight:700; }
+.callout { margin:36px 0 8px; padding:24px; border-radius:22px; background:linear-gradient(120deg,var(--accent-solid),color-mix(in srgb,var(--accent-solid) 70%,#0c2a1c)); color:var(--on-accent); }
+.callout h2 { margin:0 0 8px; color:inherit; } .callout p { color:inherit !important; opacity:.95; margin:0 0 14px; }
+.callout .btn { background:var(--on-accent); color:var(--accent-solid); border-color:transparent; } .callout .btn.ghost { background:transparent; color:var(--on-accent); border-color:color-mix(in srgb,var(--on-accent) 60%,transparent); }
+@media (max-width:520px) { .task, .steps li { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<header class="wrap top">
+  <a class="brand" href="./">Sillon</a>
+  <nav class="nav" aria-label="Navigation">
+    <a href="./">L'appli</a>
+    <a href="quand-semer.html" aria-current="page">Quand semer ?</a>
+    <a href="sources.html">Sources</a>
+    <a href="confidentialite.html">Confidentialité</a>
+  </nav>
+</header>
+<main class="wrap doc" id="contenu">
+<p class="kicker">Calendrier du potager</p>
+<h1>Quand semer&nbsp;? Le calendrier calé sur vos gelées</h1>
+<p class="lead">Les dernières gelées tombent vers la mi-mars sur la côte méditerranéenne et vers la mi-mai en montagne. Un calendrier qui donne un mois fixe a donc des semaines d'avance ou de retard selon l'endroit. Ici, tout se compte à partir de la date des dernières gelées de votre département.</p>
+
+<div class="tool" id="outil">
+  <label for="dep">Votre département</label>
+  <select id="dep"><option value="">Choisir…</option></select>
+  <p class="anchor" id="anchor" hidden></p>
+  <div class="months" id="months" aria-live="polite"></div>
+</div>
+<noscript><p>Le calendrier par département demande JavaScript. Les repères en semaines ci-dessous fonctionnent partout.</p></noscript>
+
+<h2>Les repères, en semaines</h2>
+<p>Pour la métropole, à adapter à la date de vos dernières gelées. « À l'abri » veut dire au chaud, sur un rebord de fenêtre ou sous serre ; « en terre » veut dire semis direct au potager.</p>
+<!-- STATIQUE -->
+<ol class="steps">
+  <li><span class="w">10 sem. avant</span><span><strong>À l'abri&nbsp;:</strong> aubergine, poivron, piment, céleri-rave, céleri à côtes, asperge.</span></li>
+  <li><span class="w">8 sem. avant</span><span><strong>À l'abri&nbsp;:</strong> tomate, tomate cerise, poireau, romarin, fraisier. <strong>En terre&nbsp;:</strong> fève.</span></li>
+  <li><span class="w">6 sem. avant</span><span><strong>À l'abri&nbsp;:</strong> chou pommé, chou-fleur, brocoli, ciboulette, laitue pommée, basilic grand vert, menthe poivrée, thym commun, origan, sauge officinale, persil frisé, tagète (œillet d'Inde). <strong>En terre&nbsp;:</strong> pois, radis rond, ail, épinard.</span></li>
+  <li><span class="w">4 sem. avant</span><span><strong>À l'abri&nbsp;:</strong> chou kale (chou frisé non pommé), chou-rave, melon, capucine, souci officinal, fenouil bulbeux. <strong>En terre&nbsp;:</strong> lentille, navet, roquette cultivée, carotte, oignon, échalote, laitue pommée.</span></li>
+  <li><span class="w">3 sem. avant</span><span><strong>À l'abri&nbsp;:</strong> courgette, concombre, courge butternut, potimarron, pastèque.</span></li>
+  <li><span class="w">2 sem. avant</span><span><strong>En terre&nbsp;:</strong> pomme de terre, panais, poireau, persil frisé, phacélie, souci officinal, fraisier, asperge. <strong>Planter&nbsp;:</strong> laitue pommée.</span></li>
+  <li><span class="w frost">Dernières gelées</span><span class="frost">Date médiane du département</span></li>
+  <li><span class="w">Semaine des gelées</span><span><strong>En terre&nbsp;:</strong> pois chiche, chou pommé, chou kale (chou frisé non pommé), chou-rave, ciboulette, betterave, blette (poirée), menthe poivrée, coriandre, aneth, bourrache officinale. <strong>Planter&nbsp;:</strong> chou pommé, souci officinal, fraisier, asperge.</span></li>
+  <li><span class="w">1 sem. après</span><span><strong>En terre&nbsp;:</strong> chou-fleur, brocoli, thym commun, origan, sauge officinale, tagète (œillet d'Inde), capucine, tournesol. <strong>Planter&nbsp;:</strong> tomate, tomate cerise, chou-fleur, brocoli, chou kale (chou frisé non pommé), chou-rave, céleri-rave, céleri à côtes, ciboulette, menthe poivrée, persil frisé, tagète (œillet d'Inde), capucine.</span></li>
+  <li><span class="w">2 sem. après</span><span><strong>En terre&nbsp;:</strong> haricot vert nain, haricot à rames, courgette, concombre, melon, courge butternut, potimarron, pastèque, chicorée frisée, basilic grand vert, romarin, fenouil bulbeux, maïs doux. <strong>Planter&nbsp;:</strong> aubergine, poivron, piment, poireau, courgette, concombre, melon, courge butternut, potimarron, pastèque, basilic grand vert, romarin, thym commun, origan, sauge officinale.</span></li>
+  <li><span class="w">3 sem. après</span><span><strong>Planter&nbsp;:</strong> fenouil bulbeux.</span></li>
+  <li><span class="w">12 sem. après</span><span><strong>En terre&nbsp;:</strong> mâche.</span></li>
+</ol>
+<!-- FIN STATIQUE -->
+
+<h2>Une date médiane, pas une promesse</h2>
+<p>La date de chaque département est une <strong>médiane</strong> : une année sur deux environ, il gèle encore après. Pour les plantes frileuses (tomates, courges, haricots), gardez un voile d'hivernage sous la main et regardez la météo de la semaine avant de planter. Un jardin en altitude, en fond de vallée ou loin de la mer gèle souvent plus tard que la date du département : décalez d'une ou deux semaines.</p>
+<p>Ces dates viennent du catalogue de Sillon. La page <a href="sources.html">Sources et limites</a> explique d'où elles viennent et ce qu'elles ne disent pas.</p>
+
+<aside class="callout">
+  <h2>Un rappel chaque quinzaine</h2>
+  <p>Sillon fait ce calcul pour votre jardin et vous dit quoi semer, planter ou récolter dans les deux semaines. Vous pouvez corriger la date de gelée au jour près. Gratuit, sans compte, sans réseau.</p>
+  <div class="cta" style="margin-top:0">
+    <a class="btn" href="https://play.google.com/store/apps/details?id=fr.pilmil.sillon&amp;referrer=utm_source%3Dsite%26utm_content%3Dquand-semer">Google Play</a>
+    <a class="btn ghost" href="./">Découvrir Sillon</a>
+  </div>
+</aside>
+</main>
+<footer class="wrap foot">
+  <p><img src="assets/pilmil-logo.svg" alt="" width="20" height="20" style="vertical-align:-4px;margin-right:6px">Sillon fait partie des applis de <a href="https://pilmil-studio.github.io/">Pilmil Studio</a> (France).</p>
+  <p>Contact : pilmil.studio@proton.me · <a href="sources.html">Sources</a> · <a href="https://github.com/Pilmil-Studio/sillon/blob/main/LICENSE">Licence MPL-2.0</a></p>
+</footer>
+<script>
+const DATA = /* DONNEES */{"veg":[{"n":"Tomate","a":8,"t":null,"p":1,"c":"T"},{"n":"Tomate cerise","a":8,"t":null,"p":1,"c":"T"},{"n":"Aubergine","a":10,"t":null,"p":2,"c":"T"},{"n":"Poivron","a":10,"t":null,"p":2,"c":"T"},{"n":"Piment","a":10,"t":null,"p":2,"c":"T"},{"n":"Pomme de terre","a":null,"t":-2,"p":null,"c":"T"},{"n":"Haricot vert nain","a":null,"t":2,"p":null,"c":"T"},{"n":"Haricot à rames","a":null,"t":2,"p":null,"c":"T"},{"n":"Pois","a":null,"t":-6,"p":null,"c":"T"},{"n":"Fève","a":null,"t":-8,"p":null,"c":"T"},{"n":"Lentille","a":null,"t":-4,"p":null,"c":"T"},{"n":"Pois chiche","a":null,"t":0,"p":null,"c":"T"},{"n":"Chou pommé","a":6,"t":0,"p":0,"c":"T"},{"n":"Chou-fleur","a":6,"t":1,"p":1,"c":"T"},{"n":"Brocoli","a":6,"t":1,"p":1,"c":"T"},{"n":"Radis rond","a":null,"t":-6,"p":null,"c":"T"},{"n":"Navet","a":null,"t":-4,"p":null,"c":"T"},{"n":"Roquette cultivée","a":null,"t":-4,"p":null,"c":"T"},{"n":"Chou kale (Chou frisé non pommé)","a":4,"t":0,"p":1,"c":"T"},{"n":"Chou-rave","a":4,"t":0,"p":1,"c":"T"},{"n":"Carotte","a":null,"t":-4,"p":null,"c":"T"},{"n":"Panais","a":null,"t":-2,"p":null,"c":"T"},{"n":"Céleri-rave","a":10,"t":null,"p":1,"c":"T"},{"n":"Céleri à côtes","a":10,"t":null,"p":1,"c":"T"},{"n":"Oignon","a":null,"t":-4,"p":null,"c":"T"},{"n":"Ail","a":null,"t":-6,"p":null,"c":"T"},{"n":"Échalote","a":null,"t":-4,"p":null,"c":"T"},{"n":"Poireau","a":8,"t":-2,"p":2,"c":"T"},{"n":"Ciboulette","a":6,"t":0,"p":1,"c":"T"},{"n":"Courgette","a":3,"t":2,"p":2,"c":"T"},{"n":"Concombre","a":3,"t":2,"p":2,"c":"T"},{"n":"Melon","a":4,"t":2,"p":2,"c":"T"},{"n":"Courge butternut","a":3,"t":2,"p":2,"c":"T"},{"n":"Potimarron","a":3,"t":2,"p":2,"c":"T"},{"n":"Pastèque","a":3,"t":2,"p":2,"c":"T"},{"n":"Betterave","a":null,"t":0,"p":null,"c":"T"},{"n":"Épinard","a":null,"t":-6,"p":null,"c":"T"},{"n":"Blette (Poirée)","a":null,"t":0,"p":null,"c":"T"},{"n":"Laitue pommée","a":6,"t":-4,"p":-2,"c":"T"},{"n":"Mâche","a":null,"t":12,"p":null,"c":"T"},{"n":"Chicorée frisée","a":null,"t":2,"p":null,"c":"T"},{"n":"Basilic grand vert","a":6,"t":2,"p":2,"c":"T"},{"n":"Menthe poivrée","a":6,"t":0,"p":1,"c":"T"},{"n":"Romarin","a":8,"t":2,"p":2,"c":"T"},{"n":"Thym commun","a":6,"t":1,"p":2,"c":"T"},{"n":"Origan","a":6,"t":1,"p":2,"c":"T"},{"n":"Sauge officinale","a":6,"t":1,"p":2,"c":"T"},{"n":"Persil frisé","a":6,"t":-2,"p":1,"c":"T"},{"n":"Coriandre","a":null,"t":0,"p":null,"c":"T"},{"n":"Aneth","a":null,"t":0,"p":null,"c":"T"},{"n":"Tagète (Œillet d'Inde)","a":6,"t":1,"p":1,"c":"T"},{"n":"Bourrache officinale","a":null,"t":0,"p":null,"c":"T"},{"n":"Capucine","a":4,"t":1,"p":1,"c":"T"},{"n":"Phacélie","a":null,"t":-2,"p":null,"c":"T"},{"n":"Souci officinal","a":4,"t":-2,"p":0,"c":"T"},{"n":"Fenouil bulbeux","a":4,"t":2,"p":3,"c":"T"},{"n":"Fraisier","a":8,"t":-2,"p":0,"c":"T"},{"n":"Asperge","a":10,"t":-2,"p":0,"c":"T"},{"n":"Tournesol","a":null,"t":1,"p":null,"c":"T"},{"n":"Maïs doux","a":null,"t":2,"p":null,"c":"T"},{"n":"Patate douce","a":null,"t":null,"p":4,"c":"P","i":1},{"n":"Igname","a":null,"t":-8,"p":null,"c":"P","i":1},{"n":"Madère (dachine, taro)","a":null,"t":null,"p":1,"c":"P","i":1},{"n":"Papayer","a":6,"t":null,"p":0,"c":"P","i":1},{"n":"Pois d'angole (pois cajan)","a":null,"t":0,"p":null,"c":"P","i":1},{"n":"Manioc","a":null,"t":null,"p":0,"c":"P","i":1},{"n":"Bananier","a":null,"t":null,"p":0,"c":"P","i":1},{"n":"Gombo","a":null,"t":0,"p":null,"c":"P","i":1},{"n":"Gingembre","a":null,"t":0,"p":null,"c":"P","i":1},{"n":"Citronnelle","a":null,"t":null,"p":0,"c":"P","i":1},{"n":"Chouchou (christophine)","a":null,"t":null,"p":0,"c":"P","i":1},{"n":"Curcuma (safran péi)","a":null,"t":0,"p":null,"c":"P","i":1},{"n":"Brède mafane","a":null,"t":0,"p":null,"c":"P","i":1}],"dep":[{"k":"01","n":"Ain","m":4,"d":25},{"k":"02","n":"Aisne","m":5,"d":1},{"k":"03","n":"Allier","m":5,"d":1},{"k":"04","n":"Alpes-de-Haute-Provence","m":4,"d":25},{"k":"05","n":"Hautes-Alpes","m":5,"d":15},{"k":"06","n":"Alpes-Maritimes","m":3,"d":20},{"k":"07","n":"Ardèche","m":4,"d":15},{"k":"08","n":"Ardennes","m":5,"d":5},{"k":"09","n":"Ariège","m":4,"d":25},{"k":"10","n":"Aube","m":4,"d":25},{"k":"11","n":"Aude","m":3,"d":25},{"k":"12","n":"Aveyron","m":5,"d":5},{"k":"13","n":"Bouches-du-Rhône","m":3,"d":20},{"k":"14","n":"Calvados","m":4,"d":20},{"k":"15","n":"Cantal","m":5,"d":15},{"k":"16","n":"Charente","m":4,"d":15},{"k":"17","n":"Charente-Maritime","m":4,"d":10},{"k":"18","n":"Cher","m":4,"d":20},{"k":"19","n":"Corrèze","m":5,"d":1},{"k":"2A","n":"Corse-du-Sud","m":3,"d":15},{"k":"2B","n":"Haute-Corse","m":3,"d":15},{"k":"21","n":"Côte-d'Or","m":5,"d":1},{"k":"22","n":"Côtes-d'Armor","m":4,"d":10},{"k":"23","n":"Creuse","m":5,"d":10},{"k":"24","n":"Dordogne","m":4,"d":15},{"k":"25","n":"Doubs","m":5,"d":15},{"k":"26","n":"Drôme","m":4,"d":15},{"k":"27","n":"Eure","m":4,"d":25},{"k":"28","n":"Eure-et-Loir","m":4,"d":25},{"k":"29","n":"Finistère","m":4,"d":5},{"k":"30","n":"Gard","m":3,"d":25},{"k":"31","n":"Haute-Garonne","m":4,"d":15},{"k":"32","n":"Gers","m":4,"d":15},{"k":"33","n":"Gironde","m":4,"d":10},{"k":"34","n":"Hérault","m":3,"d":20},{"k":"35","n":"Ille-et-Vilaine","m":4,"d":15},{"k":"36","n":"Indre","m":4,"d":20},{"k":"37","n":"Indre-et-Loire","m":4,"d":15},{"k":"38","n":"Isère","m":5,"d":5},{"k":"39","n":"Jura","m":5,"d":15},{"k":"40","n":"Landes","m":4,"d":10},{"k":"41","n":"Loir-et-Cher","m":4,"d":20},{"k":"42","n":"Loire","m":5,"d":5},{"k":"43","n":"Haute-Loire","m":5,"d":20},{"k":"44","n":"Loire-Atlantique","m":4,"d":10},{"k":"45","n":"Loiret","m":4,"d":20},{"k":"46","n":"Lot","m":4,"d":20},{"k":"47","n":"Lot-et-Garonne","m":4,"d":15},{"k":"48","n":"Lozère","m":5,"d":20},{"k":"49","n":"Maine-et-Loire","m":4,"d":15},{"k":"50","n":"Manche","m":4,"d":15},{"k":"51","n":"Marne","m":4,"d":25},{"k":"52","n":"Haute-Marne","m":5,"d":5},{"k":"53","n":"Mayenne","m":4,"d":20},{"k":"54","n":"Meurthe-et-Moselle","m":5,"d":5},{"k":"55","n":"Meuse","m":5,"d":5},{"k":"56","n":"Morbihan","m":4,"d":10},{"k":"57","n":"Moselle","m":5,"d":5},{"k":"58","n":"Nièvre","m":4,"d":25},{"k":"59","n":"Nord","m":4,"d":25},{"k":"60","n":"Oise","m":4,"d":25},{"k":"61","n":"Orne","m":4,"d":25},{"k":"62","n":"Pas-de-Calais","m":4,"d":25},{"k":"63","n":"Puy-de-Dôme","m":5,"d":10},{"k":"64","n":"Pyrénées-Atlantiques","m":4,"d":10},{"k":"65","n":"Hautes-Pyrénées","m":4,"d":25},{"k":"66","n":"Pyrénées-Orientales","m":3,"d":20},{"k":"67","n":"Bas-Rhin","m":5,"d":5},{"k":"68","n":"Haut-Rhin","m":5,"d":5},{"k":"69","n":"Rhône","m":4,"d":25},{"k":"70","n":"Haute-Saône","m":5,"d":5},{"k":"71","n":"Saône-et-Loire","m":4,"d":25},{"k":"72","n":"Sarthe","m":4,"d":20},{"k":"73","n":"Savoie","m":5,"d":15},{"k":"74","n":"Haute-Savoie","m":5,"d":15},{"k":"75","n":"Paris","m":4,"d":15},{"k":"76","n":"Seine-Maritime","m":4,"d":20},{"k":"77","n":"Seine-et-Marne","m":4,"d":25},{"k":"78","n":"Yvelines","m":4,"d":20},{"k":"79","n":"Deux-Sèvres","m":4,"d":15},{"k":"80","n":"Somme","m":4,"d":25},{"k":"81","n":"Tarn","m":4,"d":15},{"k":"82","n":"Tarn-et-Garonne","m":4,"d":15},{"k":"83","n":"Var","m":3,"d":20},{"k":"84","n":"Vaucluse","m":3,"d":25},{"k":"85","n":"Vendée","m":4,"d":10},{"k":"86","n":"Vienne","m":4,"d":15},{"k":"87","n":"Haute-Vienne","m":5,"d":1},{"k":"88","n":"Vosges","m":5,"d":10},{"k":"89","n":"Yonne","m":4,"d":25},{"k":"90","n":"Territoire de Belfort","m":5,"d":10},{"k":"91","n":"Essonne","m":4,"d":20},{"k":"92","n":"Hauts-de-Seine","m":4,"d":15},{"k":"93","n":"Seine-Saint-Denis","m":4,"d":15},{"k":"94","n":"Val-de-Marne","m":4,"d":15},{"k":"95","n":"Val-d'Oise","m":4,"d":20},{"k":"971","n":"Guadeloupe","m":6,"d":1,"p":1},{"k":"972","n":"Martinique","m":6,"d":1,"p":1},{"k":"973","n":"Guyane","m":8,"d":15,"p":1},{"k":"974","n":"La Réunion","m":11,"d":1,"p":1},{"k":"976","n":"Mayotte","m":4,"d":1,"p":1},{"k":"977","n":"Saint-Martin","m":6,"d":1,"p":1},{"k":"978","n":"Saint-Barthélemy","m":6,"d":1,"p":1},{"k":"987","n":"Polynésie française","m":11,"d":1,"p":1}]}/* FIN DONNEES */;
+(function () {
+  const sel = document.getElementById('dep'), out = document.getElementById('months'), anc = document.getElementById('anchor');
+  const fmt = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'short' });
+  const fmtM = new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric' });
+  const fmtA = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long' });
+  const DAY = 864e5;
+  DATA.dep.forEach(d => { const o = document.createElement('option'); o.value = d.k; o.textContent = d.k + ' · ' + d.n; sel.appendChild(o); });
+  const q = new URLSearchParams(location.search).get('dep');
+  try { const s = q || localStorage.getItem('sillon-dep'); if (s) sel.value = s; } catch (e) { if (q) sel.value = q; }
+  const esc = s => s.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
+  function render() {
+    const d = DATA.dep.find(x => x.k === sel.value);
+    out.innerHTML = ''; anc.hidden = !d; if (!d) return;
+    try { localStorage.setItem('sillon-dep', d.k); } catch (e) {}
+    const tropical = !!d.p, today = new Date(); today.setHours(0, 0, 0, 0);
+    let year = today.getFullYear(), a = new Date(year, d.m - 1, d.d);
+    if (today - a > 10 * 7 * DAY) a = new Date(++year, d.m - 1, d.d);
+    anc.innerHTML = (tropical ? 'Début de saison retenu : <strong>' : 'Dernières gelées (médiane) : <strong>') + fmtA.format(a) + ' ' + year + '</strong>';
+    const tasks = [];
+    DATA.veg.filter(v => v.c.includes(tropical ? 'P' : 'T')).forEach(v => {
+      const add = (w, kind) => { if (w === null || w === undefined) return; tasks.push({ date: new Date(a.getTime() + w * 7 * DAY), kind, n: v.n }); };
+      add(v.a === null ? null : -v.a, 'abri'); add(v.t, 'terre'); add(v.p, 'planter');
+    });
+    const label = { abri: 'Semer à l\'abri', terre: 'Semer en terre', planter: 'Planter au potager' };
+    const order = { abri: 0, terre: 1, planter: 2 };
+    const lower = n => n.toLowerCase().replace("d'inde", "d'Inde");
+    const byDate = new Map();
+    tasks.forEach(t => {
+      const k = t.date.getTime(); if (!byDate.has(k)) byDate.set(k, { date: t.date, kinds: {} });
+      (byDate.get(k).kinds[t.kind] = byDate.get(k).kinds[t.kind] || []).push(lower(t.n));
+    });
+    const months = new Map();
+    [...byDate.values()].sort((x, y) => x.date - y.date).forEach(g => { const m = fmtM.format(g.date); if (!months.has(m)) months.set(m, []); months.get(m).push(g); });
+    months.forEach((gs, m) => {
+      const sec = document.createElement('section'); sec.className = 'month';
+      sec.innerHTML = '<h3>' + m + '</h3>' + gs.map(g => {
+        const s = new Date(g.date - 7 * DAY), e = new Date(g.date.getTime() + 7 * DAY);
+        const now = today >= s && today <= e;
+        const lines = Object.keys(g.kinds).sort((x, y) => order[x] - order[y]).map(k => '<span><b>' + label[k] + '</b>&nbsp;: ' + esc(g.kinds[k].join(', ')) + '.</span>').join('');
+        return '<div class="task' + (now ? ' now' : '') + '"><span class="when">' + fmt.format(s) + ' → ' + fmt.format(e) + (now ? '<span class="tag">En ce moment</span>' : '') + '</span><span class="what">' + lines + '</span></div>';
+      }).join('');
+      out.appendChild(sec);
+    });
+    if (tropical) { const p = document.createElement('p'); p.textContent = 'Outre-mer : ces repères sont indicatifs. Le début de saison est une convention propre au territoire, pas une date de gelée.'; out.appendChild(p); }
+  }
+  sel.addEventListener('change', render); render();
+})();
+</script>
+</body>
+</html>

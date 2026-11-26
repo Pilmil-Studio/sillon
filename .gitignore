@@ -13,3 +13,4 @@ distribution/
 
 # Environnement virtuel ML local
 tools/ml/.venv/
+__pycache__/
