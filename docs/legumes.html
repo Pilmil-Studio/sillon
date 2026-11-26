@@ -1,0 +1,727 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fiches légumes : semis, espacements, bons voisins : Sillon</title>
+<meta name="description" content="60 fiches légumes gratuites : quand semer, à quel espacement, à quelle température, les bons et mauvais voisins avec le niveau de preuve.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Fiches légumes du potager">
+<meta property="og:description" content="60 fiches légumes gratuites : quand semer, à quel espacement, à quelle température, les bons et mauvais voisins avec le niveau de preuve.">
+<meta property="og:url" content="https://pilmil-studio.github.io/sillon/legumes.html">
+<meta property="og:image" content="https://pilmil-studio.github.io/sillon/marketing/out/fr/social.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232F6B4F'/%3E%3Cpath d='M18 46c0-16 10-26 28-28 0 18-10 28-26 28z' fill='%23F7F5EF'/%3E%3C/svg%3E">
+<style>
+:root { --bg:#F7F5EF; --fg:#1B2A22; --muted:#55645B; --line:#DAD8CC; --accent:#2F6B4F; --accent-solid:#2F6B4F; --warm:#C8742A; --on-accent:#fff;
+  --panel: color-mix(in srgb,#000 3%,transparent); --serif:'Iowan Old Style','Palatino Linotype',Georgia,serif; --sans:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif; color-scheme:light; }
+@media (prefers-color-scheme: dark) { :root { --bg:#111815; --fg:#EEF2EC; --muted:#A5B3A9; --line:#2B3831; --accent:#7FC29C; --accent-solid:#2F6B4F; --warm:#E39A55; --panel:color-mix(in srgb,#fff 5%,transparent); color-scheme:dark; } }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0; background-color:var(--bg);
+  background-image: radial-gradient(48rem 34rem at 92% -6%, color-mix(in srgb,var(--accent-solid) 26%,transparent), transparent 62%),
+    radial-gradient(44rem 32rem at -8% 24%, color-mix(in srgb,var(--warm) 16%,transparent), transparent 62%),
+    radial-gradient(46rem 34rem at 100% 64%, color-mix(in srgb,var(--accent-solid) 14%,transparent), transparent 62%),
+    radial-gradient(44rem 30rem at 0% 96%, color-mix(in srgb,var(--warm) 12%,transparent), transparent 62%);
+  background-repeat:no-repeat; color:var(--fg); font-family:var(--sans); font-size:18px; line-height:1.6; }
+a { color:inherit; }
+:focus-visible { outline:3px solid var(--accent); outline-offset:3px; border-radius:6px; }
+.wrap { max-width:1060px; margin:0 auto; padding-inline:20px; }
+.top { display:flex; align-items:center; justify-content:space-between; gap:16px; padding-block:18px; flex-wrap:wrap; }
+.brand { font-family:var(--serif); font-weight:700; font-size:1.5rem; text-decoration:none; }
+.nav { display:flex; gap:18px; flex-wrap:wrap; font-size:.95rem; color:var(--muted); }
+.nav a { text-decoration:none; } .nav a:hover { color:var(--fg); text-decoration:underline; }
+.hero { display:grid; gap:32px; padding-block:28px 44px; align-items:center; }
+.kicker { font-size:.8rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:0 0 14px; }
+h1,h2,h3 { font-family:var(--serif); }
+h1 { font-size:clamp(2.3rem,7vw,4rem); line-height:1.04; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+.lead { color:var(--muted); font-size:1.15rem; max-width:34em; margin:20px 0 0; }
+.cta { display:flex; gap:12px; flex-wrap:wrap; margin-top:28px; }
+.btn { display:inline-flex; padding:13px 22px; border-radius:999px; font-weight:700; text-decoration:none; border:1.5px solid var(--line); }
+.btn.primary { background:linear-gradient(120deg,var(--accent-solid),color-mix(in srgb,var(--accent-solid) 70%,#0c2a1c)); border-color:transparent; color:var(--on-accent); }
+.btn:hover { border-color:var(--fg); } .btn.primary:hover { filter:brightness(1.1); }
+.shot { justify-self:center; } .shot img { display:block; width:min(300px,70vw); height:auto; border-radius:28px; box-shadow:0 30px 70px -20px rgba(0,0,0,.45); }
+@media (min-width:860px) { .hero { grid-template-columns:1.15fr .85fr; } .shot { justify-self:end; } }
+section { padding-block:34px; }
+h2 { font-size:clamp(1.6rem,4vw,2.3rem); line-height:1.1; margin:0 0 8px; text-wrap:balance; }
+.sub { color:var(--muted); margin:0 0 24px; max-width:38em; }
+.cards { display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); }
+.card { padding:22px; border-radius:20px; border:1px solid var(--line); background:linear-gradient(150deg,color-mix(in srgb,var(--accent-solid) 12%,var(--bg)),var(--panel)); min-width:0; }
+.card h3 { margin:0 0 8px; font-size:1.2rem; } .card p { margin:0; color:var(--muted); font-size:.98rem; line-height:1.5; }
+.gallery { display:flex; gap:16px; overflow-x:auto; padding:4px 20px 18px; margin-inline:-20px; scroll-snap-type:x proximity; }
+.gallery img { flex:0 0 auto; width:210px; height:auto; border-radius:20px; scroll-snap-align:start; border:1px solid var(--line); display:block; }
+.rules { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); border-top:1px solid var(--line); list-style:none; padding:0; margin:0; }
+.rules li { padding:16px 16px 16px 0; border-bottom:1px solid var(--line); min-width:0; }
+.rules strong { display:block; font-size:1.08rem; } .rules span { color:var(--muted); font-size:.95rem; }
+.doc { max-width:46em; padding-block:24px 40px; } .doc h1 { font-size:clamp(2rem,5vw,2.8rem); margin-bottom:8px; }
+.doc h2 { font-size:1.4rem; margin:34px 0 8px; } .doc p,.doc li { color:var(--muted); } .doc strong { color:var(--fg); } .doc li { margin-bottom:6px; }
+.foot { border-top:1px solid var(--line); padding-block:30px 46px; color:var(--muted); font-size:.95rem; display:grid; gap:10px; } .foot p { margin:0; } .foot a { color:var(--fg); }
+@media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+
+.doc { max-width:52em; }
+.doc .lead { margin-top:12px; }
+.tool { margin:26px 0 8px; padding:22px; border-radius:22px; border:1px solid var(--line); background:linear-gradient(150deg,color-mix(in srgb,var(--accent-solid) 12%,var(--bg)),var(--panel)); }
+.tool label { display:block; font-weight:700; margin-bottom:8px; color:var(--fg); }
+.tool select { width:100%; max-width:26em; font:inherit; padding:11px 14px; border-radius:12px; border:1.5px solid var(--line); background:var(--bg); color:var(--fg); }
+.anchor { margin:16px 0 0; color:var(--fg); font-size:1.05rem; }
+.anchor strong { color:var(--accent); }
+.months { margin-top:18px; display:grid; gap:18px; }
+.month { padding:0; }
+.month h3 { margin:0 0 6px; font-size:1.15rem; text-transform:capitalize; }
+.task { display:grid; grid-template-columns:9em 1fr; gap:4px 14px; padding:9px 0; border-top:1px solid var(--line); font-size:.98rem; line-height:1.45; }
+.task .when { color:var(--fg); font-weight:700; font-variant-numeric:tabular-nums; }
+.task .what { color:var(--muted); display:grid; gap:3px; } .task .what b { color:var(--fg); font-weight:700; }
+.task.now { background:color-mix(in srgb,var(--warm) 14%,transparent); border-radius:10px; padding-inline:10px; margin-inline:-10px; border-top-color:transparent; }
+.tag { display:block; margin-left:0 !important; font-size:.72rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--warm); margin-left:6px; }
+.steps { list-style:none; padding:0; margin:14px 0 0; border-top:1px solid var(--line); }
+.steps li { display:grid; grid-template-columns:8.5em 1fr; gap:4px 14px; padding:10px 0; border-bottom:1px solid var(--line); margin:0; }
+.steps .w { color:var(--fg); font-weight:700; }
+.steps .frost { color:var(--accent); font-weight:700; }
+.callout { margin:36px 0 8px; padding:24px; border-radius:22px; background:linear-gradient(120deg,var(--accent-solid),color-mix(in srgb,var(--accent-solid) 70%,#0c2a1c)); color:var(--on-accent); }
+.callout h2 { margin:0 0 8px; color:inherit; } .callout p { color:inherit !important; opacity:.95; margin:0 0 14px; }
+.callout .btn { background:var(--on-accent); color:var(--accent-solid); border-color:transparent; } .callout .btn.ghost { background:transparent; color:var(--on-accent); border-color:color-mix(in srgb,var(--on-accent) 60%,transparent); }
+@media (max-width:520px) { .task, .steps li { grid-template-columns:1fr; } }
+
+.filters { display:flex; flex-wrap:wrap; gap:10px; margin:18px 0 6px; }
+.filters input, .filters select { font:inherit; padding:10px 13px; border-radius:12px; border:1.5px solid var(--line); background:var(--bg); color:var(--fg); }
+.filters input { flex:1 1 14em; }
+.index { display:flex; flex-wrap:wrap; gap:6px 14px; margin:12px 0 18px; font-size:.95rem; }
+.veg { padding:20px 0; border-top:1px solid var(--line); }
+.veg h2 { margin:0 0 8px; } .veg h2 i { font-weight:400; font-size:.8em; color:var(--muted); }
+.veg dl { display:grid; grid-template-columns:8.5em 1fr; gap:4px 14px; margin:10px 0; }
+.veg dt { font-weight:700; color:var(--fg); } .veg dd { margin:0; color:var(--muted); }
+.sow { margin:6px 0; padding-left:1.1em; } .advice { color:var(--fg); }
+details { margin:8px 0; } summary { cursor:pointer; font-weight:700; color:var(--fg); }
+.rel li { margin:6px 0; } .src { color:var(--muted); font-size:.88em; }
+.ev { display:inline-block; font-size:.72rem; font-weight:700; padding:1px 7px; border-radius:99px; margin-left:4px; vertical-align:1px; }
+.ev-etaye { background:color-mix(in srgb,var(--accent-solid) 25%,transparent); }
+.ev-plausible { background:color-mix(in srgb,var(--warm) 22%,transparent); }
+.ev-tradition { background:color-mix(in srgb,var(--muted) 18%,transparent); }
+.cal { margin:6px 0 0; font-size:.95rem; }
+.callout { margin:36px 0 8px; padding:24px; border-radius:22px; background:linear-gradient(120deg,var(--accent-solid),color-mix(in srgb,var(--accent-solid) 70%,#0c2a1c)); color:var(--on-accent); }
+.callout h2 { margin:0 0 8px; color:inherit; } .callout p { color:inherit !important; margin:0 0 14px; }
+.callout .btn { background:var(--on-accent); color:var(--accent-solid); border-color:transparent; } .callout .btn.ghost { background:transparent; color:var(--on-accent); border-color:color-mix(in srgb,var(--on-accent) 60%,transparent); }
+@media (max-width:520px) { .veg dl { grid-template-columns:1fr; } .veg dt { margin-top:6px; } }
+</style>
+</head>
+<body>
+<header class="wrap top">
+  <a class="brand" href="./">Sillon</a>
+  <nav class="nav" aria-label="Navigation">
+    <a href="./">L'appli</a>
+    <a href="guides.html">Guides</a>
+    <a href="sources.html">Sources</a>
+    <a href="confidentialite.html">Confidentialité</a>
+  </nav>
+</header>
+<main class="wrap doc" id="contenu">
+<p class="kicker">Fiches du potager</p>
+<h1>60 fiches légumes</h1>
+<p class="lead">Pour chaque légume : quand le semer par rapport aux dernières gelées, à quel espacement, à quelle température il germe, quand il se récolte, et quels voisins lui conviennent. Pour les voisins, on indique ce qui est <b>étayé par des essais</b>, ce qui est <b>plausible</b> et ce qui relève de la <b>tradition</b>.</p>
+<div class="filters"><input id="q" type="search" placeholder="Chercher un légume…" aria-label="Chercher un légume"><select id="fam" aria-label="Famille"><option value="">Toutes les familles</option><option value="ALLIACEAE">Alliacées</option><option value="APIACEAE">Apiacées</option><option value="ASPARAGACEAE">Asparagacées</option><option value="ASTERACEAE">Astéracées</option><option value="BORAGINACEAE">Boraginacées</option><option value="BRASSICACEAE">Brassicacées</option><option value="CHENOPODIACEAE">Chénopodiacées</option><option value="CUCURBITACEAE">Cucurbitacées</option><option value="FABACEAE">Fabacées</option><option value="LAMIACEAE">Lamiacées</option><option value="POACEAE">Poacées</option><option value="ROSACEAE">Rosacées</option><option value="SOLANACEAE">Solanacées</option><option value="TROPAEOLACEAE">Tropaéolacées</option><option value="VALERIANACEAE">Valérianacées</option></select></div>
+<nav class="index" aria-label="Liste des légumes"><a href="#ail">Ail</a><a href="#aneth">Aneth</a><a href="#asperge">Asperge</a><a href="#aubergine">Aubergine</a><a href="#basilic">Basilic grand vert</a><a href="#betterave">Betterave</a><a href="#blette">Blette (Poirée)</a><a href="#bourrache">Bourrache officinale</a><a href="#brocoli">Brocoli</a><a href="#capucine">Capucine</a><a href="#carotte">Carotte</a><a href="#celeri_branche">Céleri à côtes</a><a href="#celeri_rave">Céleri-rave</a><a href="#chicoree">Chicorée frisée</a><a href="#chou_kale">Chou kale (Chou frisé non pommé)</a><a href="#chou_pomme">Chou pommé</a><a href="#chou_fleur">Chou-fleur</a><a href="#chou_rave">Chou-rave</a><a href="#ciboulette">Ciboulette</a><a href="#concombre">Concombre</a><a href="#coriandre">Coriandre</a><a href="#courge_butternut">Courge butternut</a><a href="#courgette">Courgette</a><a href="#echalote">Échalote</a><a href="#epinard">Épinard</a><a href="#fenouil">Fenouil bulbeux</a><a href="#feve">Fève</a><a href="#fraise">Fraisier</a><a href="#haricot_rames">Haricot à rames</a><a href="#haricot_nain">Haricot vert nain</a><a href="#laitue">Laitue pommée</a><a href="#lentille">Lentille</a><a href="#mache">Mâche</a><a href="#mais_doux">Maïs doux</a><a href="#melon">Melon</a><a href="#menthe">Menthe poivrée</a><a href="#navet">Navet</a><a href="#oignon">Oignon</a><a href="#origan">Origan</a><a href="#panais">Panais</a><a href="#pasteque">Pastèque</a><a href="#persil">Persil frisé</a><a href="#phacelie">Phacélie</a><a href="#piment">Piment</a><a href="#poireau">Poireau</a><a href="#pois">Pois</a><a href="#pois_chiche">Pois chiche</a><a href="#poivron">Poivron</a><a href="#pomme_de_terre">Pomme de terre</a><a href="#potimarron">Potimarron</a><a href="#radis">Radis rond</a><a href="#romarin">Romarin</a><a href="#roquette">Roquette cultivée</a><a href="#sauge">Sauge officinale</a><a href="#souci">Souci officinal</a><a href="#tagete">Tagète (Œillet d'Inde)</a><a href="#thym">Thym commun</a><a href="#tomate">Tomate</a><a href="#tomate_cerise">Tomate cerise</a><a href="#tournesol">Tournesol</a></nav>
+<article class="veg" id="ail" data-n="ail allium sativum" data-f="ALLIACEAE">
+  <h2>Ail <i>Allium sativum</i></h2>
+  <ul class="sow"><li><b>En terre</b> : 6 semaines avant les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Alliacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>10 cm sur le rang, 25 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 5 °C minimum, idéal 12 à 20 °C ; levée en 10 à 20 jours</dd><dt>Récolte</dt><dd>110 à 140 jours après le semis, pendant environ 4 semaines</dd><dt>Eau</dt><dd>Faible</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Planter les gousses pointe vers le haut à 3 cm de profondeur dans un sol parfaitement drainé (former un billon en sol lourd).</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Carotte</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>L'allicine volatile désoriente les parasites de la racine</li><li><b>Tomate</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Action antifongique naturelle préventive</li></ul></details>
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Haricot vert nain</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Effet bactéricide destructeur pour les bactéries fixatrices d'azote</li><li><b>Pois</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Inhibition de croissance des légumineuses</li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="aneth" data-n="aneth anethum graveolens" data-f="APIACEAE">
+  <h2>Aneth <i>Anethum graveolens</i></h2>
+  <ul class="sow"><li><b>En terre</b> : la semaine des dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Apiacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>15 cm sur le rang, 25 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 10 °C minimum, idéal 16 à 24 °C ; levée en 8 à 15 jours</dd><dt>Récolte</dt><dd>50 à 70 jours après le semis, pendant environ 6 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Ses superbes ombelles jaunes attirent une profusion de syrphes et de coccinelles au potager.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Chou pommé</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Attire les guêpes parasitoïdes régulatrices des chenilles du chou</li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="asperge" data-n="asperge asparagus officinalis" data-f="ASPARAGACEAE">
+  <h2>Asperge <i>Asparagus officinalis</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 10 semaines avant les dernières gelées.</li><li><b>En terre</b> : 2 semaines avant les dernières gelées.</li><li><b>Plantation</b> : la semaine des dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Asparagacées (attendre 5 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>40 cm sur le rang, 90 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 12 °C minimum, idéal 18 à 24 °C ; levée en 15 à 28 jours</dd><dt>Récolte</dt><dd>700 à 1000 jours après le semis, pendant environ 6 semaines</dd><dt>Eau</dt><dd>Faible</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Culture pérenne installée pour 10 à 15 ans. Ne récolter qu'à partir de la 3e année pour laisser les griffes s'enraciner profondément.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Persil frisé</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Partenariat traditionnel stimulant la vigueur de l'asperge</li></ul></details>
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Ail</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Concurrence racinaire pérenne</li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="aubergine" data-n="aubergine solanum melongena" data-f="SOLANACEAE">
+  <h2>Aubergine <i>Solanum melongena</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 10 semaines avant les dernières gelées.</li><li><b>Plantation</b> : 2 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Solanacées (attendre 4 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>50 cm sur le rang, 70 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 15 °C minimum, idéal 22 à 30 °C ; levée en 8 à 15 jours</dd><dt>Récolte</dt><dd>80 à 110 jours après le semis, pendant environ 8 semaines</dd><dt>Eau</dt><dd>Élevé</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Exige beaucoup de chaleur (sol &gt; 15°C au repiquage). Limiter à 4-6 fruits par pied en climat tempéré pour garantir leur maturité.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Haricot vert nain</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Apport d'azote symbiotique bénéfique et répulsion mutuelle</li><li><b>Tagète (Œillet d'Inde)</b> <span class="ev ev-etaye">Étayé par essais</span><br>Effet assainissant sur les ravageurs du sol <span class="src">(Hooks et al. 2010 (culture avant la plante) ; Conboy et al. 2019 (serre) ; UF/IFAS)</span></li></ul></details>
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Pomme de terre</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Attraction démultipliée des doryphores</li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="basilic" data-n="basilic grand vert ocimum basilicum" data-f="LAMIACEAE">
+  <h2>Basilic grand vert <i>Ocimum basilicum</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 6 semaines avant les dernières gelées.</li><li><b>En terre</b> : 2 semaines après les dernières gelées.</li><li><b>Plantation</b> : 2 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Lamiacées (attendre 2 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>20 cm sur le rang, 25 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 16 °C minimum, idéal 20 à 28 °C ; levée en 6 à 10 jours</dd><dt>Récolte</dt><dd>50 à 70 jours après le semis, pendant environ 12 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Pincer régulièrement l'extrémité des tiges pour empêcher la floraison et favoriser une ramification buissonnante riche en feuilles tendres.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Tomate</b> <span class="ev ev-etaye">Étayé par essais</span><br>Synergie majeure : sublime la saveur de la tomate et repousse pucerons et mouches blanches <span class="src">(Mutisya et al. 2016 ; Bomford 2004)</span></li><li><b>Poivron</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Protection par ses effluves terpéniques répulsifs</li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="betterave" data-n="betterave beta vulgaris" data-f="CHENOPODIACEAE">
+  <h2>Betterave <i>Beta vulgaris</i></h2>
+  <ul class="sow"><li><b>En terre</b> : la semaine des dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Chénopodiacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>10 cm sur le rang, 25 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 8 °C minimum, idéal 15 à 22 °C ; levée en 8 à 15 jours</dd><dt>Récolte</dt><dd>65 à 90 jours après le semis, pendant environ 6 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Chaque glomérule contenant plusieurs graines, éclaircir impérativement à 10 cm pour ne laisser que le plus beau plant.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Oignon</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Association bénéfique stimulant la saveur et la croissance</li><li><b>Laitue pommée</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Feuillage couvrant maintenant la fraîcheur</li></ul></details>
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Haricot à rames</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Antagonisme agronomique entraînant un retard de développement</li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="blette" data-n="blette (poirée) beta vulgaris subsp. vulgaris" data-f="CHENOPODIACEAE">
+  <h2>Blette (Poirée) <i>Beta vulgaris subsp. vulgaris</i></h2>
+  <ul class="sow"><li><b>En terre</b> : la semaine des dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Chénopodiacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>35 cm sur le rang, 40 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 8 °C minimum, idéal 15 à 22 °C ; levée en 8 à 15 jours</dd><dt>Récolte</dt><dd>60 à 85 jours après le semis, pendant environ 16 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Mi-ombre</dd></dl>
+  <p class="advice">Récolter feuille par feuille en cassant les côtes extérieures au ras de la base : le cœur continue de produire sans discontinuer.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Carotte</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Partage équilibré de l'espace racinaire</li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="bourrache" data-n="bourrache officinale borago officinalis" data-f="BORAGINACEAE">
+  <h2>Bourrache officinale <i>Borago officinalis</i></h2>
+  <ul class="sow"><li><b>En terre</b> : la semaine des dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Boraginacées (attendre 2 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>30 cm sur le rang, 40 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 10 °C minimum, idéal 16 à 24 °C ; levée en 6 à 12 jours</dd><dt>Récolte</dt><dd>50 à 65 jours après le semis, pendant environ 12 semaines</dd><dt>Eau</dt><dd>Faible</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Plante compagne reine de la pollinisation. Ses magnifiques fleurs bleues au goût iodé d'huître sont comestibles en salade.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Courgette</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Attire massivement bourdons et abeilles, garantissant une nouaison optimale des fruits</li><li><b>Concombre</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Augmente le taux de pollinisation croisée</li><li><b>Tomate</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Éloigne la chenille de la noctuelle de la tomate</li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="brocoli" data-n="brocoli brassica oleracea var. italica" data-f="BRASSICACEAE">
+  <h2>Brocoli <i>Brassica oleracea var. italica</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 6 semaines avant les dernières gelées.</li><li><b>En terre</b> : 1 semaine après les dernières gelées.</li><li><b>Plantation</b> : 1 semaine après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Brassicacées (attendre 4 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>50 cm sur le rang, 60 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 8 °C minimum, idéal 15 à 22 °C ; levée en 5 à 10 jours</dd><dt>Récolte</dt><dd>70 à 95 jours après le semis, pendant environ 6 semaines</dd><dt>Eau</dt><dd>Élevé</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Après la récolte de la tête centrale, laisser le pied en place pour récolter de multiples rejets latéraux tendres.</p>
+  
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="capucine" data-n="capucine tropaeolum majus" data-f="TROPAEOLACEAE">
+  <h2>Capucine <i>Tropaeolum majus</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 4 semaines avant les dernières gelées.</li><li><b>En terre</b> : 1 semaine après les dernières gelées.</li><li><b>Plantation</b> : 1 semaine après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Tropaéolacées (attendre 2 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>30 cm sur le rang, 40 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 12 °C minimum, idéal 18 à 25 °C ; levée en 8 à 15 jours</dd><dt>Récolte</dt><dd>55 à 75 jours après le semis, pendant environ 16 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Plante sacrifice par excellence : les pucerons colonisent ses tiges tendres, laissant les courgettes et haricots indemnes.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Courgette</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Plante sacrifice attirant à elle les pucerons noirs pour épargner les légumes du potager</li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="carotte" data-n="carotte daucus carota subsp. sativus" data-f="APIACEAE">
+  <h2>Carotte <i>Daucus carota subsp. sativus</i></h2>
+  <ul class="sow"><li><b>En terre</b> : 4 semaines avant les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Apiacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>4 cm sur le rang, 25 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 8 °C minimum, idéal 15 à 22 °C ; levée en 10 à 20 jours</dd><dt>Récolte</dt><dd>70 à 100 jours après le semis, pendant environ 6 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Semer en terre fine, sans cailloux ni fumier frais (cause de racines fourchues). Maintenir le lit de semence humide jusqu'à la levée.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Poireau</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Confusion olfactive croisée : le poireau repousse la mouche de la carotte tandis que la carotte éloigne la teigne du poireau</li><li><b>Oignon</b> <span class="ev ev-etaye">Étayé par essais</span><br>Forte odeur d'allicine masquant les carottes face à la mouche Psila rosae <span class="src">(Uvah et Coaker 1984 ; Varis 1991)</span></li><li><b>Ail</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Effet répulsif sur les mouches des racines</li><li><b>Radis rond</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Semis compagne : le radis aère le lit de semence et marque la ligne</li></ul></details>
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Fenouil bulbeux</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Antagonisme fort et arrêt de croissance racinaire</li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="celeri_branche" data-n="céleri à côtes apium graveolens var. dulce" data-f="APIACEAE">
+  <h2>Céleri à côtes <i>Apium graveolens var. dulce</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 10 semaines avant les dernières gelées.</li><li><b>Plantation</b> : 1 semaine après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Apiacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>30 cm sur le rang, 40 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 12 °C minimum, idéal 18 à 24 °C ; levée en 12 à 20 jours</dd><dt>Récolte</dt><dd>90 à 120 jours après le semis, pendant environ 8 semaines</dd><dt>Eau</dt><dd>Élevé</dd><dt>Exposition</dt><dd>Mi-ombre</dd></dl>
+  <p class="advice">Butte ou blanchir les côtes 3 semaines avant récolte pour atténuer l'amertume et les rendre croquantes.</p>
+  
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="celeri_rave" data-n="céleri-rave apium graveolens var. rapaceum" data-f="APIACEAE">
+  <h2>Céleri-rave <i>Apium graveolens var. rapaceum</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 10 semaines avant les dernières gelées.</li><li><b>Plantation</b> : 1 semaine après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Apiacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>40 cm sur le rang, 40 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 12 °C minimum, idéal 18 à 24 °C ; levée en 12 à 20 jours</dd><dt>Récolte</dt><dd>120 à 150 jours après le semis, pendant environ 8 semaines</dd><dt>Eau</dt><dd>Élevé</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Exige un sol très riche en humus et un arrosage constant sans le moindre coup de sec sous peine de pomme creuse.</p>
+  
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Carotte</b> <span class="ev ev-etaye">Étayé par essais</span><br>Sensibilité croisée à la mouche de la carotte <span class="src">(RHS (mouche de la carotte))</span></li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="chicoree" data-n="chicorée frisée cichorium endivia var. crispa" data-f="ASTERACEAE">
+  <h2>Chicorée frisée <i>Cichorium endivia var. crispa</i></h2>
+  <ul class="sow"><li><b>En terre</b> : 2 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Astéracées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>30 cm sur le rang, 35 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 10 °C minimum, idéal 16 à 22 °C ; levée en 5 à 9 jours</dd><dt>Récolte</dt><dd>70 à 90 jours après le semis, pendant environ 4 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Blanchir le cœur 10 jours avant la récolte sous une cloche opaque pour réduire l'amertume naturelle.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Carotte</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Cohabitation très positive</li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="chou_kale" data-n="chou kale (chou frisé non pommé) brassica oleracea var. sabellica" data-f="BRASSICACEAE">
+  <h2>Chou kale (Chou frisé non pommé) <i>Brassica oleracea var. sabellica</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 4 semaines avant les dernières gelées.</li><li><b>En terre</b> : la semaine des dernières gelées.</li><li><b>Plantation</b> : 1 semaine après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Brassicacées (attendre 4 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>45 cm sur le rang, 50 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 7 °C minimum, idéal 14 à 22 °C ; levée en 5 à 10 jours</dd><dt>Récolte</dt><dd>65 à 90 jours après le semis, pendant environ 16 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Extrêmement rustique au gel (jusqu'à -15°C). Les premières gelées d'automne adoucissent sa saveur en transformant l'amidon en sucres.</p>
+  
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="chou_pomme" data-n="chou pommé brassica oleracea var. capitata" data-f="BRASSICACEAE">
+  <h2>Chou pommé <i>Brassica oleracea var. capitata</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 6 semaines avant les dernières gelées.</li><li><b>En terre</b> : la semaine des dernières gelées.</li><li><b>Plantation</b> : la semaine des dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Brassicacées (attendre 4 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>50 cm sur le rang, 60 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 7 °C minimum, idéal 15 à 22 °C ; levée en 5 à 10 jours</dd><dt>Récolte</dt><dd>90 à 130 jours après le semis, pendant environ 6 semaines</dd><dt>Eau</dt><dd>Élevé</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Poser impérativement un voile anti-insectes pour empêcher les pontes dévastatrices de la piéride. Exige un sol riche et frais.</p>
+  
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Tomate</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Concurrence nutritive lourde et sensibilité aux mêmes parasites du sol</li><li><b>Haricot à rames</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Incompatibilité de vigueur et d'enracinement</li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="chou_fleur" data-n="chou-fleur brassica oleracea var. botrytis" data-f="BRASSICACEAE">
+  <h2>Chou-fleur <i>Brassica oleracea var. botrytis</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 6 semaines avant les dernières gelées.</li><li><b>En terre</b> : 1 semaine après les dernières gelées.</li><li><b>Plantation</b> : 1 semaine après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Brassicacées (attendre 4 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>55 cm sur le rang, 65 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 8 °C minimum, idéal 15 à 20 °C ; levée en 6 à 12 jours</dd><dt>Récolte</dt><dd>85 à 120 jours après le semis, pendant environ 4 semaines</dd><dt>Eau</dt><dd>Élevé</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Rabattre les feuilles intérieures sur la pomme pour la maintenir d'un blanc immaculé à l'abri du soleil.</p>
+  
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="chou_rave" data-n="chou-rave brassica oleracea var. gongylodes" data-f="BRASSICACEAE">
+  <h2>Chou-rave <i>Brassica oleracea var. gongylodes</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 4 semaines avant les dernières gelées.</li><li><b>En terre</b> : la semaine des dernières gelées.</li><li><b>Plantation</b> : 1 semaine après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Brassicacées (attendre 4 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>25 cm sur le rang, 30 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 8 °C minimum, idéal 15 à 22 °C ; levée en 5 à 10 jours</dd><dt>Récolte</dt><dd>55 à 70 jours après le semis, pendant environ 4 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Récolter jeune dès que la pomme atteint la taille d'une balle de tennis pour éviter qu'il ne devienne filandreux.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Laitue pommée</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Culture intercalaire idéale récoltée rapidement</li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="ciboulette" data-n="ciboulette allium schoenoprasum" data-f="ALLIACEAE">
+  <h2>Ciboulette <i>Allium schoenoprasum</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 6 semaines avant les dernières gelées.</li><li><b>En terre</b> : la semaine des dernières gelées.</li><li><b>Plantation</b> : 1 semaine après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Alliacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>15 cm sur le rang, 20 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 10 °C minimum, idéal 16 à 22 °C ; levée en 8 à 15 jours</dd><dt>Récolte</dt><dd>60 à 80 jours après le semis, pendant environ 24 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Plante vivace très facile. Rabattre régulièrement pour stimuler l'apparition de nouvelles tiges tendres et savoureuses.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Carotte</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Action répulsive contre la mouche des racines</li></ul></details>
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Haricot vert nain</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Inhibition allélopathique</li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="concombre" data-n="concombre cucumis sativus" data-f="CUCURBITACEAE">
+  <h2>Concombre <i>Cucumis sativus</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 3 semaines avant les dernières gelées.</li><li><b>En terre</b> : 2 semaines après les dernières gelées.</li><li><b>Plantation</b> : 2 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Cucurbitacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>40 cm sur le rang, 80 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 14 °C minimum, idéal 22 à 28 °C ; levée en 5 à 9 jours</dd><dt>Récolte</dt><dd>60 à 75 jours après le semis, pendant environ 8 semaines</dd><dt>Eau</dt><dd>Élevé</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Cultiver sur treillis vertical pour aérer les fruits, éviter la pourriture au sol et faciliter la cueillette.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Basilic grand vert</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Améliore la vigueur et repousse les acariens</li><li><b>Haricot vert nain</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Azote et couverture racinaire</li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="coriandre" data-n="coriandre coriandrum sativum" data-f="APIACEAE">
+  <h2>Coriandre <i>Coriandrum sativum</i></h2>
+  <ul class="sow"><li><b>En terre</b> : la semaine des dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Apiacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>10 cm sur le rang, 20 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 8 °C minimum, idéal 15 à 22 °C ; levée en 10 à 18 jours</dd><dt>Récolte</dt><dd>40 à 60 jours après le semis, pendant environ 4 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Mi-ombre</dd></dl>
+  <p class="advice">Semer en sol frais à mi-ombre pour retarder la floraison hâtive.</p>
+  
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="courge_butternut" data-n="courge butternut cucurbita moschata" data-f="CUCURBITACEAE">
+  <h2>Courge butternut <i>Cucurbita moschata</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 3 semaines avant les dernières gelées.</li><li><b>En terre</b> : 2 semaines après les dernières gelées.</li><li><b>Plantation</b> : 2 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Cucurbitacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>100 cm sur le rang, 150 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 14 °C minimum, idéal 22 à 28 °C ; levée en 6 à 10 jours</dd><dt>Récolte</dt><dd>100 à 125 jours après le semis, pendant environ 4 semaines</dd><dt>Eau</dt><dd>Élevé</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Isoler le fruit du sol humide avec une tuile ou une planche en fin de saison pour éviter le pourrissement.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Maïs doux</b> <span class="ev ev-etaye">Étayé par essais</span><br>Élément du trio précolombien de la Milpa : couvre le sol et conserve l'eau <span class="src">(Zhang et al. 2014 ; Postma et Lynch 2012)</span></li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="courgette" data-n="courgette cucurbita pepo" data-f="CUCURBITACEAE">
+  <h2>Courgette <i>Cucurbita pepo</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 3 semaines avant les dernières gelées.</li><li><b>En terre</b> : 2 semaines après les dernières gelées.</li><li><b>Plantation</b> : 2 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Cucurbitacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>80 cm sur le rang, 100 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 12 °C minimum, idéal 20 à 28 °C ; levée en 5 à 10 jours</dd><dt>Récolte</dt><dd>50 à 65 jours après le semis, pendant environ 10 semaines</dd><dt>Eau</dt><dd>Élevé</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Récolter les courgettes jeunes (18-22 cm) pour inciter la plante à produire continuellement de nouvelles fleurs.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Haricot à rames</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Apport d'azote symbiotique bénéfique</li><li><b>Maïs doux</b> <span class="ev ev-etaye">Étayé par essais</span><br>Ombre légère bienfaisante aux heures les plus brûlantes <span class="src">(Zhang et al. 2014 ; Postma et Lynch 2012)</span></li><li><b>Bourrache officinale</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Attire les bourdons pour une pollinisation parfaite des fleurs femelles</li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="echalote" data-n="échalote allium ascalonicum" data-f="ALLIACEAE">
+  <h2>Échalote <i>Allium ascalonicum</i></h2>
+  <ul class="sow"><li><b>En terre</b> : 4 semaines avant les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Alliacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>12 cm sur le rang, 25 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 6 °C minimum, idéal 14 à 20 °C ; levée en 8 à 15 jours</dd><dt>Récolte</dt><dd>90 à 115 jours après le semis, pendant environ 4 semaines</dd><dt>Eau</dt><dd>Faible</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Planter en sol meuble non fumé récemment. Récolter par temps sec quand les feuilles sont aux 2/3 sèches.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Carotte</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Éloigne la mouche de la carotte</li></ul></details>
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Haricot vert nain</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Inhibition des légumineuses</li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="epinard" data-n="épinard spinacia oleracea" data-f="CHENOPODIACEAE">
+  <h2>Épinard <i>Spinacia oleracea</i></h2>
+  <ul class="sow"><li><b>En terre</b> : 6 semaines avant les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Chénopodiacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>8 cm sur le rang, 25 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 4 °C minimum, idéal 10 à 18 °C ; levée en 6 à 12 jours</dd><dt>Récolte</dt><dd>45 à 60 jours après le semis, pendant environ 4 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Mi-ombre</dd></dl>
+  <p class="advice">Craint la chaleur et les jours longs qui provoquent la montée en graines. Privilégier les semis d'automne et de fin d'hiver.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Fève</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Couvre-sol vivant captant l'azote exsudé par la fève</li><li><b>Pois</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Synergie printanière idéale</li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="fenouil" data-n="fenouil bulbeux foeniculum vulgare var. azoricum" data-f="APIACEAE">
+  <h2>Fenouil bulbeux <i>Foeniculum vulgare var. azoricum</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 4 semaines avant les dernières gelées.</li><li><b>En terre</b> : 2 semaines après les dernières gelées.</li><li><b>Plantation</b> : 3 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Apiacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>20 cm sur le rang, 35 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 10 °C minimum, idéal 16 à 22 °C ; levée en 8 à 15 jours</dd><dt>Récolte</dt><dd>75 à 95 jours après le semis, pendant environ 4 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Le fenouil est le mauvais compagnon par excellence au potager en raison de ses exsudats allélopathiques. À cultiver dans un coin isolé.</p>
+  
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Tomate</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Peut inhiber la nouaison de la tomate</li><li><b>Carotte</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Arrêt de développement racinaire</li><li><b>Coriandre</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Inhibition réciproque de croissance</li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="feve" data-n="fève vicia faba" data-f="FABACEAE">
+  <h2>Fève <i>Vicia faba</i></h2>
+  <ul class="sow"><li><b>En terre</b> : 8 semaines avant les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Fabacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>15 cm sur le rang, 45 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 4 °C minimum, idéal 10 à 18 °C ; levée en 10 à 18 jours</dd><dt>Récolte</dt><dd>80 à 100 jours après le semis, pendant environ 4 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Semis possible dès février (ou automne en région méditerranéenne). Pincer la tête au-dessus du 6e bouquet pour limiter les pucerons noirs.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Laitue pommée</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Protection contre les vents froids de début de saison</li></ul></details>
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Oignon</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Blocage de l'activité biologique fixatrice</li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="fraise" data-n="fraisier fragaria x ananassa" data-f="ROSACEAE">
+  <h2>Fraisier <i>Fragaria x ananassa</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 8 semaines avant les dernières gelées.</li><li><b>En terre</b> : 2 semaines avant les dernières gelées.</li><li><b>Plantation</b> : la semaine des dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Rosacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>30 cm sur le rang, 40 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 15 °C minimum, idéal 18 à 25 °C ; levée en 14 à 25 jours</dd><dt>Récolte</dt><dd>60 à 90 jours après le semis, pendant environ 8 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Pailler généreusement avec de la paille propre pour maintenir les fruits hors de contact de la terre humide.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Bourrache officinale</b> <span class="ev ev-etaye">Étayé par essais</span><br>Stimule la croissance et la floraison par attraction des pollinisateurs <span class="src">(Griffiths-Lee et al. 2023)</span></li><li><b>Ail</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Protège contre la pourriture grise (Botrytis)</li><li><b>Oignon</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Effet assainissant sur les stolons</li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="haricot_rames" data-n="haricot à rames phaseolus vulgaris var. vulgaris" data-f="FABACEAE">
+  <h2>Haricot à rames <i>Phaseolus vulgaris var. vulgaris</i></h2>
+  <ul class="sow"><li><b>En terre</b> : 2 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Fabacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>15 cm sur le rang, 70 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 12 °C minimum, idéal 18 à 25 °C ; levée en 7 à 12 jours</dd><dt>Récolte</dt><dd>65 à 80 jours après le semis, pendant environ 6 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Installer de solides tuteurs ou tipi avant le semis. Récolter deux fois par semaine pour stimuler la floraison continue.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Maïs doux</b> <span class="ev ev-etaye">Étayé par essais</span><br>Le maïs sert de tuteur naturel rigide (technique de la Milpa) <span class="src">(Zhang et al. 2014 ; Postma et Lynch 2012)</span></li><li><b>Courge butternut</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Paillis végétal vivant conservant l'humidité au pied des haricots</li></ul></details>
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Oignon</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Inhibition de la symbiose rhizobienne</li><li><b>Ail</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Sécrétions allélopathiques nocives aux nodosités</li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="haricot_nain" data-n="haricot vert nain phaseolus vulgaris var. nanus" data-f="FABACEAE">
+  <h2>Haricot vert nain <i>Phaseolus vulgaris var. nanus</i></h2>
+  <ul class="sow"><li><b>En terre</b> : 2 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Fabacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>8 cm sur le rang, 40 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 12 °C minimum, idéal 18 à 25 °C ; levée en 6 à 10 jours</dd><dt>Récolte</dt><dd>55 à 70 jours après le semis, pendant environ 4 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Semer en terre réchauffée (&gt; 12-15°C). Butter légèrement lorsque le pied atteint 10 cm pour stabiliser la tige.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Carotte</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>L'azote fixé favorise le feuillage et le développement de la carotte</li><li><b>Aubergine</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Association favorable de strate</li><li><b>Pomme de terre</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Répulsion conjointe des coléoptères nuisibles</li></ul></details>
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Oignon</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Sécrétions allélopathiques des Alliacées inhibant les rhizobiums fixateurs d'azote</li><li><b>Ail</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Effet bactéricide allélopathique bloquant les nodosités racinaires</li><li><b>Échalote</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Inhibition de la fixation d'azote symbiotique</li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="laitue" data-n="laitue pommée lactuca sativa" data-f="ASTERACEAE">
+  <h2>Laitue pommée <i>Lactuca sativa</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 6 semaines avant les dernières gelées.</li><li><b>En terre</b> : 4 semaines avant les dernières gelées.</li><li><b>Plantation</b> : 2 semaines avant les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Astéracées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>25 cm sur le rang, 30 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 4 °C minimum, idéal 14 à 20 °C ; levée en 4 à 8 jours</dd><dt>Récolte</dt><dd>45 à 65 jours après le semis, pendant environ 3 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Mi-ombre</dd></dl>
+  <p class="advice">Semer très superficiellement (la graine a besoin de lumière pour germer). En été, ombrer le lit de semence pour éviter la dormance induite par la chaleur (&gt; 22°C).</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Carotte</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Strate foliaire basse complétant la racine profonde de la carotte</li><li><b>Radis rond</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Adoucit le goût du radis et partage harmonieusement le sol</li><li><b>Betterave</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Couvre-sol limitant l'évaporation pour les betteraves</li></ul></details>
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Persil frisé</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Allélopathie néfaste inhibant la formation de la pomme de la laitue</li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="lentille" data-n="lentille lens culinaris" data-f="FABACEAE">
+  <h2>Lentille <i>Lens culinaris</i></h2>
+  <ul class="sow"><li><b>En terre</b> : 4 semaines avant les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Fabacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>5 cm sur le rang, 30 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 6 °C minimum, idéal 15 à 22 °C ; levée en 8 à 15 jours</dd><dt>Récolte</dt><dd>90 à 110 jours après le semis, pendant environ 3 semaines</dd><dt>Eau</dt><dd>Faible</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Plante frugale convenant aux sols légers, caillouteux et pauvres en matières organiques.</p>
+  
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="mache" data-n="mâche valerianella locusta" data-f="VALERIANACEAE">
+  <h2>Mâche <i>Valerianella locusta</i></h2>
+  <ul class="sow"><li><b>En terre</b> : 12 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Valérianacées (attendre 2 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>5 cm sur le rang, 20 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 4 °C minimum, idéal 10 à 18 °C ; levée en 8 à 14 jours</dd><dt>Récolte</dt><dd>60 à 80 jours après le semis, pendant environ 10 semaines</dd><dt>Eau</dt><dd>Faible</dd><dt>Exposition</dt><dd>Mi-ombre</dd></dl>
+  <p class="advice">Tasser énergiquement le sol avant et après le semis avec le dos du râteau : la mâche exige une terre ferme pour bien s'enraciner.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Poireau</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>S'installe au pied des poireaux en fin d'été comme couvre-sol hivernal</li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="mais_doux" data-n="maïs doux zea mays" data-f="POACEAE">
+  <h2>Maïs doux <i>Zea mays</i></h2>
+  <ul class="sow"><li><b>En terre</b> : 2 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Poacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>25 cm sur le rang, 60 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 12 °C minimum, idéal 20 à 28 °C ; levée en 5 à 10 jours</dd><dt>Récolte</dt><dd>75 à 95 jours après le semis, pendant environ 3 semaines</dd><dt>Eau</dt><dd>Élevé</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Toujours semer en bloc carré (minimum 3x3 plants) plutôt qu'en une seule longue ligne pour assurer une bonne pollinisation par le vent.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Haricot à rames</b> <span class="ev ev-etaye">Étayé par essais</span><br>Sert de tuteur vivant solide pour les tiges grimpantes du haricot <span class="src">(Zhang et al. 2014 ; Postma et Lynch 2012)</span></li><li><b>Courge butternut</b> <span class="ev ev-etaye">Étayé par essais</span><br>Le feuillage de la courge retient l'humidité au pied du maïs <span class="src">(Zhang et al. 2014 ; Postma et Lynch 2012)</span></li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="melon" data-n="melon cucumis melo" data-f="CUCURBITACEAE">
+  <h2>Melon <i>Cucumis melo</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 4 semaines avant les dernières gelées.</li><li><b>En terre</b> : 2 semaines après les dernières gelées.</li><li><b>Plantation</b> : 2 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Cucurbitacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>70 cm sur le rang, 100 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 16 °C minimum, idéal 24 à 32 °C ; levée en 6 à 10 jours</dd><dt>Récolte</dt><dd>80 à 100 jours après le semis, pendant environ 4 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Pincer la tige principale au-dessus de la 3e ou 4e feuille pour provoquer l'émission de rameaux fructifères.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Bourrache officinale</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Attraction d'auxiliaires pollinisateurs pour féconder les fleurs</li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="menthe" data-n="menthe poivrée mentha x piperita" data-f="LAMIACEAE">
+  <h2>Menthe poivrée <i>Mentha x piperita</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 6 semaines avant les dernières gelées.</li><li><b>En terre</b> : la semaine des dernières gelées.</li><li><b>Plantation</b> : 1 semaine après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Lamiacées (attendre 2 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>40 cm sur le rang, 40 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 12 °C minimum, idéal 18 à 24 °C ; levée en 10 à 18 jours</dd><dt>Récolte</dt><dd>60 à 80 jours après le semis, pendant environ 20 semaines</dd><dt>Eau</dt><dd>Élevé</dd><dt>Exposition</dt><dd>Mi-ombre</dd></dl>
+  <p class="advice">Très envahissante par ses stolons traçants. À cultiver de préférence en pot enterré au milieu des planches de choux.</p>
+  
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="navet" data-n="navet brassica rapa subsp. rapa" data-f="BRASSICACEAE">
+  <h2>Navet <i>Brassica rapa subsp. rapa</i></h2>
+  <ul class="sow"><li><b>En terre</b> : 4 semaines avant les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Brassicacées (attendre 4 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>10 cm sur le rang, 25 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 6 °C minimum, idéal 14 à 20 °C ; levée en 4 à 8 jours</dd><dt>Récolte</dt><dd>50 à 70 jours après le semis, pendant environ 4 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Mi-ombre</dd></dl>
+  <p class="advice">Maintenir le sol humide pour éviter que la racine ne devienne fibreuse et amère.</p>
+  
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="oignon" data-n="oignon allium cepa" data-f="ALLIACEAE">
+  <h2>Oignon <i>Allium cepa</i></h2>
+  <ul class="sow"><li><b>En terre</b> : 4 semaines avant les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Alliacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>10 cm sur le rang, 25 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 6 °C minimum, idéal 14 à 22 °C ; levée en 8 à 15 jours</dd><dt>Récolte</dt><dd>90 à 120 jours après le semis, pendant environ 6 semaines</dd><dt>Eau</dt><dd>Faible</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Ne jamais apporter de fumier frais (provoque le pourrissement des bulbes). Cesser tout arrosage 3 semaines avant la récolte.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Carotte</b> <span class="ev ev-etaye">Étayé par essais</span><br>Confusion olfactive croisée contre la mouche de la carotte <span class="src">(Uvah et Coaker 1984 ; Varis 1991)</span></li><li><b>Betterave</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Stimule la croissance sans concurrence foliaire</li></ul></details>
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Haricot vert nain</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Inhibition allélopathique des nodosités fixatrices d'azote</li><li><b>Haricot à rames</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Effet toxique sur les bactéries symbiotiques rhizobiums</li><li><b>Pois</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Blocage de l'assimilation d'azote chez les légumineuses</li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="origan" data-n="origan origanum vulgare" data-f="LAMIACEAE">
+  <h2>Origan <i>Origanum vulgare</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 6 semaines avant les dernières gelées.</li><li><b>En terre</b> : 1 semaine après les dernières gelées.</li><li><b>Plantation</b> : 2 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Lamiacées (attendre 2 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>25 cm sur le rang, 30 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 12 °C minimum, idéal 18 à 25 °C ; levée en 10 à 18 jours</dd><dt>Récolte</dt><dd>60 à 80 jours après le semis, pendant environ 30 semaines</dd><dt>Eau</dt><dd>Faible</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Magnifique floraison mellifère attirant abeilles sauvages et syrphes prédateurs de pucerons.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Poivron</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Effet protecteur répulsif</li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="panais" data-n="panais pastinaca sativa" data-f="APIACEAE">
+  <h2>Panais <i>Pastinaca sativa</i></h2>
+  <ul class="sow"><li><b>En terre</b> : 2 semaines avant les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Apiacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>15 cm sur le rang, 35 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 6 °C minimum, idéal 14 à 20 °C ; levée en 15 à 28 jours</dd><dt>Récolte</dt><dd>110 à 150 jours après le semis, pendant environ 16 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Graines fraîches indispensables (le panais perd sa faculté germinative en 1 an). Les gelées d'automne subliment sa saveur sucrée.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Radis rond</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Indicateur de ligne durant la très lente levée du panais</li></ul></details>
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Carotte</b> <span class="ev ev-etaye">Étayé par essais</span><br>Même sensibilité aux maladies racinaires <span class="src">(RHS (mouche de la carotte))</span></li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="pasteque" data-n="pastèque citrullus lanatus" data-f="CUCURBITACEAE">
+  <h2>Pastèque <i>Citrullus lanatus</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 3 semaines avant les dernières gelées.</li><li><b>En terre</b> : 2 semaines après les dernières gelées.</li><li><b>Plantation</b> : 2 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Cucurbitacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>100 cm sur le rang, 150 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 18 °C minimum, idéal 25 à 32 °C ; levée en 6 à 12 jours</dd><dt>Récolte</dt><dd>85 à 105 jours après le semis, pendant environ 3 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Requiert un maximum d'ensoleillement et un sol très sableux et chaud.</p>
+  
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="persil" data-n="persil frisé petroselinum crispum" data-f="APIACEAE">
+  <h2>Persil frisé <i>Petroselinum crispum</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 6 semaines avant les dernières gelées.</li><li><b>En terre</b> : 2 semaines avant les dernières gelées.</li><li><b>Plantation</b> : 1 semaine après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Apiacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>10 cm sur le rang, 20 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 8 °C minimum, idéal 15 à 22 °C ; levée en 18 à 28 jours</dd><dt>Récolte</dt><dd>70 à 90 jours après le semis, pendant environ 24 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Mi-ombre</dd></dl>
+  <p class="advice">Faire tremper les graines 24h dans de l'eau tiède avant le semis pour accélérer la levée réputée très lente.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Tomate</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Stimulation réciproque et rehaussement de la vigueur</li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="phacelie" data-n="phacélie phacelia tanacetifolia" data-f="BORAGINACEAE">
+  <h2>Phacélie <i>Phacelia tanacetifolia</i></h2>
+  <ul class="sow"><li><b>En terre</b> : 2 semaines avant les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Boraginacées (attendre 2 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>10 cm sur le rang, 20 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 8 °C minimum, idéal 14 à 22 °C ; levée en 6 à 12 jours</dd><dt>Récolte</dt><dd>50 à 70 jours après le semis, pendant environ 6 semaines</dd><dt>Eau</dt><dd>Faible</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Engrais vert exceptionnel : étouffe les adventices, décompacte le sol grâce à son chevelu racinaire dense et nourrit les pollinisateurs.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Courgette</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Aimant à pollinisateurs assurant une fructification abondante</li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="piment" data-n="piment capsicum frutescens" data-f="SOLANACEAE">
+  <h2>Piment <i>Capsicum frutescens</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 10 semaines avant les dernières gelées.</li><li><b>Plantation</b> : 2 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Solanacées (attendre 4 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>40 cm sur le rang, 50 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 16 °C minimum, idéal 22 à 30 °C ; levée en 10 à 20 jours</dd><dt>Récolte</dt><dd>80 à 110 jours après le semis, pendant environ 8 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Aime un sol drainant et une exposition chaude contre un mur exposé au sud.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Basilic grand vert</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Action synergique aromatique</li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="poireau" data-n="poireau allium ampeloprasum var. porrum" data-f="ALLIACEAE">
+  <h2>Poireau <i>Allium ampeloprasum var. porrum</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 8 semaines avant les dernières gelées.</li><li><b>En terre</b> : 2 semaines avant les dernières gelées.</li><li><b>Plantation</b> : 2 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Alliacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>10 cm sur le rang, 30 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 8 °C minimum, idéal 15 à 22 °C ; levée en 10 à 18 jours</dd><dt>Récolte</dt><dd>120 à 160 jours après le semis, pendant environ 16 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Habiller les plants avant repiquage (raccourcir racines à 2 cm et feuilles d'un tiers). Planter en trou profond de 15 cm et butter pour allonger le blanc.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Carotte</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Confusion olfactive croisée : la carotte repousse la teigne du poireau et le poireau repousse la mouche de la carotte</li><li><b>Céleri à côtes</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Association classique contre la teigne et la rouille</li></ul></details>
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Haricot vert nain</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Inhibition de la fixation de l'azote</li><li><b>Pois</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Ralentissement mutuel</li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="pois" data-n="pois pisum sativum" data-f="FABACEAE">
+  <h2>Pois <i>Pisum sativum</i></h2>
+  <ul class="sow"><li><b>En terre</b> : 6 semaines avant les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Fabacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>5 cm sur le rang, 40 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 5 °C minimum, idéal 12 à 18 °C ; levée en 8 à 14 jours</dd><dt>Récolte</dt><dd>60 à 85 jours après le semis, pendant environ 3 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Préfère la fraîcheur du printemps. Craint les fortes chaleurs qui provoquent l'avortement des fleurs.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Carotte</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Fixation d'azote printanière bénéfique pour la carotte précoce</li><li><b>Radis rond</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Complémentarité racinaire et développement sans concurrence</li></ul></details>
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Oignon</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Inhibition des nodosités symbiotiques par les alliacées</li><li><b>Ail</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Effet allélopathique néfaste sur la germination et la rhizosphère</li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="pois_chiche" data-n="pois chiche cicer arietinum" data-f="FABACEAE">
+  <h2>Pois chiche <i>Cicer arietinum</i></h2>
+  <ul class="sow"><li><b>En terre</b> : la semaine des dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Fabacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>15 cm sur le rang, 40 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 10 °C minimum, idéal 20 à 28 °C ; levée en 8 à 14 jours</dd><dt>Récolte</dt><dd>90 à 110 jours après le semis, pendant environ 3 semaines</dd><dt>Eau</dt><dd>Faible</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Résiste remarquablement à la sécheresse estivale. Craint l'humidité stagnante au niveau du collet.</p>
+  
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="poivron" data-n="poivron capsicum annuum" data-f="SOLANACEAE">
+  <h2>Poivron <i>Capsicum annuum</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 10 semaines avant les dernières gelées.</li><li><b>Plantation</b> : 2 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Solanacées (attendre 4 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>40 cm sur le rang, 60 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 15 °C minimum, idéal 20 à 28 °C ; levée en 10 à 18 jours</dd><dt>Récolte</dt><dd>75 à 100 jours après le semis, pendant environ 8 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Arroser régulièrement pour éviter la chute des boutons floraux. Ne planter en plein air que quand les nuits dépassent 12°C.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Basilic grand vert</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Stimule la croissance et masque les odeurs</li><li><b>Carotte</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Structure de canopée compatible</li></ul></details>
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Haricot à rames</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Risque d'étouffement par l'ombrage</li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="pomme_de_terre" data-n="pomme de terre solanum tuberosum" data-f="SOLANACEAE">
+  <h2>Pomme de terre <i>Solanum tuberosum</i></h2>
+  <ul class="sow"><li><b>En terre</b> : 2 semaines avant les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Solanacées (attendre 4 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>35 cm sur le rang, 65 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 8 °C minimum, idéal 15 à 22 °C ; levée en 12 à 25 jours</dd><dt>Récolte</dt><dd>80 à 120 jours après le semis, pendant environ 4 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Planter les tubercules germés dans un sillon de 10 cm. Butter dès que les tiges atteignent 15 cm de hauteur pour protéger les tubercules de la lumière.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Haricot vert nain</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Éloigne mutuellement les doryphores et apporte de l'azote</li><li><b>Pois</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Enrichissement du sol en azote organique</li></ul></details>
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Tomate</b> <span class="ev ev-etaye">Étayé par essais</span><br>Partage des mêmes maladies cryptogamiques dévastatrices (mildiou) et concurrence nutritive de Solanacées <span class="src">(UMass Extension)</span></li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="potimarron" data-n="potimarron cucurbita maxima" data-f="CUCURBITACEAE">
+  <h2>Potimarron <i>Cucurbita maxima</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 3 semaines avant les dernières gelées.</li><li><b>En terre</b> : 2 semaines après les dernières gelées.</li><li><b>Plantation</b> : 2 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Cucurbitacées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>100 cm sur le rang, 150 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 14 °C minimum, idéal 22 à 28 °C ; levée en 6 à 10 jours</dd><dt>Récolte</dt><dd>90 à 115 jours après le semis, pendant environ 4 semaines</dd><dt>Eau</dt><dd>Élevé</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Récolter avec son pédoncule bien sec avant les gelées d'automne. Se conserve plusieurs mois au sec à 15°C.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Maïs doux</b> <span class="ev ev-etaye">Étayé par essais</span><br>Couverture vivante du sol dans le système de la Milpa <span class="src">(Zhang et al. 2014 ; Postma et Lynch 2012)</span></li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="radis" data-n="radis rond raphanus sativus" data-f="BRASSICACEAE">
+  <h2>Radis rond <i>Raphanus sativus</i></h2>
+  <ul class="sow"><li><b>En terre</b> : 6 semaines avant les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Brassicacées (attendre 4 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>3 cm sur le rang, 15 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 5 °C minimum, idéal 12 à 20 °C ; levée en 3 à 6 jours</dd><dt>Récolte</dt><dd>21 à 35 jours après le semis, pendant environ 2 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Mi-ombre</dd></dl>
+  <p class="advice">Arroser tous les deux jours en petite quantité : un manque d'eau rend le radis piquant et creux. Échelonner les semis toutes les 2 semaines.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Carotte</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Semis mélangé idéal : lève rapidement, marque le rang et est récolté avant que la carotte n'ait besoin de place</li><li><b>Laitue pommée</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Les salades tempèrent le sol et rendent les radis plus doux et moins piquants</li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="romarin" data-n="romarin salvia rosmarinus" data-f="LAMIACEAE">
+  <h2>Romarin <i>Salvia rosmarinus</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 8 semaines avant les dernières gelées.</li><li><b>En terre</b> : 2 semaines après les dernières gelées.</li><li><b>Plantation</b> : 2 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Lamiacées (attendre 2 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>60 cm sur le rang, 60 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 12 °C minimum, idéal 18 à 26 °C ; levée en 15 à 25 jours</dd><dt>Récolte</dt><dd>90 à 120 jours après le semis, pendant environ 40 semaines</dd><dt>Eau</dt><dd>Faible</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Arbrisseau méditerranéen vivace exigeant un drainage parfait. Craint les sols lourds et gorgés d'eau en hiver.</p>
+  
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="roquette" data-n="roquette cultivée eruca vesicaria" data-f="BRASSICACEAE">
+  <h2>Roquette cultivée <i>Eruca vesicaria</i></h2>
+  <ul class="sow"><li><b>En terre</b> : 4 semaines avant les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Brassicacées (attendre 4 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>4 cm sur le rang, 20 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 6 °C minimum, idéal 12 à 20 °C ; levée en 3 à 6 jours</dd><dt>Récolte</dt><dd>25 à 40 jours après le semis, pendant environ 4 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Mi-ombre</dd></dl>
+  <p class="advice">Couper les feuilles régulièrement pour stimuler de nouvelles repousses tendres.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Laitue pommée</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Microclimat frais limitant la montée à graines précoce</li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="sauge" data-n="sauge officinale salvia officinalis" data-f="LAMIACEAE">
+  <h2>Sauge officinale <i>Salvia officinalis</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 6 semaines avant les dernières gelées.</li><li><b>En terre</b> : 1 semaine après les dernières gelées.</li><li><b>Plantation</b> : 2 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Lamiacées (attendre 2 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>40 cm sur le rang, 50 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 12 °C minimum, idéal 18 à 25 °C ; levée en 12 à 22 jours</dd><dt>Récolte</dt><dd>70 à 90 jours après le semis, pendant environ 35 semaines</dd><dt>Eau</dt><dd>Faible</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Feuillage persistant aromatique. Tailler légèrement au début du printemps.</p>
+  
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="souci" data-n="souci officinal calendula officinalis" data-f="ASTERACEAE">
+  <h2>Souci officinal <i>Calendula officinalis</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 4 semaines avant les dernières gelées.</li><li><b>En terre</b> : 2 semaines avant les dernières gelées.</li><li><b>Plantation</b> : la semaine des dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Astéracées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>20 cm sur le rang, 25 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 10 °C minimum, idéal 15 à 22 °C ; levée en 7 à 14 jours</dd><dt>Récolte</dt><dd>50 à 65 jours après le semis, pendant environ 18 semaines</dd><dt>Eau</dt><dd>Faible</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Fleur médicinale rustique fleurissant du printemps aux gelées. Se ressème spontanément d'année en année sans jamais être envahissante.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Tomate</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Répulsif contre les ravageurs et attracteur de pollinisateurs</li><li><b>Pomme de terre</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Stimule la santé biologique de la terre</li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="tagete" data-n="tagète (œillet d'inde) tagetes patula" data-f="ASTERACEAE">
+  <h2>Tagète (Œillet d'Inde) <i>Tagetes patula</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 6 semaines avant les dernières gelées.</li><li><b>En terre</b> : 1 semaine après les dernières gelées.</li><li><b>Plantation</b> : 1 semaine après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Astéracées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>20 cm sur le rang, 25 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 14 °C minimum, idéal 20 à 26 °C ; levée en 5 à 10 jours</dd><dt>Récolte</dt><dd>50 à 70 jours après le semis, pendant environ 18 semaines</dd><dt>Eau</dt><dd>Faible</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Un classique au pied des Solanacées. Cultivé avant la culture, il fait baisser les nématodes à galles (Meloidogyne) ; en simple voisinage, l'effet est moins sûr.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Tomate</b> <span class="ev ev-etaye">Étayé par essais</span><br>Réduit les nématodes à galles quand il est cultivé avant la tomate <span class="src">(Hooks et al. 2010 (culture avant la plante) ; Conboy et al. 2019 (serre) ; UF/IFAS)</span></li><li><b>Aubergine</b> <span class="ev ev-etaye">Étayé par essais</span><br>Éloigne les aleurodes et les vers nématodes <span class="src">(Hooks et al. 2010 (culture avant la plante) ; Conboy et al. 2019 (serre) ; UF/IFAS)</span></li><li><b>Poivron</b> <span class="ev ev-etaye">Étayé par essais</span><br>Protection sanitaire du système racinaire <span class="src">(Hooks et al. 2010 (culture avant la plante) ; Conboy et al. 2019 (serre) ; UF/IFAS)</span></li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="thym" data-n="thym commun thymus vulgaris" data-f="LAMIACEAE">
+  <h2>Thym commun <i>Thymus vulgaris</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 6 semaines avant les dernières gelées.</li><li><b>En terre</b> : 1 semaine après les dernières gelées.</li><li><b>Plantation</b> : 2 semaines après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Lamiacées (attendre 2 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>20 cm sur le rang, 25 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 12 °C minimum, idéal 18 à 26 °C ; levée en 12 à 20 jours</dd><dt>Récolte</dt><dd>70 à 90 jours après le semis, pendant environ 40 semaines</dd><dt>Eau</dt><dd>Faible</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Plante frugale n'exigeant aucun engrais. Tailler après floraison pour conserver une touffe compacte.</p>
+  
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="tomate" data-n="tomate solanum lycopersicum" data-f="SOLANACEAE">
+  <h2>Tomate <i>Solanum lycopersicum</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 8 semaines avant les dernières gelées.</li><li><b>Plantation</b> : 1 semaine après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Solanacées (attendre 4 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>50 cm sur le rang, 70 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 12 °C minimum, idéal 18 à 26 °C ; levée en 6 à 12 jours</dd><dt>Récolte</dt><dd>75 à 100 jours après le semis, pendant environ 10 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Arroser impérativement au pied sans jamais mouiller les feuilles pour prévenir le mildiou. Pailler sur 10 cm après réchauffement du sol.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Basilic grand vert</b> <span class="ev ev-etaye">Étayé par essais</span><br>Moins d'aleurodes et meilleur rendement observés en essais, sans effet constant sur la saveur <span class="src">(Mutisya et al. 2016 ; Bomford 2004)</span></li><li><b>Tagète (Œillet d'Inde)</b> <span class="ev ev-etaye">Étayé par essais</span><br>Réduit les nématodes à galles quand il est cultivé avant la tomate ; en serre, il gêne aussi les aleurodes <span class="src">(Hooks et al. 2010 (culture avant la plante) ; Conboy et al. 2019 (serre) ; UF/IFAS)</span></li><li><b>Carotte</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Exploitation racinaire complémentaire sans concurrence</li></ul></details>
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Pomme de terre</b> <span class="ev ev-etaye">Étayé par essais</span><br>Vecteur partagé du mildiou (Phytophthora infestans) et doryphores <span class="src">(UMass Extension)</span></li><li><b>Fenouil bulbeux</b> <span class="ev ev-plausible">Plausible, peu étudié</span><br>Sécrétions allélopathiques inhibitrices de croissance</li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="tomate_cerise" data-n="tomate cerise solanum lycopersicum var. cerasiforme" data-f="SOLANACEAE">
+  <h2>Tomate cerise <i>Solanum lycopersicum var. cerasiforme</i></h2>
+  <ul class="sow"><li><b>À l'abri</b> : 8 semaines avant les dernières gelées.</li><li><b>Plantation</b> : 1 semaine après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Solanacées (attendre 4 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>45 cm sur le rang, 60 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 12 °C minimum, idéal 18 à 26 °C ; levée en 5 à 10 jours</dd><dt>Récolte</dt><dd>65 à 85 jours après le semis, pendant environ 12 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Plus hâtive et résistante que la tomate standard. Inutile d'ébourgeonner drastiquement si la plante est tuteurée en buisson.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Basilic grand vert</b> <span class="ev ev-etaye">Étayé par essais</span><br>Renforce la vigueur végétative et protège des parasites <span class="src">(Mutisya et al. 2016 ; Bomford 2004)</span></li></ul></details>
+  
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<article class="veg" id="tournesol" data-n="tournesol helianthus annuus" data-f="ASTERACEAE">
+  <h2>Tournesol <i>Helianthus annuus</i></h2>
+  <ul class="sow"><li><b>En terre</b> : 1 semaine après les dernières gelées.</li></ul>
+  <dl><dt>Famille</dt><dd>Astéracées (attendre 3 ans avant d'y revenir au même endroit)</dd><dt>Espacement</dt><dd>40 cm sur le rang, 60 cm entre les rangs</dd><dt>Germination</dt><dd>sol à 10 °C minimum, idéal 18 à 26 °C ; levée en 6 à 12 jours</dd><dt>Récolte</dt><dd>80 à 100 jours après le semis, pendant environ 4 semaines</dd><dt>Eau</dt><dd>Modéré</dd><dt>Exposition</dt><dd>Plein soleil</dd></dl>
+  <p class="advice">Ses graines nourrissent les oiseaux en hiver. Ses fleurs géantes orientées vers le soleil sont un repère pour les pollinisateurs.</p>
+  <details><summary>Bons voisins</summary><ul class="rel"><li><b>Courge butternut</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Fournit un tuteur robuste et attire les pollinisateurs</li></ul></details>
+  <details><summary>À éloigner</summary><ul class="rel"><li><b>Pomme de terre</b> <span class="ev ev-tradition">Tradition de jardinage</span><br>Allélopathie racinaire négative</li></ul></details>
+  <p class="cal"><a href="quand-semer.html">Voir les dates pour mon département</a></p>
+</article>
+<aside class="callout">
+  <h2>Le potager qui se souvient pour vous</h2>
+  <p>Sillon reprend ces fiches, calcule les dates pour votre commune, vous rappelle quoi faire chaque quinzaine et garde la mémoire de vos parcelles pour la rotation. Gratuit, sans compte, sans réseau.</p>
+  <div class="cta" style="margin-top:0"><a class="btn" href="https://play.google.com/store/apps/details?id=fr.pilmil.sillon&amp;referrer=utm_source%3Dsite%26utm_content%3Dlegumes">Google Play</a><a class="btn ghost" href="./">Découvrir Sillon</a></div>
+</aside>
+<p>Données issues du catalogue de Sillon. D'où elles viennent et ce qu'elles ne disent pas : <a href="sources.html">Sources et limites</a>.</p>
+</main>
+<section class="g-more" aria-labelledby="g-more-t"><style>
+.hub,.g-more{--g:#2F6B4F;--g-ink:#FFFFFF}
+.hub{max-width:72rem;margin:0 auto;padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 56px}
+.hub-hero{display:grid;gap:14px;max-width:46rem}
+.hub-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--g)}
+.hub-eyebrow::before{content:"";width:22px;height:2px;background:currentColor;border-radius:2px}
+.hub h1{font-size:clamp(2.1rem,5.2vw,3.6rem);line-height:1.03;letter-spacing:-.025em;margin:0;text-wrap:balance}
+.hub-lead{font-size:clamp(1.05rem,1.6vw,1.25rem);line-height:1.55;margin:0;opacity:.82;max-width:40rem}
+.hub-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.hub-chips span{font-size:.85rem;padding:6px 12px;border-radius:99px;background:color-mix(in srgb,var(--g) 12%,transparent);border:1px solid color-mix(in srgb,var(--g) 24%,transparent)}
+.g-grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,19rem),1fr));margin-top:clamp(28px,4vw,44px)}
+.g-card{position:relative;display:flex;flex-direction:column;gap:10px;padding:22px 22px 20px;border-radius:22px;text-decoration:none;color:inherit;background:color-mix(in srgb,var(--g) 6%,transparent);border:1px solid color-mix(in srgb,currentColor 12%,transparent);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;overflow:hidden}
+.g-card::after{content:"";position:absolute;inset:auto -30% -60% auto;width:70%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--g) 22%,transparent),transparent 70%);pointer-events:none}
+.g-card:hover,.g-card:focus-visible{transform:translateY(-3px);border-color:color-mix(in srgb,var(--g) 55%,transparent);box-shadow:0 14px 34px -18px color-mix(in srgb,var(--g) 70%,transparent)}
+.g-card.feat{grid-column:1/-1;padding:clamp(24px,4vw,38px);background:linear-gradient(135deg,var(--g),color-mix(in srgb,var(--g) 62%,#000));color:var(--g-ink);border-color:transparent}
+.g-card.feat::after{background:radial-gradient(circle,rgba(255,255,255,.18),transparent 70%)}
+.g-card.feat h2{font-size:clamp(1.6rem,3.4vw,2.3rem)}
+.g-card.feat .g-tag{background:rgba(255,255,255,.18);color:inherit}
+.g-tag{align-self:flex-start;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:99px;background:color-mix(in srgb,var(--g) 18%,transparent);color:var(--g)}
+.g-card h2,.g-card h3{margin:0;font-size:1.28rem;line-height:1.18;letter-spacing:-.01em;text-wrap:balance}
+.g-card p{margin:0;line-height:1.5;opacity:.85}
+.g-meta{margin-top:auto!important;padding-top:6px;display:flex;justify-content:space-between;align-items:center;font-size:.88rem;font-weight:600;opacity:.9!important}
+.g-meta b{font-size:1.2rem;transition:transform .18s}
+.g-card:hover .g-meta b{transform:translateX(4px)}
+.g-app{margin-top:clamp(40px,6vw,64px);display:grid;gap:20px;grid-template-columns:auto 1fr;align-items:center;padding:clamp(22px,4vw,34px);border-radius:26px;border:1px solid color-mix(in srgb,var(--g) 30%,transparent);background:radial-gradient(120% 140% at 0% 0%,color-mix(in srgb,var(--g) 16%,transparent),transparent 60%)}
+.g-app img{width:72px;height:72px;border-radius:18px;display:block}
+.g-app h2{margin:0 0 6px;font-size:clamp(1.3rem,2.6vw,1.7rem)}
+.g-app p{margin:0;opacity:.85;line-height:1.5}
+.g-app ul{list-style:none;padding:0;margin:12px 0 0;display:flex;flex-wrap:wrap;gap:8px 16px;font-size:.92rem;font-weight:600}
+.g-app li::before{content:"✓ ";color:var(--g)}
+.g-actions{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px}
+.g-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;font-weight:700;text-decoration:none;background:var(--g);color:var(--g-ink);border:1.5px solid var(--g)}
+.g-btn.ghost{background:transparent;color:inherit;border-color:color-mix(in srgb,currentColor 30%,transparent)}
+.g-more{max-width:72rem;margin:clamp(36px,6vw,64px) auto 0;padding:0 clamp(18px,4vw,40px) 12px}
+.g-more-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.g-more-head h2{margin:0;font-size:1.4rem}
+.g-more-head a{font-weight:700;color:var(--g)}
+.g-more .g-grid{margin-top:16px}
+.g-grid.two{grid-template-columns:1.35fr 1fr}.g-grid.two .g-card.feat{grid-column:auto}
+@media (max-width:760px){.g-grid.two{grid-template-columns:1fr}}
+@media (max-width:560px){.g-app{grid-template-columns:1fr}.g-app img{width:56px;height:56px}}
+@media (prefers-reduced-motion:reduce){.g-card,.g-meta b{transition:none}}
+@media print{.g-more{display:none}}
+</style><div class="g-more-head"><h2 id="g-more-t">D'autres guides</h2><a href="guides.html">Tous les guides →</a></div><div class="g-grid"><a class="g-card" href="quand-semer.html"><span class="g-tag">Outil</span><h3>Quand semer ? Le calendrier calé sur vos gelées</h3><p>Choisissez votre département : le calendrier mois par mois, avec ce qui est à faire cette quinzaine.</p><p class="g-meta"><span>3 min de lecture · par département</span><b aria-hidden="true">→</b></p></a></div></section>
+<footer class="wrap foot">
+  <p><img src="assets/pilmil-logo.svg" alt="" width="20" height="20" style="vertical-align:-4px;margin-right:6px">Sillon fait partie des applis de <a href="https://pilmil-studio.github.io/">Pilmil Studio</a> (France).</p>
+  <p>Contact : pilmil.studio@proton.me · <a href="sources.html">Sources</a> · <a href="https://github.com/Pilmil-Studio/sillon/blob/main/LICENSE">Licence MPL-2.0</a></p>
+</footer>
+<script>
+(function(){
+  var q=document.getElementById('q'), f=document.getElementById('fam'), cards=[].slice.call(document.querySelectorAll('.veg'));
+  function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
+  function run(){var t=norm(q.value.trim()), fam=f.value;
+    cards.forEach(function(c){c.hidden=!((!t||norm(c.dataset.n).indexOf(t)>=0)&&(!fam||c.dataset.f===fam));});}
+  q.addEventListener('input',run); f.addEventListener('change',run);
+})();
+</script>
+</body>
+</html>
