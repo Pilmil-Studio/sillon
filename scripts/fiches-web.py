@@ -189,8 +189,18 @@ details { margin:8px 0; } summary { cursor:pointer; font-weight:700; color:var(-
 '''
     return head + css + rest + body + foot + js
 
+def keep_extras(new):
+    """Conserve l'encart « autres guides » ajouté par l'espace Guides du site."""
+    if not PAGE.exists():
+        return new
+    m = re.search(r'<section class="g-more".*?</section>\n', PAGE.read_text(encoding="utf-8"), re.S)
+    if not m:
+        return new
+    i = new.index("<footer")
+    return new[:i] + m.group(0) + new[i:]
+
 def main():
-    new = build()
+    new = keep_extras(build())
     if "--check" in sys.argv:
         old = PAGE.read_text(encoding="utf-8") if PAGE.exists() else ""
         sys.exit(0 if old == new else "docs/legumes.html n'est pas à jour : lancez scripts/fiches-web.py")
